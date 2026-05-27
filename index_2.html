@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SoCDS — School of Computing &amp; Data Science | Centurion University</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══ RESET & BASE ═══ */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#f0ede6;color:#1a1a1a}
+a{text-decoration:none}
+[id]{scroll-margin-top:150px}
+.su{opacity:0;transform:translateY(40px);transition:opacity .6s ease,transform .6s ease}
+.su.vis{opacity:1;transform:none}
+.d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
+
+/* ═══ NAV ═══ */
+.nav{background:#fff;border-bottom:3px solid #0C447C;position:sticky;top:0;z-index:200;box-shadow:0 2px 10px rgba(0,0,0,.10)}
+.nav-top{display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:80px;border-bottom:1px solid #eee}
+.nav-logo{display:flex;align-items:center;gap:14px}
+.nav-logo img{height:66px;width:auto;filter:drop-shadow(0 1px 3px rgba(0,0,0,.15))}
+.nav-div{width:1.5px;height:50px;background:#d0d0d0;flex-shrink:0}
+.nav-logo-text h1{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:#0C447C;line-height:1.2}
+.nav-logo-text p{font-size:14px;color:#666;margin-top:2px}
+.nav-top-r{display:flex;align-items:center;gap:12px}
+.campus-sel{border:1.5px solid #ccc;border-radius:6px;padding:7px 13px;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;background:#fff;outline:none;color:#333}
+.campus-sel:focus{border-color:#0C447C}
+.ham{display:none;background:none;border:none;cursor:pointer;padding:6px;flex-direction:column;gap:5px}
+.ham span{display:block;width:24px;height:2.5px;background:#0C447C;border-radius:2px}
+/* Tablet nav scroll wrapper — keeps dropdown visible above clipping */
+.nav-bar-wrap{background:#0C447C;overflow-x:auto;overflow-y:visible;scrollbar-width:none}
+.nav-bar-wrap::-webkit-scrollbar{display:none}
+.nav-bar{background:#0C447C;padding:0 32px;display:flex;align-items:center;width:max-content;min-width:100%;overflow:visible}
+.nav-bar>a,.nd>span{font-size:13.5px;font-weight:500;color:rgba(255,255,255,.88);padding:12px 13px;display:inline-block;cursor:pointer;white-space:nowrap;transition:background .15s}
+.nav-bar>a:hover,.nd:hover>span{background:rgba(255,255,255,.12);color:#fff}
+.nav-bar>a.act{color:#EF9F27;border-bottom:3px solid #EF9F27}
+.nd{position:relative}
+.nd>span{cursor:pointer;user-select:none}
+.nd>span::after{content:" ▾";font-size:10px;opacity:.7}
+.dd{display:none;position:fixed;background:#fff;border-radius:0 0 10px 10px;box-shadow:0 8px 28px rgba(0,0,0,.18);min-width:200px;z-index:9999;border-top:3px solid #EF9F27;overflow:hidden}
+.nd:hover .dd,.nd.open .dd{display:block}
+.dd a{display:block;padding:12px 18px;font-size:13px;color:#333;border-bottom:1px solid #f5f5f5;transition:background .12s;white-space:nowrap}
+.dd a:last-child{border-bottom:none}
+.dd a:hover{background:#E6F1FB;color:#0C447C}
+.mob-nav{display:none;flex-direction:column;background:#042C53}
+.mob-nav.open{display:flex}
+.mob-nav a{padding:13px 22px;font-size:14px;color:rgba(255,255,255,.9);border-bottom:1px solid rgba(255,255,255,.07);display:block}
+.mob-nav a:hover{background:rgba(255,255,255,.08);color:#EF9F27}
+@media(max-width:768px){
+  .nav-top{padding:10px 16px;height:auto}
+  .nav-logo img{height:48px}
+  .nav-logo-text h1{font-size:15px}
+  .nav-logo-text p{font-size:11px}
+  .nav-div{height:36px}
+  .campus-sel{display:none}
+  .ham{display:flex}
+  .nav-bar-wrap{display:none}
+}
+@media(max-width:480px){
+  .nav-logo img{height:42px}
+  .nav-logo-text h1{font-size:13px}
+  .nav-logo-text p{display:none}
+  .nav-div{height:30px}
+}
+
+/* ═══ HERO ═══ */
+.hero{position:relative;min-height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;overflow:hidden;padding:70px 28px 60px}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=1600&q=80');background-size:cover;background-position:center}
+#heroCanvas{position:absolute;inset:0;z-index:1;pointer-events:none;width:100%;height:100%}
+.hero-ov{position:absolute;inset:0;background:linear-gradient(135deg,rgba(2,18,38,.94),rgba(8,50,100,.90),rgba(4,44,83,.88));z-index:2}
+.hero-content{position:relative;z-index:3;max-width:900px;margin:0 auto}
+.hero-eyebrow{display:inline-block;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:5px 16px;font-size:12px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.9);margin-bottom:18px}
+.hero h2{font-family:'Cinzel',serif;font-size:clamp(24px,5vw,54px);font-weight:700;margin-bottom:12px;line-height:1.15;text-shadow:0 2px 12px rgba(0,0,0,.3);text-align:center}
+.hero h3{font-family:'Cinzel',serif;font-size:clamp(13px,2vw,17px);color:#EF9F27;letter-spacing:.06em;margin-bottom:20px}
+.hero-desc{font-size:15px;line-height:1.8;color:rgba(255,255,255,.85);max-width:680px;margin:0 auto 32px;text-align:justify}
+.hero-stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;width:100%;max-width:780px;margin:0 auto}
+.hs{flex:1;min-width:110px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:14px 10px;text-align:center}
+.hs b{display:block;font-family:'Cinzel',serif;font-size:22px;color:#EF9F27;margin-bottom:4px}
+.hs small{font-size:11px;color:rgba(255,255,255,.75);line-height:1.3}
+@media(max-width:600px){.hero{min-height:auto;padding:50px 16px 44px}.hero-desc{font-size:13.5px;text-align:left}.hero h2{font-size:clamp(20px,6vw,34px)}.hs{min-width:calc(50% - 5px)}}
+
+/* ═══ ABOUT ═══ */
+.about-sec{background:#fff;padding:44px 32px 0}
+.about-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+.about-left h3{font-family:'Cinzel',serif;font-size:20px;color:#0C447C;margin-bottom:14px;text-align:center}
+.about-left p{font-size:14px;line-height:1.85;color:#444;margin-bottom:13px;text-align:justify}
+.vm-stack{display:flex;flex-direction:column;gap:14px}
+.vm-box{border-radius:12px;padding:18px 16px;border-left:4px solid}
+.vm-box.vis-box{background:#EBF4FF;border-color:#0C447C}
+.vm-box.mis-box{background:#FFF8EC;border-color:#EF9F27}
+.vm-box h4{font-family:'Cinzel',serif;font-size:14px;margin-bottom:8px}
+.vm-box.vis-box h4{color:#0C447C}
+.vm-box.mis-box h4{color:#BA7517}
+.vm-box p{font-size:13px;line-height:1.7;color:#444}
+.mis-pts{list-style:none;display:flex;flex-direction:column;gap:7px;margin-top:6px}
+.mis-pts li{font-size:13px;color:#444;padding-left:20px;position:relative;line-height:1.6}
+.mis-pts li::before{content:"→";position:absolute;left:0;color:#BA7517;font-weight:700}
+@media(max-width:768px){.about-inner{grid-template-columns:1fr}.about-sec{padding:36px 18px 0}}
+
+/* ═══ PROGRAMS STRIP ═══ */
+.prog-strip{background:#fff;padding:20px 32px 36px}
+.prog-strip-inner{max-width:1200px;margin:0 auto}
+.prog-strip-title{font-family:'Cinzel',serif;font-size:14px;color:#0C447C;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.prog-strip-title::after{content:'';flex:1;height:1px;background:#E6F1FB}
+.prog-cards-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.prog-card{background:#fff;border-radius:12px;border:1.5px solid #e8e4de;padding:0;overflow:hidden;cursor:pointer;transition:transform .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.prog-card:hover{transform:translateY(-5px);box-shadow:0 10px 28px rgba(0,0,0,.14)}
+.prog-card-top{height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#fff;font-size:26px;position:relative}
+.prog-card-level{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;background:rgba(255,255,255,.25);color:#fff;text-transform:uppercase;letter-spacing:.04em}
+.prog-card-body{padding:11px 12px 13px}
+.prog-card-body h5{font-size:12.5px;font-weight:600;color:#1a1a1a;margin-bottom:3px;line-height:1.3}
+.prog-card-body span{font-size:10.5px;color:#888}
+.prog-card-chips{display:flex;gap:5px;margin-top:8px;flex-wrap:wrap}
+.pchip{font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:20px}
+@media(max-width:900px){.prog-cards-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.prog-cards-row{grid-template-columns:1fr 1fr}.prog-strip{padding:16px 14px 28px}}
+
+/* ═══ WHY + NEWS ═══ */
+.why-news{background:#f0ede6;padding:48px 32px}
+.why-news-inner{max-width:1300px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.wn-title{font-family:'Cinzel',serif;font-size:20px;color:#0C447C;margin-bottom:4px}
+.wn-sub{font-size:13px;color:#888;margin-bottom:18px}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.why-card{padding:14px 13px;border-radius:10px;border:1.5px solid #E6F1FB;background:#fff}
+.why-card h4{font-family:'Cinzel',serif;font-size:12px;color:#042C53;margin-bottom:5px}
+.why-card p{font-size:12px;color:#555;line-height:1.55}
+.why-icon{font-size:22px;margin-bottom:7px}
+.news-list{display:flex;flex-direction:column;gap:10px}
+.news-card{background:#fff;border-radius:10px;overflow:hidden;display:grid;grid-template-columns:4px 1fr auto;box-shadow:0 2px 10px rgba(0,0,0,.07);cursor:pointer;transition:transform .18s}
+.news-card:hover{transform:translateX(4px)}
+.news-bar{width:4px}
+.news-cnt{padding:12px 14px}
+.news-dt{display:inline-block;background:#E6F1FB;color:#042C53;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:6px}
+.news-cnt h4{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:3px;line-height:1.3}
+.news-cnt p{font-size:12px;color:#666;line-height:1.5}
+.news-arr{display:flex;align-items:center;padding:0 14px;font-size:18px;color:#ddd;transition:color .18s}
+.news-card:hover .news-arr{color:#0C447C}
+@media(max-width:900px){.why-news-inner{grid-template-columns:1fr}}
+@media(max-width:768px){.why-news{padding:36px 18px}}
+
+/* ═══ TEAM ═══ */
+.team-sec{background:#fff;padding:52px 32px}
+.team-inner{max-width:1200px;margin:0 auto}
+.campus-block{margin-bottom:32px}
+.campus-block-title{font-family:'Cinzel',serif;font-size:16px;color:#0C447C;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid #E6F1FB;display:flex;align-items:center;gap:10px}
+.cdot{width:12px;height:12px;border-radius:50%;display:inline-block;flex-shrink:0}
+/* Leadership row */
+.lead-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.lead-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.10);cursor:pointer;transition:transform .2s;border:2px solid}
+.lead-card:hover{transform:translateY(-4px)}
+.lead-photo{height:100px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;font-size:26px;font-weight:700;font-family:'Cinzel',serif;color:#fff}
+.lead-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.lead-bdg{position:absolute;top:7px;left:7px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
+.lead-body{padding:11px 12px 13px}
+.lead-name{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:2px;line-height:1.3}
+.lead-role{font-size:10.5px;color:#0C447C;font-weight:600;margin-bottom:2px}
+.lead-desig{font-size:10px;color:#888}
+.lead-profile{display:inline-block;margin-top:6px;font-size:10.5px;color:#0C447C;text-decoration:underline;font-weight:600}
+/* Faculty grid */
+.fac-filter{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;align-items:center}
+.ffbtn{padding:6px 14px;border-radius:50px;border:1.5px solid #ccc;background:#fff;font-size:12.5px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;color:#333}
+.ffbtn:hover,.ffbtn.act{background:#042C53;color:#fff;border-color:#042C53}
+.ffbtn.b-bbsr.act{background:#0C447C;border-color:#0C447C}
+.ffbtn.b-pkd.act{background:#BA7517;border-color:#BA7517}
+.fac-search{border:1.5px solid #ccc;border-radius:50px;padding:6px 14px;font-size:12.5px;font-family:'DM Sans',sans-serif;outline:none;width:200px;margin-left:auto}
+.fac-search:focus{border-color:#0C447C}
+.fac-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fac-card{background:#fff;border-radius:11px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.08);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.fac-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.13)}
+.fac-av{height:78px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;font-family:'Cinzel',serif;color:#fff;position:relative;overflow:hidden}
+.fac-av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fac-body{padding:11px 12px 13px}
+.fac-name{font-size:12.5px;font-weight:600;color:#1a1a1a;margin-bottom:2px;line-height:1.3}
+.fac-role{font-size:10px;color:#A32D2D;font-weight:700;margin-bottom:2px}
+.fac-desig{font-size:11px;color:#0C447C;font-weight:600;margin-bottom:3px}
+.fac-spec{font-size:11px;color:#888;margin-bottom:7px;line-height:1.4}
+.fac-tags{display:flex;gap:5px;flex-wrap:wrap}
+.ftag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.ftag-bbsr{background:#E6F1FB;color:#0C447C}
+.ftag-pkd{background:#FFF3DC;color:#BA7517}
+.ftag-desig{background:#f0f0f0;color:#555}
+.team-btns{text-align:center;margin-top:20px;display:flex;gap:10px;justify-content:center;align-items:center}
+@media(max-width:1024px){.fac-grid{grid-template-columns:repeat(3,1fr)}.lead-row{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.fac-grid{grid-template-columns:1fr 1fr}.team-sec{padding:36px 18px}.fac-search{width:100%;margin-left:0}}
+@media(max-width:480px){.fac-grid{grid-template-columns:1fr 1fr}}
+
+/* ═══ LABS ═══ */
+.labs-sec{background:#f0ede6;padding:52px 32px}
+.labs-inner{max-width:1200px;margin:0 auto}
+.labs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.lab-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.09);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.lab-card:hover{transform:translateY(-5px);box-shadow:0 14px 36px rgba(0,0,0,.14)}
+.lab-img{height:130px;display:flex;align-items:center;justify-content:center;font-size:44px;position:relative;color:#fff}
+.lab-lbl{position:absolute;bottom:8px;left:12px;right:12px;font-family:'Cinzel',serif;font-size:10px;color:rgba(255,255,255,.9);font-weight:600;letter-spacing:.04em;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.lab-body{padding:13px 14px 15px;background:#faf9f4}
+.lab-body h4{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:5px}
+.lab-body p{font-size:12.5px;color:#555;line-height:1.6;margin-bottom:10px}
+.lab-tags{display:flex;flex-wrap:wrap;gap:5px}
+.ltag{background:#E6F1FB;color:#042C53;font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:20px}
+@media(max-width:900px){.labs-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.labs-grid{grid-template-columns:1fr}.labs-sec{padding:36px 14px}}
+
+/* ═══ RESEARCH / PROJECTS / PUBLICATIONS / COLLABS ═══ */
+.sec-std{padding:52px 32px}
+.sec-std.alt{background:#f0ede6}
+.sec-std.wht{background:#fff}
+.sec-in{max-width:1200px;margin:0 auto}
+.sec-hd{margin-bottom:28px}
+.sec-hd h2{font-family:'Cinzel',serif;font-size:22px;color:#0C447C;margin-bottom:6px}
+.sec-hd p{font-size:14px;color:#888}
+.sec-bar{width:52px;height:3px;background:#EF9F27;border-radius:2px;margin-top:8px}
+/* cards */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.rc{background:#f8f7f2;border-radius:12px;padding:18px 16px;border:1.5px solid #e8e4de;border-top:4px solid;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.rc:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.1)}
+.rc-icon{font-size:28px;margin-bottom:10px}
+.rc h4{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:6px}
+.rc p{font-size:12.5px;color:#666;line-height:1.6;margin-bottom:10px}
+.rc-pills{display:flex;gap:5px;flex-wrap:wrap}
+.rpill{background:#E6F1FB;color:#042C53;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.pj-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.08);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.pj-card:hover{transform:translateY(-5px);box-shadow:0 14px 36px rgba(0,0,0,.14)}
+.pj-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:40px}
+.pj-body{padding:13px 14px}
+.pj-tag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:8px}
+.pj-body h4{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:5px;line-height:1.3}
+.pj-body p{font-size:12.5px;color:#555;line-height:1.6;margin-bottom:8px}
+.pj-meta{font-size:11.5px;color:#aaa}
+.pub-item{background:#fff;border-radius:12px;padding:15px 17px;display:flex;gap:13px;align-items:flex-start;box-shadow:0 2px 10px rgba(0,0,0,.07);border-left:4px solid;cursor:pointer;transition:transform .18s;margin-bottom:10px}
+.pub-item:hover{transform:translateX(4px)}
+.pub-icon{font-size:24px;flex-shrink:0;margin-top:2px}
+.pub-body h4{font-size:13.5px;font-weight:600;color:#1a1a1a;margin-bottom:4px;line-height:1.4}
+.pub-meta{font-size:12px;color:#888;margin-bottom:5px}
+.pub-arr{margin-left:auto;font-size:18px;color:#ddd;flex-shrink:0;align-self:center}
+.ps{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;background:#E6F1FB;color:#0C447C;margin-right:4px}
+.ps.p-pkd{background:#FFF3DC;color:#BA7517}
+.clb-card{background:#fff;border-radius:12px;padding:18px 16px;border:1.5px solid #e8e4de;border-top:4px solid;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.clb-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.1)}
+.clb-icon{font-size:28px;margin-bottom:10px}
+.clb-card h4{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:6px}
+.clb-card p{font-size:12.5px;color:#666;line-height:1.6;margin-bottom:10px}
+.ctag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;background:#E6F1FB;color:#0C447C}
+.ctag.a{background:#FFF3DC;color:#BA7517}
+.ctag.g{background:#EAF3DE;color:#3B6D11}
+.ctag.p{background:#EEEDFE;color:#533AB7}
+.ctag.r{background:#FCEBEB;color:#A32D2D}
+@media(max-width:1024px){.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){.g3{grid-template-columns:1fr 1fr}.sec-std{padding:36px 18px}}
+@media(max-width:480px){.g3,.g4{grid-template-columns:1fr}.sec-std{padding:28px 14px}}
+
+/* ═══ EVENTS / WORKSHOPS ═══ */
+.ev-card{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.08);cursor:pointer;transition:transform .2s,box-shadow .2s}
+.ev-card:hover{transform:translateY(-5px);box-shadow:0 14px 36px rgba(0,0,0,.14)}
+.ev-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:40px}
+.ev-body{padding:13px 14px}
+.ev-tag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px;background:#E6F1FB;color:#0C447C;margin-bottom:8px}
+.ev-tag.g{background:#EAF3DE;color:#3B6D11}
+.ev-tag.a{background:#FFF3DC;color:#BA7517}
+.ev-tag.p{background:#EEEDFE;color:#533AB7}
+.ev-tag.r{background:#FCEBEB;color:#A32D2D}
+.ev-body h4{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:5px;line-height:1.3}
+.ev-body p{font-size:12.5px;color:#555;line-height:1.6;margin-bottom:8px}
+.ev-meta{font-size:11.5px;color:#aaa}
+
+/* ═══ STARTUPS ═══ */
+.sc-card{background:#fff;border-radius:12px;padding:18px 16px;border:1.5px solid #e8e4de;border-left:4px solid;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.sc-card:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.1)}
+.sc-icon{font-size:28px;margin-bottom:8px}
+.sc-card h4{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:5px}
+.sc-card p{font-size:12.5px;color:#666;line-height:1.6;margin-bottom:10px}
+.sctag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:20px}
+
+/* ═══ GALLERY ═══ */
+.gal-filter{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.gfbtn{padding:6px 15px;border-radius:50px;border:1.5px solid #ccc;background:#fff;font-size:13px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s;color:#333}
+.gfbtn:hover,.gfbtn.act{background:#0C447C;color:#fff;border-color:#0C447C}
+.gal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.gal-item{border-radius:10px;overflow:hidden;aspect-ratio:4/3;position:relative;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.10);transition:transform .2s}
+.gal-item:hover{transform:scale(1.03)}
+.gal-ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.gal-ph-icon{font-size:38px}
+.gal-ph-lbl{font-size:11px;font-weight:600;color:rgba(255,255,255,.85);text-align:center;padding:0 10px}
+.gal-ov{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.65) 100%);opacity:0;transition:opacity .3s}
+.gal-item:hover .gal-ov{opacity:1}
+.gal-cap{position:absolute;bottom:10px;left:12px;right:12px;color:#fff;font-size:11.5px;font-weight:600;opacity:0;transition:opacity .3s}
+.gal-item:hover .gal-cap{opacity:1}
+@media(max-width:768px){.gal-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.gal-grid{grid-template-columns:1fr 1fr}}
+
+/* ═══ NEWS (before contact) ═══ */
+.news-sec{background:#fff;padding:52px 32px}
+.news-inner{max-width:1200px;margin:0 auto}
+.news-full-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.nf-card{background:#f8f7f2;border-radius:12px;overflow:hidden;display:grid;grid-template-columns:4px 1fr auto;cursor:pointer;transition:transform .18s;border:1px solid #eee}
+.nf-card:hover{transform:translateX(4px)}
+.nf-bar{width:4px}
+.nf-cnt{padding:14px 16px}
+.nf-dt{display:inline-block;background:#E6F1FB;color:#042C53;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:7px}
+.nf-cnt h4{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:4px;line-height:1.35}
+.nf-cnt p{font-size:12.5px;color:#666;line-height:1.55}
+.nf-arr{display:flex;align-items:center;padding:0 14px;font-size:18px;color:#ddd;transition:color .18s}
+.nf-card:hover .nf-arr{color:#0C447C}
+@media(max-width:768px){.news-full-grid{grid-template-columns:1fr}.news-sec{padding:36px 18px}}
+
+/* ═══ CONTACT ═══ */
+.contact-sec{background:#f0ede6;padding:52px 32px}
+.contact-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.contact-card{background:#fff;border-radius:14px;padding:26px;box-shadow:0 4px 18px rgba(0,0,0,.09)}
+.contact-card h3{font-family:'Cinzel',serif;font-size:16px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #E6F1FB}
+.cinfo-row{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.cinfo-icon{width:36px;height:36px;border-radius:8px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.cinfo-text label{display:block;font-size:10.5px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.cinfo-text span,.cinfo-text a{font-size:13.5px;color:#1a1a1a}
+.cinfo-text a{color:#0C447C}
+.contact-form{background:#fff;border-radius:14px;padding:26px;box-shadow:0 4px 18px rgba(0,0,0,.09)}
+.contact-form h3{font-family:'Cinzel',serif;font-size:16px;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid #E6F1FB}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.fg{margin-bottom:14px}
+.fg label{display:block;font-size:12.5px;font-weight:600;color:#333;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{width:100%;border:1.5px solid #ddd;border-radius:8px;padding:9px 12px;font-size:13.5px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#0C447C}
+.fg textarea{resize:vertical;min-height:100px}
+.cf-submit{background:#0C447C;color:#fff;border:none;border-radius:8px;padding:11px 26px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+.cf-submit:hover{background:#042C53}
+.cf-success{display:none;background:#EAF3DE;border:1px solid #5a8a2e;border-radius:8px;padding:12px 14px;font-size:13.5px;color:#3B6D11;margin-top:12px}
+@media(max-width:768px){.contact-inner{grid-template-columns:1fr}.contact-sec{padding:36px 18px}.cf-row{grid-template-columns:1fr}}
+
+/* ═══ FOOTER ═══ */
+footer{background:#1a1a1a;padding:44px 32px 0}
+.ft-in{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr;gap:48px;padding-bottom:36px;border-bottom:1px solid #2e2e2e}
+.ft-brand h3{font-family:'Cinzel',serif;font-size:16px;color:#fff;margin-bottom:4px}
+.ft-brand p{font-size:12.5px;color:#888;margin-bottom:18px;line-height:1.7}
+.ft-camps{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.ft-camp{background:#252525;border-left:3px solid #EF9F27;border-radius:8px;padding:12px 14px;font-size:12px;color:#aaa;line-height:1.8}
+.ft-camp strong{color:#fff;display:block;margin-bottom:2px}
+.ft-links{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.ft-col h4{font-family:'Cinzel',serif;font-size:11px;color:#EF9F27;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.ft-col a{display:block;font-size:12px;color:#aaa;margin-bottom:7px;transition:color .15s}
+.ft-col a:hover{color:#fff}
+.ft-copy{max-width:1200px;margin:0 auto;text-align:center;font-size:12px;color:#555;padding:14px 0}
+@media(max-width:768px){footer{padding:32px 18px 0}.ft-in{grid-template-columns:1fr;gap:28px}.ft-camps{grid-template-columns:1fr}.ft-links{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){footer{padding:24px 14px 0}.ft-links{grid-template-columns:1fr 1fr}}
+
+/* ═══ MODAL ═══ */
+.mo{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.65);align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+.mo.open{display:flex}
+.mo-box{background:#fff;border-radius:16px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:mIn .22s ease}
+@keyframes mIn{from{transform:scale(.93);opacity:0}to{transform:scale(1);opacity:1}}
+.mo-x{position:absolute;top:12px;right:14px;background:rgba(0,0,0,.08);border:none;width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;color:#555;z-index:1}
+.mo-x:hover{background:rgba(0,0,0,.15)}
+.mo-top{padding:22px 22px 16px;border-bottom:1px solid #eee;display:flex;gap:14px;align-items:flex-start}
+.mo-body{padding:20px 22px}
+.mo-row{display:flex;gap:8px;margin-bottom:11px;font-size:13.5px;align-items:flex-start}
+.mo-row span{color:#888;min-width:100px;flex-shrink:0;font-size:12px;padding-top:1px}
+.mo-row strong{color:#1a1a1a;line-height:1.5}
+.mo-strip{height:150px;display:flex;align-items:center;justify-content:center;font-size:56px;border-radius:14px 14px 0 0}
+.mo-avatar{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;font-family:'Cinzel',serif;color:#fff;flex-shrink:0;overflow:hidden;position:relative}
+.mo-avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.mo-name{font-size:17px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
+.mo-desig{font-size:13px;color:#0C447C;font-weight:600}
+.mo-role-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:#E6F1FB;color:#0C447C;margin-bottom:4px}
+
+.gal-360-badge{position:absolute;top:8px;right:8px;background:#EF9F27;color:#042C53;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;z-index:2;letter-spacing:.03em}
+/* ═══ TOUCH & MOBILE IMPROVEMENTS ═══ */
+/* Make all clickable cards touch-friendly */
+.prog-card,.fac-card,.lead-card,.lab-card,.rc,.pj-card,.pub-item,.clb-card,.ev-card,.sc-card,.gal-item,.nf-card,.news-card{
+  -webkit-tap-highlight-color:rgba(0,0,0,.1);
+  touch-action:manipulation;
+  cursor:pointer;
+}
+/* Modal improvements for mobile */
+.mo{-webkit-overflow-scrolling:touch}
+.mo-box{-webkit-overflow-scrolling:touch}
+/* Prevent text selection on tap */
+.prog-card,.fac-card,.lead-card,.lab-card,.rc,.pj-card,.clb-card,.ev-card,.sc-card{user-select:none;-webkit-user-select:none}
+
+/* ═══ TABLET (769–1024px) ═══ */
+@media(min-width:769px) and (max-width:1024px){
+  .nav-logo-text h1{font-size:18px}
+  .nav-logo-text p{font-size:12px}
+  .nav-logo img{height:56px}
+  .nav-bar>a,.nd>span{font-size:12.5px;padding:12px 10px}
+  .hero{padding:60px 28px 50px}
+  .hero h2{font-size:clamp(22px,4vw,42px)}
+  .hero-stats .hs{min-width:130px}
+  .about-inner{gap:24px}
+  .prog-cards-row{grid-template-columns:repeat(3,1fr)}
+  .why-news-inner{gap:28px}
+  .lead-row{grid-template-columns:repeat(4,1fr);gap:10px}
+  .lead-photo{height:88px}
+  .fac-grid{grid-template-columns:repeat(3,1fr)}
+  .labs-grid{grid-template-columns:repeat(3,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .gal-grid{grid-template-columns:repeat(3,1fr)}
+  .news-full-grid{grid-template-columns:1fr 1fr}
+  .contact-inner{gap:22px}
+  .ft-in{gap:32px}
+  .ft-links{grid-template-columns:repeat(3,1fr)}
+}
+
+/* ═══ MOBILE (≤768px) GENERAL ═══ */
+@media(max-width:768px){
+  [id]{scroll-margin-top:120px}
+  /* NAV */
+  .nav-top{padding:10px 16px;height:auto;min-height:64px}
+  .nav-logo img{height:46px}
+  .nav-logo-text h1{font-size:14px}
+  .nav-logo-text p{font-size:11px}
+  .nav-div{height:34px}
+  .campus-sel{display:none}
+  .ham{display:flex}
+  .nav-bar-wrap{display:none}
+  /* HERO */
+  .hero{padding:48px 16px 44px;min-height:auto}
+  .hero h2{font-size:clamp(20px,6vw,32px)}
+  .hero h3{font-size:13px}
+  .hero-desc{font-size:13px;text-align:left}
+  .hero-stats{gap:8px}
+  .hs{min-width:calc(50% - 4px);padding:12px 8px}
+  .hs b{font-size:18px}
+  .hs small{font-size:10px}
+  /* ABOUT */
+  .about-inner{grid-template-columns:1fr;gap:20px}
+  .about-sec{padding:32px 16px 0}
+  /* PROGRAMS */
+  .prog-strip{padding:16px 16px 28px}
+  .prog-cards-row{grid-template-columns:1fr 1fr;gap:10px}
+  .prog-card-top{height:80px;font-size:22px}
+  .prog-card-body h5{font-size:12px}
+  /* WHY+NEWS */
+  .why-news{padding:32px 16px}
+  .why-news-inner{grid-template-columns:1fr;gap:24px}
+  .why-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .why-card{padding:12px 11px}
+  .why-icon{font-size:18px;margin-bottom:5px}
+  /* TEAM */
+  .team-sec{padding:32px 16px}
+  .lead-row{grid-template-columns:1fr 1fr;gap:10px}
+  .lead-photo{height:86px;font-size:20px}
+  .lead-name{font-size:12px}
+  .lead-role{font-size:10px}
+  .lead-desig{font-size:9.5px}
+  .fac-filter{gap:6px}
+  .ffbtn{padding:5px 11px;font-size:12px}
+  .fac-search{width:100%;margin-left:0;margin-top:4px}
+  .fac-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .fac-av{height:68px;font-size:18px}
+  .fac-name{font-size:12px}
+  .fac-desig{font-size:10.5px}
+  .fac-spec{font-size:10.5px}
+  /* LABS */
+  .labs-sec{padding:32px 16px}
+  .labs-grid{grid-template-columns:1fr 1fr;gap:14px}
+  .lab-img{height:110px;font-size:36px}
+  /* SECTIONS */
+  .sec-std{padding:32px 16px}
+  .g3{grid-template-columns:1fr 1fr;gap:14px}
+  .g4{grid-template-columns:1fr 1fr;gap:12px}
+  .sec-hd h2{font-size:19px}
+  /* GALLERY */
+  .gal-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .gal-filter{gap:6px}
+  .gfbtn{padding:5px 12px;font-size:12px}
+  /* NEWS */
+  .news-sec{padding:32px 16px}
+  .news-full-grid{grid-template-columns:1fr;gap:10px}
+  /* CONTACT */
+  .contact-sec{padding:32px 16px}
+  .contact-inner{grid-template-columns:1fr;gap:18px}
+  .cf-row{grid-template-columns:1fr;gap:10px}
+  /* FOOTER */
+  footer{padding:28px 16px 0}
+  .ft-in{grid-template-columns:1fr;gap:24px}
+  .ft-camps{grid-template-columns:1fr;gap:10px}
+  .ft-links{grid-template-columns:1fr 1fr;gap:14px}
+  /* MODAL */
+  .mo-box{margin:auto;max-height:88vh;border-radius:14px}
+  .mo-strip{height:120px;font-size:44px}
+  .mo-top{padding:18px 16px 14px;gap:12px}
+  .mo-body{padding:16px}
+  .mo-row{font-size:13px}
+  .mo-name{font-size:15px}
+  /* CHAT */
+  .chat-bub{bottom:14px;right:14px}
+  .chat-bx{width:270px}
+  .chat-tog{width:46px;height:46px;font-size:19px}
+  /* SEE MORE BTNS */
+  .see-more-btn,.see-less-btn{padding:9px 20px;font-size:13px}
+}
+
+/* ═══ SMALL MOBILE (≤480px) ═══ */
+@media(max-width:480px){
+  .nav-logo img{height:40px}
+  .nav-logo-text h1{font-size:13px}
+  .nav-logo-text p{display:none}
+  .nav-div{height:28px}
+  /* HERO */
+  .hero{padding:40px 14px 36px}
+  .hero-eyebrow{font-size:11px;padding:4px 12px}
+  .hero h2{font-size:clamp(19px,7vw,28px)}
+  .hero h3{font-size:12px}
+  .hero-desc{font-size:12.5px}
+  .hs b{font-size:16px}
+  .hs small{font-size:9.5px}
+  /* ABOUT */
+  .about-sec{padding:28px 14px 0}
+  .about-left p{font-size:13px}
+  .vm-box{padding:15px 13px}
+  /* PROGRAMS */
+  .prog-strip{padding:14px 14px 24px}
+  .prog-cards-row{grid-template-columns:1fr 1fr;gap:8px}
+  .prog-card-top{height:72px;font-size:20px}
+  .prog-card-body{padding:9px 10px 11px}
+  .prog-card-body h5{font-size:11.5px}
+  .prog-card-body span{font-size:10px}
+  .prog-card-chips{gap:4px}
+  .pchip{font-size:9px;padding:1px 6px}
+  /* WHY+NEWS */
+  .why-news{padding:28px 14px}
+  .why-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .why-card{padding:11px 10px}
+  .why-card h4{font-size:11px}
+  .why-card p{font-size:11px}
+  /* TEAM */
+  .team-sec{padding:28px 14px}
+  .lead-row{grid-template-columns:1fr 1fr;gap:8px}
+  .lead-photo{height:78px;font-size:18px}
+  .lead-name{font-size:11.5px}
+  .lead-role{font-size:9.5px}
+  .lead-bdg{font-size:8.5px;padding:1px 6px}
+  .fac-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .fac-av{height:64px;font-size:17px}
+  .fac-name{font-size:11.5px}
+  /* LABS */
+  .labs-sec{padding:28px 14px}
+  .labs-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .lab-body h4{font-size:13px}
+  .lab-body p{font-size:12px}
+  /* SECTIONS */
+  .sec-std{padding:28px 14px}
+  .g3,.g4{grid-template-columns:1fr 1fr;gap:10px}
+  .sec-hd h2{font-size:17px}
+  .rc{padding:14px 12px}
+  .rc-icon{font-size:24px}
+  .rc h4{font-size:13px}
+  .rc p{font-size:12px}
+  /* GALLERY */
+  .gal-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .gal-ph-icon{font-size:30px}
+  .gal-ph-lbl{font-size:10px}
+  /* NEWS */
+  .news-sec{padding:28px 14px}
+  .nf-cnt h4{font-size:13px}
+  .nf-cnt p{font-size:12px}
+  /* CONTACT */
+  .contact-sec{padding:28px 14px}
+  .contact-card{padding:20px}
+  .contact-form{padding:20px}
+  /* FOOTER */
+  footer{padding:24px 14px 0}
+  .ft-links{grid-template-columns:1fr 1fr}
+  .ft-col h4{font-size:10px}
+  .ft-col a{font-size:11.5px;margin-bottom:6px}
+  /* MODAL */
+  .mo{padding:12px}
+  .mo-box{border-radius:12px}
+  .mo-body{padding:14px}
+  .mo-top{padding:16px 14px 12px}
+  .mo-row span{min-width:80px;font-size:11.5px}
+  .mo-row strong{font-size:12.5px}
+  .mo-name{font-size:14px}
+  .mo-avatar{width:58px;height:58px;font-size:18px}
+  .mo-strip{height:100px;font-size:40px}
+  /* CHAT */
+  .chat-bub{bottom:12px;right:12px}
+  .chat-bx{width:256px}
+}
+
+/* ═══ VERY SMALL (≤360px) ═══ */
+@media(max-width:360px){
+  .prog-cards-row{grid-template-columns:1fr}
+  .g3,.g4{grid-template-columns:1fr}
+  .lead-row{grid-template-columns:1fr 1fr}
+  .fac-grid{grid-template-columns:1fr 1fr}
+  .labs-grid{grid-template-columns:1fr}
+  .gal-grid{grid-template-columns:1fr}
+  .ft-links{grid-template-columns:1fr}
+  .why-grid{grid-template-columns:1fr}
+  .hero h2{font-size:clamp(18px,7vw,26px)}
+}
+
+/* ═══ DOMAIN & SKILL SUBJECTS ═══ */
+.subj-section{margin-top:28px;padding-top:24px;border-top:1.5px solid #eee}
+.subj-section-title{font-family:'Cinzel',serif;font-size:14px;color:#0C447C;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.subj-section-title::after{content:'';flex:1;height:1px;background:#E6F1FB}
+.subj-tabs{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.subj-tab{padding:8px 20px;border-radius:50px;border:2px solid #0C447C;background:#fff;color:#0C447C;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .18s}
+.subj-tab.act{background:#0C447C;color:#fff}
+.subj-tab:hover{background:#0C447C;color:#fff}
+.subj-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.subj-card{background:#fff;border-radius:10px;padding:14px 13px;border:1.5px solid #e8e4de;border-top:3px solid;cursor:pointer;transition:transform .2s,box-shadow .2s}
+.subj-card:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.11)}
+.subj-card-icon{font-size:24px;margin-bottom:8px}
+.subj-card h5{font-size:12.5px;font-weight:600;color:#1a1a1a;line-height:1.35;margin-bottom:5px}
+.subj-card span{font-size:10.5px;color:#888}
+@media(max-width:1024px){.subj-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.subj-grid{grid-template-columns:1fr 1fr}.subj-tabs{gap:8px}.subj-tab{font-size:12px;padding:7px 16px}}
+@media(max-width:480px){.subj-grid{grid-template-columns:1fr 1fr}.subj-tab{font-size:11.5px;padding:6px 13px}}
+
+/* ═══ ALUMNI ═══ */
+.alumni-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.alumni-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,.09);transition:transform .2s}
+.alumni-card:hover{transform:translateY(-4px)}
+.alumni-av{height:90px;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;font-family:'Cinzel',serif;color:#fff;position:relative}
+.alumni-body{padding:16px 16px 18px}
+.alumni-name{font-size:15px;font-weight:600;color:#1a1a1a;margin-bottom:3px}
+.alumni-batch{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;background:#E6F1FB;color:#0C447C;display:inline-block;margin-bottom:8px}
+.alumni-role{font-size:13px;color:#555;margin-bottom:4px}
+.alumni-company{font-size:12.5px;color:#888}
+@media(max-width:768px){.alumni-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.alumni-grid{grid-template-columns:1fr}}
+
+/* ═══ TESTIMONIALS ═══ */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.testi-card{background:#fff;border-radius:14px;padding:22px 20px;box-shadow:0 4px 16px rgba(0,0,0,.09);position:relative;border-top:4px solid}
+.testi-quote{font-size:44px;color:#E6F1FB;font-family:Georgia,serif;line-height:1;margin-bottom:8px;margin-top:-8px}
+.testi-text{font-size:13.5px;color:#444;line-height:1.75;margin-bottom:16px;font-style:italic}
+.testi-person{display:flex;align-items:center;gap:12px}
+.testi-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;font-family:'Cinzel',serif;color:#fff;flex-shrink:0}
+.testi-name{font-size:13.5px;font-weight:600;color:#1a1a1a}
+.testi-role{font-size:11.5px;color:#888}
+.testi-stars{color:#EF9F27;font-size:13px;margin-bottom:10px}
+@media(max-width:768px){.testi-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.testi-grid{grid-template-columns:1fr}}
+
+/* ═══ STUDENTS DROPDOWN ═══ */
+/* reuses .nd, .dd styles — no extra CSS needed */
+
+/* ═══ SEE MORE/LESS ═══ */
+.sm-btns{text-align:center;margin-top:20px}
+.see-more-btn{background:#0C447C;color:#fff;border:none;padding:10px 26px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .18s}
+.see-more-btn:hover{background:#042C53}
+.see-less-btn{background:transparent;color:#0C447C;border:2px solid #0C447C;padding:8px 24px;border-radius:8px;font-size:13.5px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .18s;margin-left:10px}
+.see-less-btn:hover{background:#0C447C;color:#fff}
+.hidden-item{display:none!important}
+
+/* ═══ CHAT ═══ */
+.chat-bub{position:fixed;bottom:26px;right:26px;z-index:999;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+.chat-bx{display:none;background:#fff;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,.18);width:300px;overflow:hidden;border:1.5px solid #e0e0e0}
+.chat-bx.open{display:block;animation:mIn .22s ease}
+.chat-hd{background:#0C447C;padding:13px 15px;display:flex;align-items:center;gap:10px}
+.chat-av{width:34px;height:34px;background:#EF9F27;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.chat-hd h4{font-size:13px;font-weight:600;color:#fff}
+.chat-hd p{font-size:11px;color:#B5D4F4}
+.chat-hx{margin-left:auto;background:none;border:none;color:#B5D4F4;font-size:18px;cursor:pointer}
+.chat-ms{padding:14px;min-height:120px;background:#f8f7f2;display:flex;flex-direction:column;gap:8px;max-height:200px;overflow-y:auto}
+.cm{max-width:84%;padding:8px 11px;border-radius:12px;font-size:12.5px;line-height:1.5}
+.cm.bot{background:#fff;border:1px solid #e8e4de;color:#333;align-self:flex-start;border-radius:4px 12px 12px 12px}
+.cm.usr{background:#0C447C;color:#fff;align-self:flex-end;border-radius:12px 4px 12px 12px}
+.chat-ir{display:flex;gap:6px;padding:10px 12px;border-top:1px solid #eee}
+.chat-in{flex:1;border:1.5px solid #ddd;border-radius:20px;padding:7px 12px;font-size:12.5px;font-family:'DM Sans',sans-serif;outline:none}
+.chat-in:focus{border-color:#0C447C}
+.chat-snd{background:#0C447C;border:none;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:13px}
+.chat-tog{width:52px;height:52px;background:#0C447C;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 18px rgba(12,68,124,.4);transition:all .2s}
+.chat-tog:hover{background:#042C53;transform:scale(1.08)}
+.chat-bdg{position:absolute;top:-4px;right:-4px;background:#EF9F27;color:#fff;font-size:10px;font-weight:700;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+
+<!-- ════ NAV ════ -->
+<nav class="nav" id="mainNav">
+  <div class="nav-top">
+    <div class="nav-logo">
+      <img src="https://cutm.ac.in/wp-content/themes/centurion/images/logo.svg" alt="CUTM"
+           onerror="this.onerror=null;this.src='https://cutm.ac.in/wp-content/themes/centurion/images/logo-shrink.png'">
+      <div class="nav-div"></div>
+      <div class="nav-logo-text"><h1>CENTURION UNIVERSITY</h1><p>of Technology &amp; Management, Odisha</p></div>
+    </div>
+    <div class="nav-top-r">
+      <select class="campus-sel" id="campusSel" onchange="filterCampus(this.value)">
+        <option value="all">🏛️ Both Campuses</option>
+        <option value="bbsr">📍 Bhubaneswar</option>
+        <option value="pkd">📍 Paralakhemundi</option>
+      </select>
+      <button class="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="nav-bar-wrap">
+  <div class="nav-bar" id="navBar">
+    <a href="#home" class="act" id="na-home">Home</a>
+    <a href="#about" id="na-about">About</a>
+    <a href="#programs" id="na-programs">Programs</a>
+    <a href="#labs" id="na-labs">Labs</a>
+    <div class="nd" id="researchNd">
+      <span id="na-research" onclick="handleResearchClick(event)">Research</span>
+      <div class="dd" id="researchDd">
+        <a href="#research" onclick="closeResearchDd()">Research Areas</a>
+        <a href="#projects" onclick="closeResearchDd()">Projects</a>
+        <a href="#publications" onclick="closeResearchDd()">Publications</a>
+        <a href="#collaborations" onclick="closeResearchDd()">Collaborations</a>
+      </div>
+    </div>
+    <a href="#events" id="na-events">Events</a>
+    <a href="#workshops" id="na-workshops">Workshops</a>
+    <div class="nd" id="studentsNd">
+      <span id="na-students" onclick="handleStudentsClick(event)">Students</span>
+      <div class="dd" id="studentsDd">
+        <a href="#startups" onclick="closeStudentsDd()">Startups &amp; Clubs</a>
+        <a href="#alumni" onclick="closeStudentsDd()">Alumni</a>
+        <a href="#testimonials" onclick="closeStudentsDd()">Testimonials</a>
+      </div>
+    </div>
+    <a href="#gallery" id="na-gallery">Gallery</a>
+    <a href="#news" id="na-news">News</a>
+    <a href="#team" id="na-team">Team</a>
+    <a href="#contact" id="na-contact">Contact</a>
+  </div><!-- /nav-bar -->
+  </div><!-- /nav-bar-wrap -->
+  <div class="mob-nav" id="mobNav">
+    <a href="#home" onclick="toggleMob()">Home</a>
+    <a href="#about" onclick="toggleMob()">About</a>
+    <a href="#programs" onclick="toggleMob()">Programs</a>
+    <a href="#labs" onclick="toggleMob()">Labs</a>
+    <a href="#research" onclick="toggleMob()">Research Areas</a>
+    <a href="#projects" onclick="toggleMob()">Projects</a>
+    <a href="#publications" onclick="toggleMob()">Publications</a>
+    <a href="#collaborations" onclick="toggleMob()">Collaborations</a>
+    <a href="#events" onclick="toggleMob()">Events</a>
+    <a href="#workshops" onclick="toggleMob()">Workshops</a>
+    <a href="#startups" onclick="toggleMob()">Startups &amp; Clubs</a>
+    <a href="#alumni" onclick="toggleMob()">Alumni</a>
+    <a href="#testimonials" onclick="toggleMob()">Testimonials</a>
+    <a href="#gallery" onclick="toggleMob()">Gallery</a>
+    <a href="#news" onclick="toggleMob()">News</a>
+    <a href="#team" onclick="toggleMob()">Team</a>
+    <a href="#contact" onclick="toggleMob()">Contact</a>
+  </div>
+</nav>
+
+<!-- ════ HERO ════ -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-ov"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">🎓 Centurion University · Odisha, India</div>
+    <h2>School of Computing &amp; Data Science</h2>
+    <h3>SoCDS — Shaping Tomorrow's Technologists</h3>
+    <p class="hero-desc">A dedicated school under Centurion University of Technology &amp; Management, offering programs in Computer Science, Artificial Intelligence &amp; Machine Learning, and Data Science — designed for the demands of a rapidly evolving digital era.</p>
+    <div class="hero-stats">
+      <div class="hs"><b>800+</b><small>Students Enrolled</small></div>
+      <div class="hs"><b>40+</b><small>Expert Faculty</small></div>
+      <div class="hs"><b>95%</b><small>Placement Rate</small></div>
+      <div class="hs"><b>60+</b><small>Industry MoUs</small></div>
+      <div class="hs"><b>NAAC A+</b><small>Accreditation</small></div>
+      <div class="hs"><b>5</b><small>Programs Offered</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ ABOUT ════ -->
+<section class="about-sec" id="about">
+  <div class="about-inner">
+    <div class="about-left su">
+      <h3>About SoCDS</h3>
+      <p>The <strong>School of Computing &amp; Data Science (SoCDS)</strong> is a premier academic division of Centurion University of Technology &amp; Management, Odisha. Formerly under the School of Engineering &amp; Technology, SoCDS was established as a dedicated school to reflect the university's deep commitment to computing education and research excellence.</p>
+      <p>The school offers specialized undergraduate and postgraduate programs that blend theoretical depth with hands-on, industry-relevant training. With GPU-powered AI labs, experienced faculty, and 60+ industry MoU partners, SoCDS prepares graduates to lead in one of the world's fastest-growing sectors.</p>
+      <p>SoCDS believes in building not just skilled professionals, but critical thinkers, innovators, and responsible technologists who contribute meaningfully to society and the economy.</p>
+    </div>
+    <div class="vm-stack su d2">
+      <div class="vm-box vis-box">
+        <h4>🔭 Our Vision</h4>
+        <p>To be a globally recognized centre of excellence in computing education, research, and innovation — nurturing ethical, creative, and industry-ready technology leaders.</p>
+      </div>
+      <div class="vm-box mis-box">
+        <h4>🎯 Our Mission</h4>
+        <ul class="mis-pts">
+          <li>Deliver quality, industry-integrated computing education aligned with global standards.</li>
+          <li>Foster cutting-edge research, innovation, and entrepreneurial thinking among students and faculty.</li>
+          <li>Build ethical, inclusive, and socially responsible technology professionals for a digital society.</li>
+          <li>Strengthen industry, academic, and government partnerships for holistic development.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ PROGRAMS STRIP ════ -->
+<div class="prog-strip" id="programs">
+  <div class="prog-strip-inner">
+    <div class="prog-strip-title">🎓 Our Programs — Click to view details</div>
+    <div class="prog-cards-row" id="progCardsRow"></div>
+
+    <!-- Domain & Skill Subjects subsection -->
+    <div class="subj-section">
+      <div class="subj-tabs">
+        <button class="subj-tab act" onclick="switchSubjTab('domain',this)">📘 Domain Subjects</button>
+        <button class="subj-tab" onclick="switchSubjTab('skill',this)">🛠️ Skill Subjects</button>
+      </div>
+      <div id="domainGrid" class="subj-grid"></div>
+      <div id="skillGrid" class="subj-grid" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ════ LABS ════ -->
+<section class="labs-sec" id="labs">
+  <div class="labs-inner">
+    <div class="sec-hd su"><h2>Our Laboratories &amp; Infrastructure</h2><p>9 state-of-the-art laboratories at both campuses supporting research, hands-on learning, and industry-ready skill development</p><div class="sec-bar"></div></div>
+    <div class="labs-grid" id="labsGrid"></div>
+  </div>
+</section>
+
+<!-- ════ RESEARCH ════ -->
+<section class="sec-std wht" id="research">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Research Areas</h2><p>Cutting-edge research domains driving innovation at SoCDS</p><div class="sec-bar"></div></div>
+    <div class="g4" id="resGrid"></div>
+  </div>
+</section>
+
+<!-- ════ PROJECTS ════ -->
+<section class="sec-std alt" id="projects">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Projects</h2><p>Live, completed, and ongoing projects by SoCDS students and faculty</p><div class="sec-bar"></div></div>
+    <div class="g3" id="projGrid"></div>
+    <div class="sm-btns" id="projBtns"></div>
+  </div>
+</section>
+
+<!-- ════ PUBLICATIONS ════ -->
+<section class="sec-std wht" id="publications">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Publications</h2><p>Peer-reviewed publications by SoCDS faculty in international journals</p><div class="sec-bar"></div></div>
+    <div id="pubList"></div>
+    <div class="sm-btns" id="pubBtns"></div>
+  </div>
+</section>
+
+<!-- ════ COLLABORATIONS ════ -->
+<section class="sec-std alt" id="collaborations">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Collaborations</h2><p>60+ active MoUs with industry and academic partners powering placements, research, and curriculum</p><div class="sec-bar"></div></div>
+    <div class="g4" id="collabGrid"></div>
+  </div>
+</section>
+
+<!-- ════ EVENTS ════ -->
+<section class="sec-std wht" id="events">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Events</h2><p>Academic events, hackathons, and industry conferences at SoCDS</p><div class="sec-bar"></div></div>
+    <div class="g3" id="evGrid"></div>
+  </div>
+</section>
+
+<!-- ════ WORKSHOPS ════ -->
+<section class="sec-std alt" id="workshops">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Workshops</h2><p>Hands-on skill development workshops by faculty and industry experts</p><div class="sec-bar"></div></div>
+    <div class="g4" id="wsGrid"></div>
+    <div class="sm-btns" id="wsBtns"></div>
+  </div>
+</section>
+
+<!-- ════ STARTUPS & CLUBS ════ -->
+<section class="sec-std wht" id="startups">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Startups &amp; Clubs</h2><p>Student-led innovation cells, technical clubs, and incubated startups at SoCDS</p><div class="sec-bar"></div></div>
+    <div class="g4" id="startupGrid"></div>
+  </div>
+</section>
+
+<!-- ════ ALUMNI ════ -->
+<section class="sec-std alt" id="alumni">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Our Alumni</h2><p>Proud graduates of SoCDS making an impact across the technology industry</p><div class="sec-bar"></div></div>
+    <div class="alumni-grid" id="alumniGrid"></div>
+    <div class="sm-btns" id="alumniBtns"></div>
+  </div>
+</section>
+
+<!-- ════ TESTIMONIALS ════ -->
+<section class="sec-std wht" id="testimonials">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>What Our Students Say</h2><p>Experiences and feedback from current students and alumni of SoCDS</p><div class="sec-bar"></div></div>
+    <div class="testi-grid" id="testiGrid"></div>
+  </div>
+</section>
+
+<!-- ════ GALLERY ════ -->
+<section class="sec-std alt" id="gallery">
+  <div class="sec-in">
+    <div class="sec-hd su"><h2>Gallery</h2><p>Moments from SoCDS — labs, events, workshops, and campus life</p><div class="sec-bar"></div></div>
+    <div class="gal-filter">
+      <button class="gfbtn act" onclick="filterGal('all',this)">All</button>
+      <button class="gfbtn" onclick="filterGal('labs',this)">Labs</button>
+      <button class="gfbtn" onclick="filterGal('events',this)">Events</button>
+      <button class="gfbtn" onclick="filterGal('campus',this)">Campus</button>
+    </div>
+    <div class="gal-grid" id="galGrid"></div>
+    <div class="sm-btns" id="galBtns"></div>
+  </div>
+</section>
+
+<!-- ════ WHY CHOOSE + NEWS ════ -->
+<div class="why-news" id="why-choose">
+  <div class="why-news-inner">
+    <div>
+      <div class="wn-title su">Why Choose SoCDS?</div>
+      <div class="wn-sub su">What sets our school apart from the rest</div>
+      <div class="why-grid">
+        <div class="why-card su d1"><div class="why-icon">🧠</div><h4>Industry-Integrated Curriculum</h4><p>Programs co-designed with leading IT companies, updated every year to match evolving market needs.</p></div>
+        <div class="why-card su d2"><div class="why-icon">🔬</div><h4>Active Research Ecosystem</h4><p>Faculty-led research groups with funded projects and strong publication records in indexed journals.</p></div>
+        <div class="why-card su d3"><div class="why-icon">🏭</div><h4>GPU-Powered AI Labs</h4><p>Hands-on deep learning facilities with NVIDIA GPU clusters, enabling real research from year one.</p></div>
+        <div class="why-card su d4"><div class="why-icon">🤝</div><h4>Strong Industry Connect</h4><p>MoUs with 60+ companies for internships, live projects, and campus placements with top IT firms.</p></div>
+        <div class="why-card su d1"><div class="why-icon">🌏</div><h4>Global Exposure</h4><p>International collaborations, student exchange programs, and participation in global hackathons.</p></div>
+        <div class="why-card su d2"><div class="why-icon">🎓</div><h4>Expert Faculty</h4><p>40+ experienced faculty with PhDs, industry experience, and strong publication records.</p></div>
+        <div class="why-card su d3"><div class="why-icon">🏆</div><h4>100% Placement Support</h4><p>Dedicated placement cell with pre-placement training, mock interviews, and placement assistance for every eligible student.</p></div>
+        <div class="why-card su d4"><div class="why-icon">💡</div><h4>Skill &amp; Certification Hub</h4><p>Students earn AWS, Google Cloud, NPTEL, Cisco certifications — integrated into curriculum at no extra cost.</p></div>
+      </div>
+    </div>
+    <div>
+      <div class="wn-title su">News &amp; Announcements</div>
+      <div class="wn-sub su">&nbsp;</div>
+      <div class="news-list" id="homeNewsList"></div>
+    </div>
+  </div>
+</div>
+<!-- ════ NEWS ════ -->
+<section class="news-sec" id="news">
+  <div class="news-inner">
+    <div class="sec-hd su"><h2>News &amp; Announcements</h2><p>Latest updates, achievements, and announcements from SoCDS</p><div class="sec-bar"></div></div>
+    <div class="news-full-grid" id="newsGrid"></div>
+    <div class="sm-btns" id="newsBtns"></div>
+  </div>
+</section>
+
+<!-- ════ TEAM ════ -->
+<section class="team-sec" id="team">
+  <div class="team-inner">
+    <div class="sec-hd su"><h2>Our Faculty &amp; Team</h2><p>Meet the dedicated academic team of SoCDS across both campuses</p><div class="sec-bar"></div></div>
+
+    <!-- Filter / Search — sits right below heading -->
+    <div class="fac-filter-wrap">
+      <div class="fac-filter">
+        <span style="font-size:13px;color:#666;font-weight:500">Filter:</span>
+        <button class="ffbtn act" onclick="filterFac('all',this)">All (40)</button>
+        <button class="ffbtn b-bbsr" onclick="filterFac('bbsr',this)">📍 Bhubaneswar (27)</button>
+        <button class="ffbtn b-pkd" onclick="filterFac('pkd',this)">📍 Paralakhemundi (13)</button>
+        <button class="ffbtn" onclick="filterFac('prof',this)">Professors</button>
+        <button class="ffbtn" onclick="filterFac('assoc',this)">Assoc. Prof.</button>
+        <button class="ffbtn" onclick="filterFac('asst',this)">Asst. Prof.</button>
+        <input class="fac-search" type="text" placeholder="🔍 Search by name or subject…" oninput="searchFac(this.value)">
+      </div>
+      <div style="font-size:13px;color:#888;margin:8px 0 4px" id="facCount"></div>
+    </div>
+
+    <!-- BBSR campus block -->
+    <div class="campus-block" id="bbsr-block">
+      <div class="campus-block-title"><span class="cdot" style="background:#0C447C"></span>Bhubaneswar Campus — Leadership</div>
+      <div class="lead-row" id="bbsr-lead-row"></div>
+      <div class="campus-block-title" style="margin-top:20px"><span class="cdot" style="background:#0C447C"></span>Bhubaneswar Campus — Faculty</div>
+      <div class="fac-grid" id="bbsr-fac-grid"></div>
+    </div>
+
+    <!-- PKD campus block -->
+    <div class="campus-block" id="pkd-block">
+      <div class="campus-block-title"><span class="cdot" style="background:#BA7517"></span>Paralakhemundi Campus — Leadership</div>
+      <div class="lead-row" id="pkd-lead-row"></div>
+      <div class="campus-block-title" style="margin-top:20px"><span class="cdot" style="background:#BA7517"></span>Paralakhemundi Campus — Faculty</div>
+      <div class="fac-grid" id="pkd-fac-grid"></div>
+    </div>
+
+    <!-- All-faculty filtered grid (hidden when showing both campus blocks) -->
+    <div id="all-fac-wrap" style="display:none">
+      <div class="fac-grid" id="all-fac-grid"></div>
+      <div class="sm-btns" id="facBtns"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CONTACT ════ -->
+<section class="contact-sec" id="contact">
+  <div class="contact-inner">
+    <div>
+      <!-- BBSR -->
+      <div class="contact-card su d1" style="margin-bottom:20px" data-campus="bbsr">
+        <h3 style="color:#0C447C">📍 Bhubaneswar Campus</h3>
+        <div class="cinfo-row"><div class="cinfo-icon">🏠</div><div class="cinfo-text"><label>Address</label><span>Campus-11, Jatni, Bhubaneswar, Odisha — 752050</span></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon">📞</div><div class="cinfo-text"><label>Phone</label><a href="tel:+910674249244">+91 0674 2492 444</a></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon">✉️</div><div class="cinfo-text"><label>Email</label><a href="mailto:info.bbsr@cutm.ac.in">info.bbsr@cutm.ac.in</a></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon">🕐</div><div class="cinfo-text"><label>Hours</label><span>Mon – Sat: 9:00 AM – 5:00 PM</span></div></div>
+        <a href="https://maps.google.com/?q=Centurion+University+Bhubaneswar+Jatni" target="_blank" style="display:inline-block;margin-top:10px;background:#E6F1FB;color:#0C447C;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px">📍 Open in Google Maps</a>
+      </div>
+      <!-- PKD -->
+      <div class="contact-card su d2" data-campus="pkd">
+        <h3 style="color:#BA7517">📍 Paralakhemundi Campus</h3>
+        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">🏠</div><div class="cinfo-text"><label>Address</label><span>Ramachandrapur, Gajapati, Odisha — 761211</span></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">📞</div><div class="cinfo-text"><label>Phone</label><a href="tel:+918260077222">+91 8260077222</a></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">✉️</div><div class="cinfo-text"><label>Email</label><a href="mailto:info.pkd@cutm.ac.in">info.pkd@cutm.ac.in</a></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">🕐</div><div class="cinfo-text"><label>Hours</label><span>Mon – Sat: 9:00 AM – 5:00 PM</span></div></div>
+        <a href="https://maps.google.com/?q=Centurion+University+Paralakhemundi" target="_blank" style="display:inline-block;margin-top:10px;background:#FFF3DC;color:#BA7517;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px">📍 Open in Google Maps</a>
+      </div>
+    </div>
+    <div class="contact-form su d3">
+      <h3>Send us a Message</h3>
+      <div class="cf-row">
+        <div class="fg"><label>Full Name *</label><input type="text" id="cfName" placeholder="Your full name"></div>
+        <div class="fg"><label>Email *</label><input type="email" id="cfEmail" placeholder="your@email.com"></div>
+      </div>
+      <div class="cf-row">
+        <div class="fg"><label>Phone</label><input type="tel" id="cfPhone" placeholder="+91 XXXXX XXXXX"></div>
+        <div class="fg"><label>Campus</label><select id="cfCampus"><option value="">Select campus</option><option>Bhubaneswar</option><option>Paralakhemundi</option><option>Not sure</option></select></div>
+      </div>
+      <div class="fg"><label>Subject *</label>
+        <select id="cfSubject"><option value="">Select subject</option><option>Admissions Enquiry</option><option>Program Information</option><option>Research Collaboration</option><option>Faculty Information</option><option>Industry Partnership / MoU</option><option>Other</option></select>
+      </div>
+      <div class="fg"><label>Message *</label><textarea id="cfMsg" placeholder="Write your message here…"></textarea></div>
+      <button class="cf-submit" onclick="submitCF()">Send Message →</button>
+      <div class="cf-success" id="cfSuccess">✅ Thank you! Your message has been received. We will respond within 1–2 working days.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ FOOTER ════ -->
+<footer id="footer-sec">
+  <div class="ft-in">
+    <div class="ft-brand">
+      <h3>School of Computing &amp; Data Science</h3>
+      <p>A premier academic division of Centurion University of Technology &amp; Management, Odisha — nurturing technology leaders across two campuses.</p>
+      <div class="ft-camps">
+        <div class="ft-camp"><strong>📍 Bhubaneswar Campus</strong>Jatni, Bhubaneswar, Odisha — 752050<br>📞 +91 0674 2492 444 | ✉️ info.bbsr@cutm.ac.in</div>
+        <div class="ft-camp"><strong>📍 Paralakhemundi Campus</strong>Ramachandrapur, Gajapati, Odisha — 761211<br>📞 +91 8260077222 | ✉️ info.pkd@cutm.ac.in</div>
+      </div>
+      <div style="font-size:12px;color:#888">✉️ <a href="mailto:socds@cutm.ac.in" style="color:#EF9F27">socds@cutm.ac.in</a> &nbsp;|&nbsp; 🌐 <a href="https://cutm.ac.in" target="_blank" style="color:#EF9F27">cutm.ac.in</a></div>
+    </div>
+    <div class="ft-links">
+      <div class="ft-col"><h4>Academic</h4><a href="#about">About SoCDS</a><a href="#programs">Programs</a><a href="#team">Faculty</a><a href="#labs">Laboratories</a><a href="#research">Research</a></div>
+      <div class="ft-col"><h4>Student</h4><a href="#events">Events</a><a href="#workshops">Workshops</a><a href="#startups">Startups &amp; Clubs</a><a href="#alumni">Alumni</a><a href="#testimonials">Testimonials</a><a href="#gallery">Gallery</a><a href="#news">News</a></div>
+      <div class="ft-col"><h4>University</h4><a href="https://cutm.ac.in/nirf/" target="_blank">NIRF Ranking</a><a href="https://cutm.ac.in/naac/" target="_blank">NAAC A+</a><a href="https://cutm.ac.in/right-to-information-rti/" target="_blank">RTI</a><a href="https://cutm.ac.in/cutm-grievance-service/" target="_blank">Grievance</a><a href="#contact">Contact Us</a></div>
+    </div>
+  </div>
+  <div class="ft-copy">© 2025 School of Computing &amp; Data Science · Centurion University of Technology &amp; Management, Odisha · All rights reserved.</div>
+</footer>
+
+<!-- ════ MODALS ════ -->
+<div class="mo" id="subjMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('subjMo')">✕</button><div id="subjMoBody"></div></div></div>
+<div class="mo" id="alumniMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('alumniMo')">✕</button><div id="alumniMoBody"></div></div></div>
+<div class="mo" id="progMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('progMo')">✕</button><div id="progMoBody"></div></div></div>
+<div class="mo" id="facMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('facMo')">✕</button><div id="facMoBody"></div></div></div>
+<div class="mo" id="labMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('labMo')">✕</button><div id="labMoBody"></div></div></div>
+<div class="mo" id="resMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('resMo')">✕</button><div id="resMoBody"></div></div></div>
+<div class="mo" id="projMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('projMo')">✕</button><div id="projMoBody"></div></div></div>
+<div class="mo" id="pubMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('pubMo')">✕</button><div id="pubMoBody"></div></div></div>
+<div class="mo" id="collabMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('collabMo')">✕</button><div id="collabMoBody"></div></div></div>
+<div class="mo" id="evMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('evMo')">✕</button><div id="evMoBody"></div></div></div>
+<div class="mo" id="wsMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('wsMo')">✕</button><div id="wsMoBody"></div></div></div>
+<div class="mo" id="scMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('scMo')">✕</button><div id="scMoBody"></div></div></div>
+<div class="mo" id="galMo"><div class="mo-box" style="max-width:620px;background:#1a1a1a"><button class="mo-x" style="color:#aaa" onclick="closeMo('galMo')">✕</button><div id="galMoBody"></div></div></div>
+<div class="mo" id="newsMo"><div class="mo-box"><button class="mo-x" onclick="closeMo('newsMo')">✕</button><div id="newsMoBody"></div></div></div>
+
+<!-- ════ CHAT ════ -->
+<div class="chat-bub">
+  <div class="chat-bx" id="chatBx">
+    <div class="chat-hd"><div class="chat-av">🎓</div><div><h4>SoCDS Assistant</h4><p>Ask me anything!</p></div><button class="chat-hx" onclick="toggleChat()">✕</button></div>
+    <div class="chat-ms" id="chatMs"><div class="cm bot">👋 Hello! Welcome to SoCDS. How can I help?</div><div class="cm bot">Ask about: Programs · Campuses · Faculty · Admissions</div></div>
+    <div class="chat-ir"><input class="chat-in" id="chatIn" placeholder="Type here…" onkeydown="if(event.key==='Enter')sendChat()"><button class="chat-snd" onclick="sendChat()">➤</button></div>
+  </div>
+  <div style="position:relative"><button class="chat-tog" onclick="toggleChat()">💬</button><div class="chat-bdg" id="chatBdg">1</div></div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════
+   ALL DATA
+════════════════════════════════════════════ */
+const GR=['linear-gradient(135deg,#042C53,#185FA5)','linear-gradient(135deg,#0C447C,#1D9E75)','linear-gradient(135deg,#185FA5,#533AB7)','linear-gradient(135deg,#3B6D11,#0C447C)','linear-gradient(135deg,#A32D2D,#185FA5)','linear-gradient(135deg,#533AB7,#042C53)','linear-gradient(135deg,#BA7517,#0C447C)','linear-gradient(135deg,#1D6B8C,#042C53)'];
+
+const PROGRAMS=[
+  {id:0,syllabus:'',name:'B.Tech in Computer Science & Engineering',short:'B.Tech CSE',icon:'💻',color:'#185FA5',bg:'linear-gradient(135deg,#042C53,#185FA5)',level:'UG',dur:'4 Years',seats:{bbsr:60,pkd:60},eligi:'10+2 with PCM, min 50%. OJEE / JEE Main preferred.',desc:'A comprehensive four-year undergraduate program covering algorithms, data structures, OS, computer networks, databases, and software engineering with hands-on labs and 6-month industry internship.',highlights:['GPU-powered AI lab access','6-month compulsory internship','Industry-certified curriculum','100% placement assistance','AWS, Google, Cisco certifications'],careers:['Software Engineer','Backend Developer','Systems Analyst','DevOps Engineer','IT Consultant']},
+  {id:1,syllabus:'',name:'B.Tech CSE — AI & Machine Learning',short:'B.Tech CSE (AIML)',icon:'🤖',color:'#0C447C',bg:'linear-gradient(135deg,#0C447C,#533AB7)',level:'UG',dur:'4 Years',seats:{bbsr:60,pkd:60},eligi:'10+2 with PCM, min 50%. OJEE / JEE Main preferred.',desc:'A specialized B.Tech focusing on Artificial Intelligence and Machine Learning — covering deep learning, NLP, computer vision, and AI system deployment with NVIDIA GPU cluster access.',highlights:['NVIDIA A100 GPU cluster lab','Research publication support','Live industry AI projects','GATE / PhD preparation','Google / AWS AI certifications'],careers:['AI Engineer','ML Researcher','Data Scientist','NLP Engineer','Computer Vision Developer']},
+  {id:2,syllabus:'',name:'BCA — Bachelor of Computer Applications',short:'BCA',icon:'🎓',color:'#3B6D11',bg:'linear-gradient(135deg,#3B6D11,#1D9E75)',level:'UG',dur:'3 Years',seats:{bbsr:60,pkd:60},eligi:'10+2 in any stream, min 45%. Direct merit-based admission.',desc:'A career-focused three-year program in computer applications, web development, programming, and database management — ideal for quick IT industry entry or pathway to MCA.',highlights:['Practical project every semester','Web & mobile development focus','NPTEL certifications integrated','Strong placement cell support','Gateway to MCA program'],careers:['Junior Software Developer','Web Developer','Technical Support Analyst','Programmer Analyst','IT Trainee']},
+  {id:3,syllabus:'',name:'MCA — Master of Computer Applications',short:'MCA',icon:'🖥️',color:'#042C53',bg:'linear-gradient(135deg,#042C53,#185FA5)',level:'PG',dur:'2 Years',seats:{bbsr:30,pkd:30},eligi:'BCA / B.Sc. CS / IT or equivalent, min 50%. Mathematics at 10+2 or graduation level.',desc:'A two-year postgraduate program in advanced software engineering, enterprise application development, and emerging technologies with a 6-month compulsory industry internship.',highlights:['6-month compulsory internship','Enterprise software development','90%+ placement track record','Cloud & AI electives','Research publication support'],careers:['Software Engineer','Full-Stack Developer','Systems Analyst','IT Consultant','Project Manager']},
+  {id:4,syllabus:'',name:'M.Tech in Data Science',short:'M.Tech Data Science',icon:'🔬',color:'#A32D2D',bg:'linear-gradient(135deg,#A32D2D,#185FA5)',level:'PG',dur:'2 Years',seats:{bbsr:18,pkd:18},eligi:'B.Tech / B.E. in CS / IT / ECE or M.Sc. CS / IT / Mathematics. Min 55%. GATE score preferred.',desc:'A research-intensive postgraduate program covering advanced data science, ML research, statistical modelling, and big data engineering with thesis-based assessment and PhD pathway.',highlights:['Research scholarships available','Funded project participation','National conference presentations','PhD pathway supported','CUTM research centre access'],careers:['Data Scientist','Research Scientist','ML Engineer','Data Analyst','PhD Scholar / Academia']},
+];
+
+const LEADERSHIP={
+  bbsr:[
+    {name:'Dr. Sujata Chakravarty',role:'Director — IC & Academic External Interface',desig:'Professor',campus:'bbsr',spec:'Machine Learning, Pattern Recognition',email:'sujata.chakravarty@cutm.ac.in',photo:'https://fdp.cutm.ac.in/sujatachakravarty/assets/images/profile.png',profile:'https://fdp.cutm.ac.in/sujatachakravarty/',badge:'Director',bc:'#A32D2D'},
+    {name:'Dr. Swarna Prabha Jena',role:'Associate Dean — SoCDS',desig:'Associate Professor-I',campus:'bbsr',spec:'Embedded Systems, IoT, Edge Computing',email:'swarna.jena@cutm.ac.in',photo:'https://fdp.cutm.ac.in/swarnaprabhajena/assets/images/profile.png',profile:'https://fdp.cutm.ac.in/swarnaprabhajena/',badge:'Assoc. Dean',bc:'#0C447C'},
+    {name:'Dr. Rahul Ray',role:'HoD — Computer Science & Engineering',desig:'Associate Professor',campus:'bbsr',spec:'AI, Deep Learning',email:'rahul.ray@cutm.ac.in',photo:'',profile:'',badge:'HoD CSE',bc:'#1D9E75'},
+    {name:'Dr. Rakesh Kumar Ray',role:'HoD — Computer Applications (MCA & BCA)',desig:'Assistant Professor',campus:'bbsr',spec:'FinTech, Blockchain',email:'rakesh.ray@cutm.ac.in',photo:'',profile:'',badge:'HoD CA',bc:'#1D9E75'},
+  ],
+  pkd:[
+    {name:'Dr. Prafulla Kumar Panda',role:'Dean — SoCDS',desig:'Professor',campus:'pkd',spec:'Data Science, Machine Learning',email:'prafullapanda@cutm.ac.in',photo:'',profile:'',badge:'Dean',bc:'#EF9F27'},
+    {name:'Dr. Pragyan Paramita Pradhan',role:'Associate Dean — SoCDS',desig:'Assistant Professor',campus:'pkd',spec:'Smart Infrastructure, IoT',email:'pragyan.pradhan@cutm.ac.in',photo:'',profile:'',badge:'Assoc. Dean',bc:'#0C447C'},
+    {name:'Dr. Dhawaleswar Rao CH',role:'HoD — Computer Science & Engineering',desig:'Associate Professor',campus:'pkd',spec:'Data Science, Machine Learning',email:'dhawaleswar.rao@cutm.ac.in',photo:'',profile:'',badge:'HoD CSE',bc:'#1D9E75'},
+    {name:'Mr. Jagannath Padhy',role:'Program Coordinator — MCA & BCA',desig:'Assistant Professor',campus:'pkd',spec:'Software Engineering, DBMS',email:'jagannath.padhy@cutm.ac.in',photo:'',profile:'',badge:'Coordinator',bc:'#533AB7'},
+  ]
+};
+
+const FACULTY_BBSR=[
+  {name:'Dr. Sujata Chakravarty',desig:'Professor',role:'Director — IC & Academic External Interface',spec:'Machine Learning, Pattern Recognition',campus:'bbsr',email:'sujata.chakravarty@cutm.ac.in',photo:'https://fdp.cutm.ac.in/sujatachakravarty/assets/images/profile.png',profile:'https://fdp.cutm.ac.in/sujatachakravarty/'},
+  {name:'Dr. Swarna Prabha Jena',desig:'Associate Professor-I',role:'Associate Dean — SoCDS',spec:'Embedded Systems, IoT, Edge Computing',campus:'bbsr',email:'swarna.jena@cutm.ac.in',photo:'https://fdp.cutm.ac.in/swarnaprabhajena/assets/images/profile.png',profile:'https://fdp.cutm.ac.in/swarnaprabhajena/'},
+  {name:'Dr. Sangram Keshari Swain',desig:'Professor',role:'',spec:'Software Engineering, IoT',campus:'bbsr',email:'sangram.swain@cutm.ac.in',photo:'',profile:''},
+  {name:'Dr. Sasmita Kumari Nayak',desig:'Associate Professor',role:'',spec:'Data Mining, Big Data',campus:'bbsr',email:'sasmita.nayak@cutm.ac.in',photo:'',profile:''},
+  {name:'Dr. Sunil Kumar Mohapatra',desig:'Associate Professor',role:'',spec:'Cloud Computing, Networks',campus:'bbsr',email:'sunil.mohapatra@cutm.ac.in',photo:'',profile:''},
+  {name:'Dr. Rahul Ray',desig:'Associate Professor',role:'HoD — CSE',spec:'AI, Deep Learning',campus:'bbsr',email:'rahul.ray@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Raj Kumar Mohanta',desig:'Assistant Professor',role:'',spec:'Web Technologies, Database',campus:'bbsr',email:'rajkumar.mohanta@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Adyasa Swain',desig:'Assistant Professor',role:'',spec:'Data Science, Python',campus:'bbsr',email:'adyasa.swain@cutm.ac.in',photo:'',profile:''},
+  {name:'Mrs. Swarupa Pattanaik',desig:'Assistant Professor',role:'',spec:'Computer Networks, Security',campus:'bbsr',email:'swarupa.pattanaik@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Chitta Ranjan Behera',desig:'Assistant Professor',role:'',spec:'Algorithms, Data Structures',campus:'bbsr',email:'chitta.behera@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Sabyasachi Mohanty',desig:'Assistant Professor',role:'',spec:'Machine Learning, NLP',campus:'bbsr',email:'sabyasachi.mohanty@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Rakesh Kumar Ray',desig:'Assistant Professor',role:'HoD — Computer Applications',spec:'FinTech, Blockchain',campus:'bbsr',email:'rakesh.ray@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Saneev Kumar Das',desig:'Assistant Professor',role:'',spec:'Drone Technology, Embedded Systems',campus:'bbsr',email:'saneev.das@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Saroj Kumar Sahoo',desig:'Assistant Professor',role:'',spec:'Software Development, DBMS',campus:'bbsr',email:'saroj.sahoo@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Rasmi Prakash Swain',desig:'Assistant Professor',role:'',spec:'Computer Architecture, OS',campus:'bbsr',email:'rasmi.swain@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Sushanta Meher',desig:'Assistant Professor',role:'',spec:'Programming Languages, Web Dev',campus:'bbsr',email:'sushanta.meher@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Sanghamitra Panda',desig:'Assistant Professor',role:'',spec:'Data Analytics, Statistics',campus:'bbsr',email:'sanghamitra.panda@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Satyananda Swain',desig:'Assistant Professor',role:'',spec:'Cybersecurity, Networking',campus:'bbsr',email:'satyananda.swain@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Swatilagna Sahu',desig:'Assistant Professor',role:'',spec:'AI, Computer Vision',campus:'bbsr',email:'swatilagna.sahu@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Sasmita Tripathy',desig:'Assistant Professor',role:'',spec:'Machine Learning, IoT',campus:'bbsr',email:'sasmita.tripathy@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Smita Patra',desig:'Assistant Professor',role:'',spec:'Soft Computing, Programming',campus:'bbsr',email:'smita.patra@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Lalit Kumar Behera',desig:'Assistant Professor',role:'',spec:'Deep Learning, NLP',campus:'bbsr',email:'lalit.behera@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Rosellen Anjum',desig:'Assistant Professor',role:'',spec:'Web Technologies, UI/UX',campus:'bbsr',email:'rosellen.anjum@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Sanjib Kumar Naik',desig:'Assistant Professor',role:'',spec:'Data Science, Cloud',campus:'bbsr',email:'sanjib.naik@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Priyanka Sarkar',desig:'Assistant Professor',role:'',spec:'AI, Data Mining',campus:'bbsr',email:'priyanka.sarkar@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Sahil Gupta',desig:'Assistant Professor',role:'',spec:'Full Stack Development',campus:'bbsr',email:'sahil.gupta@cutm.ac.in',photo:'',profile:''},
+  {name:'Dr. Prachee Dewangan',desig:'Assistant Professor',role:'',spec:'ML, Pattern Recognition',campus:'bbsr',email:'prachee.dewangan@cutm.ac.in',photo:'',profile:''},
+  {name:'Mrs. Soumyarashmi Panigrahi',desig:'Assistant Professor',role:'',spec:'Algorithms, Distributed Systems',campus:'bbsr',email:'soumyarashmi.panigrahi@cutm.ac.in',photo:'',profile:''},
+];
+
+const FACULTY_PKD=[
+  {name:'Dr. Prafulla Kumar Panda',desig:'Professor',role:'Dean — SoCDS',spec:'Data Science, Machine Learning',campus:'pkd',email:'prafullapanda@cutm.ac.in',photo:'',profile:''},
+  {name:'Dr. Pragyan Paramita Pradhan',desig:'Assistant Professor',role:'Associate Dean — SoCDS',spec:'Smart Infrastructure, IoT',campus:'pkd',email:'pragyan.pradhan@cutm.ac.in',photo:'',profile:''},
+  {name:'Dr. Dhawaleswar Rao CH',desig:'Associate Professor',role:'HoD — CSE',spec:'Data Science, Machine Learning',campus:'pkd',email:'dhawaleswar.rao@cutm.ac.in',photo:'',profile:''},
+  {name:'Dr. Abhishek Das',desig:'Assistant Professor',role:'',spec:'AI, Computer Vision',campus:'pkd',email:'abhishek.das@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Jagannath Padhy',desig:'Assistant Professor',role:'Program Coordinator — MCA & BCA',spec:'Software Engineering, DBMS',campus:'pkd',email:'jagannath.padhy@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Susanta Kumar Nayak',desig:'Assistant Professor',role:'',spec:'Networks, Cybersecurity',campus:'pkd',email:'susanta.nayak@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Lipsa Priyadarshini Singh',desig:'Assistant Professor',role:'',spec:'Data Analytics, Python',campus:'pkd',email:'lipsa.singh@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Satyanarayan Sahu',desig:'Assistant Professor',role:'',spec:'Cloud Computing, DevOps',campus:'pkd',email:'satyanarayan.sahu@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Manoj Kumar Padhi',desig:'Assistant Professor',role:'',spec:'ML, Deep Learning',campus:'pkd',email:'manoj.padhi@cutm.ac.in',photo:'',profile:''},
+  {name:'Mr. Biswaranjan Routray',desig:'Assistant Professor',role:'',spec:'IoT, Embedded Systems',campus:'pkd',email:'biswaranjan.routray@cutm.ac.in',photo:'',profile:''},
+  {name:'Mrs. Kumari Manswini Padhy',desig:'Assistant Professor',role:'',spec:'Data Science, Statistics',campus:'pkd',email:'manswini.padhy@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Sagarika Dash',desig:'Assistant Professor',role:'',spec:'AI, NLP',campus:'pkd',email:'sagarika.dash@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Pragnya Das',desig:'Assistant Professor',role:'',spec:'Computer Graphics, Web Dev',campus:'pkd',email:'pragnya.das@cutm.ac.in',photo:'',profile:''},
+  {name:'Ms. Aryalopa Malla',desig:'Assistant Professor',role:'',spec:'Programming, Algorithms',campus:'pkd',email:'aryalopa.malla@cutm.ac.in',photo:'',profile:''},
+  {name:'Mrs. Puspanjali B',desig:'Assistant Professor',role:'',spec:'Software Development, Testing',campus:'pkd',email:'puspanjali.b@cutm.ac.in',photo:'',profile:''},
+];
+
+const ALL_FAC=[...FACULTY_BBSR,...FACULTY_PKD];
+
+const LABS=[
+  {name:'Basic Programming Lab',has360:true,icon:'💻',bg:'linear-gradient(135deg,#185FA5,#042C53)',cap:'50 workstations',tech:'C, C++, Java, Python, Basic Web',desc:'Foundational lab with 50 high-spec workstations supporting C, C++, Java, Python, and web programming for first and second year students with hands-on compiler and debugging tools.'},
+  {name:'Data Science & ML Lab',has360:true,icon:'🧠',bg:'linear-gradient(135deg,#533AB7,#0C447C)',cap:'30 workstations + NVIDIA GPUs',tech:'TensorFlow, PyTorch, Keras, Jupyter',desc:'GPU-powered lab with NVIDIA A100 clusters for deep learning, NLP, and computer vision research. Students run real ML experiments using TensorFlow, PyTorch, and Jupyter notebooks.'},
+  {name:'Advanced Programming Lab',has360:true,icon:'⚙️',bg:'linear-gradient(135deg,#042C53,#185FA5)',cap:'50 workstations',tech:'Full Stack, Docker, DSA, CI/CD',desc:'Full-stack development, DSA, algorithms, and system design lab with CI/CD pipelines, Docker environments, and collaborative coding platforms for advanced students.'},
+  {name:'Cloud Computing Lab',has360:true,icon:'☁️',bg:'linear-gradient(135deg,#1D9E75,#042C53)',cap:'40 workstations',tech:'AWS, Azure, GCP, Kubernetes, Docker',desc:'AWS Academy-certified lab for cloud architecture, serverless computing, Kubernetes orchestration, and cloud-native application development. Students earn AWS certifications.'},
+  {name:'Operating System Lab',has360:true,icon:'🖥️',bg:'linear-gradient(135deg,#A32D2D,#533AB7)',cap:'40 workstations',tech:'Linux, Shell Script, VMware, VirtualBox',desc:'Linux administration, shell scripting, system calls, process management and virtualisation lab using VMware and VirtualBox for simulated multi-OS environments.'},
+  {name:'AR / VR Lab',has360:true,icon:'🥽',bg:'linear-gradient(135deg,#BA7517,#A32D2D)',cap:'20 Meta Quest 3 headsets',tech:'Unity 3D, Unreal Engine 5, Meta Quest',desc:'Immersive technology lab with Meta Quest 3 headsets, Unity 3D, and Unreal Engine 5 for AR/VR application development, 3D environment design, and XR research.'},
+  {name:'Blockchain Lab',has360:true,icon:'⛓️',bg:'linear-gradient(135deg,#3B6D11,#0C447C)',cap:'30 workstations',tech:'Ethereum, Solidity, Hyperledger, Web3.js',desc:'Dedicated blockchain development lab with Ethereum, Solidity smart contracts, Hyperledger Fabric, and DApp development using Truffle and Ganache environments.'},
+  {name:'Research Lab',has360:true,icon:'🔬',bg:'linear-gradient(135deg,#042C53,#533AB7)',cap:'20 researcher workstations',tech:'HPC Cluster, MATLAB, R, Python',desc:'Dedicated research environment for funded projects, patent work, thesis research, and faculty-led innovation with HPC resources and specialised research software.'},
+  {name:'Networking Lab',has360:true,icon:'🌐',bg:'linear-gradient(135deg,#1D6B8C,#042C53)',cap:'30 workstations',tech:'Cisco Routers, Wireshark, GNS3, CCNA',desc:'Cisco-certified lab with physical routers, managed switches, firewalls, and network simulation tools for enterprise-grade network design and security training.'},
+  {name:'Future Nexus Lab',has360:true,icon:'🚀',bg:'linear-gradient(135deg,#EF9F27,#A32D2D)',cap:'30 workstations + Innovation Space',tech:'Quantum Computing Simulators, AI Agents, XR Devices, Edge AI',desc:'A next-generation innovation lab bridging emerging technologies — quantum computing simulation, agentic AI systems, spatial computing, and cross-disciplinary tech experimentation. Designed for advanced research and prototype development.'},
+];
+
+const RESEARCH_AREAS=[
+  {name:'Artificial Intelligence & ML',icon:'🧠',color:'#0C447C',desc:'Deep learning, reinforcement learning, NLP, computer vision and intelligent systems with GPU-powered infrastructure. Faculty publish in IEEE Transactions and top AI conferences.',papers:'12+ publications',projects:'8 active projects'},
+  {name:'Data Science & Analytics',icon:'📊',color:'#1D9E75',desc:'Big data processing, predictive modelling, statistical analysis, and BI systems for real-world decision support with industry partner datasets.',papers:'8 publications',projects:'5 active projects'},
+  {name:'Cyber Security',icon:'🔒',color:'#A32D2D',desc:'Network security, cryptography, digital forensics, IDS and ethical hacking research. Students participate in national CTF competitions and bug bounty programs.',papers:'6 publications',projects:'4 active projects'},
+  {name:'Cloud & Distributed Systems',icon:'☁️',color:'#533AB7',desc:'Scalable cloud architectures, edge computing, fog computing, IoT integration and distributed system design. AWS Academy partner for real cloud research.',papers:'5 publications',projects:'3 active projects'},
+  {name:'Blockchain & FinTech',icon:'⛓️',color:'#BA7517',desc:'Distributed ledger, smart contracts, DApps, cryptocurrency systems and financial technology innovation including blockchain-based certificate verification.',papers:'4 publications',projects:'3 active projects'},
+  {name:'Internet of Things',icon:'🌐',color:'#3B6D11',desc:'Embedded systems, sensor networks, smart city applications, industrial IoT and drone technology research in collaboration with CUTM Centre for DRONE Technology.',papers:'6 publications',projects:'5 active projects'},
+  {name:'AR / VR & HCI',icon:'🥽',color:'#185FA5',desc:'Augmented and virtual reality applications, human-computer interaction, immersive learning and UX research using Meta Quest headsets and Unity 3D.',papers:'3 publications',projects:'2 active projects'},
+  {name:'Health Informatics',icon:'🏥',color:'#042C53',desc:'AI in healthcare, medical image analysis, electronic health records, and federated learning for privacy-preserving patient data analysis.',papers:'4 publications',projects:'2 active projects'},
+];
+
+const PROJECTS=[
+  {name:'Smart Traffic Management System',tag:'AI / ML',tagc:'#0C447C',tagbg:'#E6F1FB',icon:'🚦',bg:'linear-gradient(135deg,#042C53,#185FA5)',team:'Final Year B.Tech CSE',campus:'BBSR',desc:'Computer vision and real-time analytics to optimise urban traffic flow using YOLO object detection and LSTM-based traffic prediction models.',tech:['Computer Vision','Python','YOLO','LSTM']},
+  {name:'Blockchain Certificate Verification',tag:'Blockchain',tagc:'#A32D2D',tagbg:'#FCEBEB',icon:'🔐',bg:'linear-gradient(135deg,#1D6B8C,#533AB7)',team:'Final Year B.Tech CSE',campus:'Both',desc:'Tamper-proof academic credential system on Ethereum smart contracts eliminating certificate fraud using ERC-721 NFT standards for unique credential issuance.',tech:['Ethereum','Solidity','Web3.js','IPFS']},
+  {name:'Smart Campus Monitoring System',tag:'IoT',tagc:'#3B6D11',tagbg:'#EAF3DE',icon:'📡',bg:'linear-gradient(135deg,#3B6D11,#1D9E75)',team:'MCA Final Year',campus:'PKD',desc:'IoT-based real-time energy and resource monitoring across CUTM campus with ML-driven anomaly alerts and predictive maintenance capabilities.',tech:['IoT','Node.js','MQTT','Raspberry Pi']},
+  {name:'AI-Based Disease Prediction',tag:'ML',tagc:'#0C447C',tagbg:'#E6F1FB',icon:'🏥',bg:'linear-gradient(135deg,#A32D2D,#185FA5)',team:'M.Tech Data Science',campus:'BBSR',desc:'ML model with 92% accuracy for early detection of diabetes and heart disease using patient records with explainable AI features for doctor interpretability.',tech:['scikit-learn','XGBoost','SHAP','Python']},
+  {name:'Precision Agriculture with Drones',tag:'Drone · AI',tagc:'#BA7517',tagbg:'#FFF3DC',icon:'🌾',bg:'linear-gradient(135deg,#BA7517,#042C53)',team:'Faculty Research',campus:'PKD',desc:'Drone-based crop monitoring, soil analysis and AI-guided irrigation for improved agricultural yield. Collaboration with CUTM Centre for DRONE Technology.',tech:['Computer Vision','DJI SDK','Python','GIS']},
+  {name:'Odia Language NLP System',tag:'NLP',tagc:'#533AB7',tagbg:'#EEEDFE',icon:'💬',bg:'linear-gradient(135deg,#533AB7,#3B6D11)',team:'Funded Research',campus:'Both',desc:'NLP tools for Odia script — text classification, sentiment analysis and machine translation using fine-tuned multilingual BERT models.',tech:['BERT','Transformers','Python','Odia Corpus']},
+];
+
+const PUBLICATIONS=[
+  {title:'Deep Learning Approaches for Real-Time Object Detection in Low-Resource Environments',authors:'Dr. Sujata Chakravarty, Dr. Rahul Ray, Ms. Adyasa Swain',jrnl:'IEEE Transactions on Neural Networks',year:'2024',campus:'BBSR',impact:'IF: 10.4',color:'#185FA5',abstract:'Proposes a lightweight deep learning architecture for real-time object detection with limited compute, achieving 89% mAP on benchmark datasets.'},
+  {title:'Federated Learning for Privacy-Preserving Healthcare Data Analysis',authors:'Dr. Sasmita Kumari Nayak, Ms. Adyasa Swain',jrnl:'Springer – Journal of Medical Informatics',year:'2024',campus:'BBSR',impact:'IF: 7.2',color:'#1D9E75',abstract:'Federated learning framework for training ML models on distributed hospital datasets without sharing raw patient data, ensuring GDPR compliance.'},
+  {title:'Blockchain-Enhanced Security Architecture for IoT Networks',authors:'Dr. Dhawaleswar Rao CH, Mr. Biswaranjan Routray',jrnl:'Elsevier – Computers & Security',year:'2025',campus:'PKD',impact:'IF: 5.6',color:'#A32D2D',abstract:'Novel blockchain-based decentralised security architecture for IoT networks eliminating single points of failure and ensuring tamper-proof device authentication.'},
+  {title:'Natural Language Processing for Low-Resource Odia Script',authors:'Dr. Sunil Kumar Mohapatra, Ms. Sanghamitra Panda',jrnl:'ACM Computing Surveys',year:'2024',campus:'BBSR',impact:'IF: 23.8',color:'#BA7517',abstract:'Comprehensive survey of NLP techniques for the Odia language — a low-resource Indian language — with a proposed framework for text classification and MT.'},
+  {title:'Efficient Resource Scheduling in Edge Computing Using Reinforcement Learning',authors:'Dr. Abhishek Das, Mr. Jagannath Padhy',jrnl:'IEEE Access',year:'2025',campus:'PKD',impact:'IF: 3.9',color:'#533AB7',abstract:'RL-based dynamic resource scheduling for edge computing reducing task completion time by 34% compared to existing methods.'},
+  {title:'Smart Agriculture Using Drone Technology and Deep Learning',authors:'Mr. Saneev Kumar Das, Dr. Prachee Dewangan',jrnl:'Springer Precision Agriculture',year:'2025',campus:'BBSR',impact:'IF: 6.2',color:'#3B6D11',abstract:'Drone-based crop disease detection using CNN-based image classification achieving 91% accuracy for 12 major crop diseases in Odisha.'},
+];
+
+const COLLABS=[
+  {name:'TCS iON',icon:'🏢',color:'#0C447C',type:'Industry Partner',desc:'Curriculum co-development, campus placements, pre-placement training, and industry-sponsored capstone projects for final year students.'},
+  {name:'AWS Academy',icon:'☁️',color:'#BA7517',type:'Cert. Partner',desc:'Cloud certification programs integrated into B.Tech and MCA curricula. Students earn AWS Cloud Practitioner at no extra cost.'},
+  {name:'Infosys',icon:'🌐',color:'#1D9E75',type:'Recruit. Partner',desc:'Campus recruitment, Infosys Springboard access, live project mentorship and special training tracks for final year students.'},
+  {name:'NIT Rourkela',icon:'🔬',color:'#533AB7',type:'Academic Partner',desc:'Joint research programs, faculty exchange, collaborative PhD supervision and shared lab access for advanced computing research.'},
+  {name:'NASSCOM',icon:'🎓',color:'#A32D2D',type:'Cert. Partner',desc:'FutureSkills Prime certification and industry-aligned curriculum advisory through the NASSCOM digital skills consortium.'},
+  {name:'NPTEL / IIT Network',icon:'📚',color:'#3B6D11',type:'Academic Partner',desc:'Online IIT faculty courses available to all SoCDS students with academic credit recognition for completed courses.'},
+  {name:'Wipro',icon:'💻',color:'#185FA5',type:'Recruit. Partner',desc:'Wipro TalentNext program, campus placement partnerships, and training in cloud, cybersecurity, and AI/ML for graduating students.'},
+  {name:'Capgemini',icon:'🏛️',color:'#042C53',type:'Industry Partner',desc:'Annual campus recruitment drives, technical training partnerships and internship opportunities for B.Tech and MCA students.'},
+];
+
+const EVENTS=[
+  {name:'TechNova 2025 — Annual Hackathon',tag:'Hackathon',tc:'#0C447C',icon:'🏆',bg:'linear-gradient(135deg,#042C53,#0C447C)',date:'March 2025',campus:'Both Campuses',desc:'48-hour national-level hackathon with 500+ participants in AI, Web Dev, and IoT tracks. Cash prizes worth ₹2 lakhs. Organised by SoCDS in association with CUTM.'},
+  {name:'AI in Industry — Guest Lecture Series',tag:'Seminar',tc:'#3B6D11',tagc:'g',icon:'🎓',bg:'linear-gradient(135deg,#1D9E75,#3B6D11)',date:'Monthly — Ongoing',campus:'Both Campuses',desc:'Monthly lectures by experts from Google, Microsoft, IBM, and leading AI startups covering real-world AI applications, career guidance, and emerging tech trends.'},
+  {name:'Campus Recruitment Drive 2025',tag:'Placement',tc:'#BA7517',tagc:'a',icon:'💼',bg:'linear-gradient(135deg,#BA7517,#A32D2D)',date:'February 2025',campus:'Both Campuses',desc:'Annual placement fair with 30+ companies — TCS, Infosys, Wipro, Capgemini, HCL. Pre-placement talks, group discussions, and on-spot offer letters.'},
+  {name:'Smart India Hackathon 2024',tag:'National Award',tc:'#533AB7',tagc:'p',icon:'📜',bg:'linear-gradient(135deg,#533AB7,#185FA5)',date:'December 2024',campus:'BBSR',desc:'SoCDS teams won top-3 positions at SIH 2024 competing against 10,000+ teams. Winning solution: AI-based solid waste management system for urban municipalities.'},
+  {name:'Industry-Academia Conclave 2024',tag:'Summit',tc:'#3B6D11',tagc:'g',icon:'🤝',bg:'linear-gradient(135deg,#3B6D11,#0C447C)',date:'November 2024',campus:'BBSR',desc:'Annual summit with 15+ industry leaders — 8 new MoUs signed, 200+ internship opportunities announced, 3 joint research projects initiated.'},
+  {name:'Research Symposium — SoCDS',tag:'Research',tc:'#0C447C',icon:'🔬',bg:'linear-gradient(135deg,#1D6B8C,#533AB7)',date:'January 2025',campus:'PKD',desc:'Annual research showcase — students and faculty present papers, posters and project demos. Best paper award and funding for top 3 student research projects.'},
+];
+
+const WORKSHOPS=[
+  {name:'Deep Learning with PyTorch',dur:'2 Days',icon:'🧠',bg:'linear-gradient(135deg,#0C447C,#185FA5)',campus:'BBSR',desc:'CNNs, RNNs, Transformer models and deployment on NVIDIA GPU lab with live training on real datasets.'},
+  {name:'Ethical Hacking Bootcamp',dur:'1 Day',icon:'🛡️',bg:'linear-gradient(135deg,#533AB7,#042C53)',campus:'Both',desc:'Penetration testing, Metasploit, Kali Linux, CTF challenges and OWASP Top 10 security tools.'},
+  {name:'Data Analytics with Python & Tableau',dur:'3 Days',icon:'📊',bg:'linear-gradient(135deg,#1D9E75,#3B6D11)',campus:'PKD',desc:'End-to-end data pipeline: collection, cleaning, EDA, Tableau visualisation and business storytelling.'},
+  {name:'AWS Cloud Practitioner Prep',dur:'2 Days',icon:'☁️',bg:'linear-gradient(135deg,#BA7517,#EF9F27)',campus:'Both',desc:'AWS core services (EC2, S3, Lambda, RDS, IAM), cloud architecture best practices and certification exam strategies.'},
+  {name:'Blockchain Development with Solidity',dur:'2 Days',icon:'⛓️',bg:'linear-gradient(135deg,#A32D2D,#533AB7)',campus:'BBSR',desc:'Smart contracts on Ethereum, DApp creation, ERC-20/721 token standards, Truffle/Ganache and Sepolia test network deployment.'},
+  {name:'Full-Stack Web Development',dur:'5 Days',icon:'🌐',bg:'linear-gradient(135deg,#1D6B8C,#0C447C)',campus:'Both',desc:'React.js, Node.js, Express, MongoDB MERN stack with REST API design, authentication and cloud deployment.'},
+  {name:'Robotics & Embedded Systems',dur:'3 Days',icon:'🤖',bg:'linear-gradient(135deg,#3B6D11,#1D9E75)',campus:'PKD',desc:'Arduino, Raspberry Pi, servo control, sensor integration, motor drivers and autonomous robot programming.'},
+  {name:'Mobile App Development (Flutter)',dur:'3 Days',icon:'📱',bg:'linear-gradient(135deg,#185FA5,#BA7517)',campus:'BBSR',desc:'Cross-platform mobile apps with Flutter/Dart, Firebase, state management with Provider and Google Play submission.'},
+];
+
+const STARTUPS=[
+  {name:'SoCDS Startup Incubator',type:'Incubator',icon:'🚀',bc:'#EF9F27',bg:'#FFF3DC',bc2:'#BA7517',desc:'Student startup cell with mentoring, seed funding up to ₹50,000, legal guidance and CUTM incubation tie-ups for tech ventures. Open to 2nd year+ students.'},
+  {name:'Innovation & Design Thinking Cell',type:'Innovation Lab',icon:'💡',bc:'#1D9E75',bg:'#EAF3DE',bc2:'#3B6D11',desc:'Cross-disciplinary lab using Stanford Design Thinking frameworks, rapid prototyping, and user research to build solutions for social and industry problems.'},
+  {name:'CodeCraft Club',type:'Technical Club',icon:'💻',bc:'#0C447C',bg:'#E6F1FB',bc2:'#0C447C',desc:'Competitive programming community with weekly LeetCode sessions, Codeforces rounds, ICPC preparation and monthly internal hackathons.'},
+  {name:'AI & Robotics Society',type:'Research Society',icon:'🤖',bc:'#533AB7',bg:'#EEEDFE',bc2:'#533AB7',desc:'Student society focused on AI research, robotics projects, drone programming and national competition participation including Smart India Hackathon.'},
+  {name:'CyberSec Club',type:'Technical Club',icon:'🛡️',bc:'#A32D2D',bg:'#FCEBEB',bc2:'#A32D2D',desc:'Ethical hacking community with CTF competitions, HackerOne/Bugcrowd bug bounty hunts, OWASP study sessions and cybersecurity awareness drives.'},
+  {name:'WebDev & Design Club',type:'Technical Club',icon:'🌐',bc:'#3B6D11',bg:'#EAF3DE',bc2:'#3B6D11',desc:'Front-end, back-end and UI/UX design community running monthly web challenges, open-source contributions, portfolio building and freelancing workshops.'},
+  {name:'Data Science & Analytics Club',type:'Research Club',icon:'📊',bc:'#0C447C',bg:'#E6F1FB',bc2:'#0C447C',desc:'Data exploration community competing in Kaggle challenges, hosting visualisation workshops and building analytical portfolios for data science careers.'},
+  {name:'App Dev Society',type:'Technical Club',icon:'📱',bc:'#BA7517',bg:'#FFF3DC',bc2:'#BA7517',desc:'Mobile and web app development club building real apps for college and community use — current projects include CUTM student portal app and SoCDS digital noticeboard.'},
+];
+
+const GALLERY=[
+  {lbl:'Basic Programming Lab',cat:'labs',icon:'💻',bg:'linear-gradient(135deg,#185FA5,#042C53)',has360:true,desc:'First-year students in a hands-on coding session — C and Python fundamentals at the Basic Programming Lab.'},
+  {lbl:'AI & ML Lab — GPU Session',cat:'labs',icon:'🧠',bg:'linear-gradient(135deg,#533AB7,#0C447C)',has360:true,desc:'Deep learning model training on NVIDIA GPU cluster — M.Tech Data Science students running PyTorch experiments.'},
+  {lbl:'TechNova 2024 Hackathon',cat:'events',icon:'🏆',bg:'linear-gradient(135deg,#042C53,#0C447C)',has360:false,desc:'TechNova 2024 — 48-hour national hackathon with 500+ participants across AI, Web, and IoT tracks at BBSR campus.'},
+  {lbl:'AI in Industry Lecture',cat:'events',icon:'🎓',bg:'linear-gradient(135deg,#1D9E75,#3B6D11)',has360:false,desc:'Guest lecture by a Google AI researcher on large language models and their real-world industry applications.'},
+  {lbl:'Bhubaneswar Campus',cat:'campus',icon:'🏛️',bg:'linear-gradient(135deg,#0C447C,#185FA5)',has360:true,desc:'Centurion University Bhubaneswar Campus — Jatni, Odisha. Home to 27 CSE faculty and all 5 SoCDS programs.'},
+  {lbl:'Paralakhemundi Campus',cat:'campus',icon:'🌿',bg:'linear-gradient(135deg,#3B6D11,#1D9E75)',has360:true,desc:"Centurion University Paralakhemundi Campus — Gajapati, Odisha. CUTM's founding campus established in 2005."},
+  {lbl:'Networking Lab',cat:'labs',icon:'🌐',bg:'linear-gradient(135deg,#1D6B8C,#042C53)',has360:false,desc:'Cisco-certified Networking Lab — students configuring routers and switches for enterprise network design.'},
+  {lbl:'AR/VR Lab Demo',cat:'labs',icon:'🥽',bg:'linear-gradient(135deg,#BA7517,#A32D2D)',has360:true,desc:'Students experiencing immersive learning in the AR/VR Lab using Meta Quest 3 headsets and Unity 3D.'},
+  {lbl:'Smart India Hackathon',cat:'events',icon:'📜',bg:'linear-gradient(135deg,#533AB7,#185FA5)',has360:false,desc:'SoCDS team at Smart India Hackathon 2024 — winners of the Urban Waste Management AI challenge.'},
+  {lbl:'Annual Day Celebrations',cat:'campus',icon:'🎉',bg:'linear-gradient(135deg,#A32D2D,#BA7517)',has360:false,desc:'Annual Day at SoCDS — celebrating academic achievements and cultural performances across both campuses.'},
+  {lbl:'AWS Cloud Workshop',cat:'events',icon:'🛠️',bg:'linear-gradient(135deg,#042C53,#533AB7)',has360:false,desc:'AWS Academy certified workshop — students earning cloud practitioner certification integrated with curriculum.'},
+  {lbl:'Campus Placement Drive',cat:'campus',icon:'💼',bg:'linear-gradient(135deg,#185FA5,#1D9E75)',has360:false,desc:'Campus Placement Drive 2025 — 150+ students placed at top IT companies with packages up to 12 LPA.'},
+];
+
+const NEWS=[
+  {title:'New AI & ML Research Lab Inaugurated',date:'May 2025',color:'#185FA5',desc:'State-of-the-art GPU cluster lab launched at SoCDS for advanced deep learning and computer vision research featuring NVIDIA A100 GPUs accessible to both students and faculty.'},
+  {title:'Placement Drive 2025 — Record Results',date:'Apr 2025',color:'#1D9E75',desc:'Over 150 SoCDS students placed at TCS, Infosys, Wipro, and Capgemini with packages ranging from 3.5 to 12 LPA — the best placement season in SoCDS history.'},
+  {title:'National Hackathon — SoCDS Wins Top Prize',date:'Mar 2025',color:'#BA7517',desc:'CSE teams won at Smart India Hackathon 2025 with an AI-based urban waste management solution, winning ₹2 lakh in prize money.'},
+  {title:'M.Tech Data Science — Applications Open 2025–26',date:'Feb 2025',color:'#042C53',desc:'Applications open for the new M.Tech in Data Science cohort at both campuses. Research scholarships and funded positions available. GATE score preferred.'},
+  {title:'AWS Academy Partnership Extended for 3 More Years',date:'Jan 2025',color:'#533AB7',desc:'SoCDS extends AWS Academy partnership enabling B.Tech and MCA students to earn AWS certifications integrated into the regular curriculum at no additional cost.'},
+  {title:'Annual Tech Fest "TechNova 2024" — Grand Success',date:'Dec 2024',color:'#A32D2D',desc:'1,200+ participants across coding, robotics, AI demos and paper presentations. Inaugurated by the CUTM Vice Chancellor.'},
+  {title:'Three Faculty Papers Published in IEEE & Springer',date:'Nov 2024',color:'#3B6D11',desc:'SoCDS faculty published three papers in IEEE Transactions, Springer Medical Informatics, and Elsevier Computers & Security — a quarterly record.'},
+  {title:'Industry-Academia Conclave 2024 at BBSR Campus',date:'Oct 2024',color:'#1D6B8C',desc:'Annual conclave with 15+ companies — 8 new MoUs signed, 200+ internship opportunities announced for students across both campuses.'},
+];
+
+/* ════ DOMAIN SUBJECTS ════ */
+const DOMAIN_SUBJECTS=[
+  {name:'Full-Stack Development with MERN',icon:'🌐',color:'#185FA5',bg:'linear-gradient(135deg,#185FA5,#042C53)',type:'Domain',desc:'Covers front-end (React.js) and back-end (Node.js, Express, MongoDB) development. Students build complete, production-ready web applications with REST APIs, authentication, and cloud deployment.',skills:['React.js','Node.js','Express','MongoDB','REST API'],outcomes:'Students develop full-stack web applications independently and are ready for roles as Full-Stack Developer, Web Engineer, or Product Developer.'},
+  {name:'Generative AI',icon:'🤖',color:'#533AB7',bg:'linear-gradient(135deg,#533AB7,#0C447C)',type:'Domain',desc:'Covers Large Language Models, prompt engineering, fine-tuning, diffusion models, and AI content generation. Students work with OpenAI, HuggingFace, and Stable Diffusion frameworks.',skills:['LLMs','Prompt Engineering','HuggingFace','LangChain','Diffusion Models'],outcomes:'Students can build AI-powered applications, chatbots, and creative AI systems for industries ranging from media to healthcare.'},
+  {name:'Data Analytics and Machine Learning',icon:'📊',color:'#0C447C',bg:'linear-gradient(135deg,#0C447C,#1D9E75)',type:'Domain',desc:'Comprehensive coverage of data wrangling, exploratory data analysis, statistical modelling, supervised and unsupervised ML, and model deployment using Python, scikit-learn, and TensorFlow.',skills:['Python','scikit-learn','TensorFlow','Pandas','Power BI'],outcomes:'Students qualify for Data Analyst, ML Engineer, and Business Intelligence roles at leading analytics and IT companies.'},
+  {name:'Cloud Technology',icon:'☁️',color:'#1D9E75',bg:'linear-gradient(135deg,#1D9E75,#185FA5)',type:'Domain',desc:'AWS, Azure, and GCP cloud platforms — serverless computing, cloud architecture, containerisation with Docker and Kubernetes, DevOps pipelines, and cloud security best practices.',skills:['AWS','Azure','GCP','Docker','Kubernetes','CI/CD'],outcomes:'Students earn cloud certifications and are ready for Cloud Engineer, DevOps Engineer, and Cloud Architect roles.'},
+  {name:'Drone Imaging and Spectral Analysis',icon:'🚁',color:'#BA7517',bg:'linear-gradient(135deg,#BA7517,#042C53)',type:'Domain',desc:'UAV flight operations, drone photography, multispectral and hyperspectral imaging, GIS data processing, and agricultural remote sensing using DJI drones and specialised analysis software.',skills:['DJI SDK','GIS','NDVI Analysis','Remote Sensing','Python'],outcomes:'Students can work in precision agriculture, environmental monitoring, infrastructure inspection, and geospatial analytics sectors.'},
+  {name:'Software Technology',icon:'⚙️',color:'#042C53',bg:'linear-gradient(135deg,#042C53,#185FA5)',type:'Domain',desc:'Software engineering principles, design patterns, agile methodologies, DevOps practices, testing, quality assurance, and enterprise application architecture.',skills:['Agile/Scrum','Design Patterns','Git','CI/CD','Testing'],outcomes:'Students are prepared for Software Engineer, QA Engineer, and Technical Project Manager roles across the IT industry.'},
+  {name:'Mobile App Development',icon:'📱',color:'#3B6D11',bg:'linear-gradient(135deg,#3B6D11,#1D9E75)',type:'Domain',desc:'Cross-platform mobile application development using Flutter and Dart, native Android (Kotlin), Firebase integration, state management, and Google Play / App Store deployment.',skills:['Flutter','Dart','Firebase','Kotlin','UI/UX Design'],outcomes:'Students can independently build and publish mobile apps and work as Mobile App Developer, Android Developer, or Flutter Developer.'},
+  {name:'Gaming and Immersive Learning — AR/VR',icon:'🎮',color:'#A32D2D',bg:'linear-gradient(135deg,#A32D2D,#533AB7)',type:'Domain',desc:'Game development using Unity 3D and Unreal Engine 5, VR/AR application creation, 3D modelling, shader programming, and deployment on PC, mobile, and Meta Quest headsets.',skills:['Unity 3D','Unreal Engine 5','C#','Meta Quest','3D Modelling'],outcomes:'Students can pursue careers as Game Developer, XR Developer, Simulation Engineer, or VR/AR Content Creator.'},
+  {name:'Blockchain Development',icon:'⛓️',color:'#1D6B8C',bg:'linear-gradient(135deg,#1D6B8C,#533AB7)',type:'Domain',desc:'Ethereum blockchain, Solidity smart contract development, decentralised applications (DApps), NFT standards, Web3.js, Hyperledger Fabric, and DeFi protocol design.',skills:['Ethereum','Solidity','Web3.js','IPFS','Hyperledger'],outcomes:'Students qualify for Blockchain Developer, Smart Contract Engineer, and DeFi Analyst roles in fintech and Web3 companies.'},
+  {name:'Cyber Security',icon:'🔒',color:'#A32D2D',bg:'linear-gradient(135deg,#A32D2D,#042C53)',type:'Domain',desc:'Ethical hacking, penetration testing, network security, cryptography, digital forensics, VAPT, incident response, and security operations centre (SOC) practices.',skills:['Kali Linux','Wireshark','Metasploit','Cryptography','VAPT'],outcomes:'Students are prepared for Ethical Hacker, Security Analyst, SOC Analyst, and Cyber Forensics Investigator roles.'},
+];
+
+const SKILL_SUBJECTS=[
+  {name:'Artificial Intelligence in Material Science',icon:'🧬',color:'#533AB7',bg:'linear-gradient(135deg,#533AB7,#185FA5)',type:'Skill',desc:'Application of AI and ML techniques to materials discovery, property prediction, molecular simulations, and accelerated materials research for industrial and academic applications.',skills:['Python','Materials Informatics','ML Models','Molecular Simulation'],outcomes:'Students gain interdisciplinary skills bridging AI and physical sciences — valuable in research labs, pharma, and advanced manufacturing.'},
+  {name:'SBC Based System Design & IoT',icon:'🖥️',color:'#1D9E75',bg:'linear-gradient(135deg,#1D9E75,#042C53)',type:'Skill',desc:'Single Board Computer (Raspberry Pi, Arduino, BeagleBone) based system design, sensor integration, IoT protocol (MQTT, CoAP), edge computing, and real-time data pipelines.',skills:['Raspberry Pi','Arduino','MQTT','Node-RED','Edge Computing'],outcomes:'Students develop IoT solutions for smart home, agriculture, health monitoring, and industrial automation.'},
+  {name:'Quantum Computing',icon:'⚛️',color:'#042C53',bg:'linear-gradient(135deg,#042C53,#533AB7)',type:'Skill',desc:'Fundamentals of quantum mechanics for computing, quantum gates, circuits, Qiskit programming, quantum algorithms (Shor, Grover), and quantum cryptography concepts.',skills:['Qiskit','Python','Quantum Gates','IBM Quantum','Linear Algebra'],outcomes:'Students gain foundational knowledge for quantum research roles and emerging quantum computing industry positions.'},
+  {name:'Blockchain Technology',icon:'⛓️',color:'#BA7517',bg:'linear-gradient(135deg,#BA7517,#0C447C)',type:'Skill',desc:'Conceptual and applied study of distributed ledger technology, consensus mechanisms, permissioned vs permissionless blockchains, tokenisation, and real-world enterprise blockchain use cases.',skills:['Ethereum','Hyperledger','Consensus Algorithms','Tokenisation'],outcomes:'Students understand blockchain architecture and can apply it to supply chain, healthcare, and financial systems.'},
+  {name:'Natural Language Processing',icon:'💬',color:'#0C447C',bg:'linear-gradient(135deg,#0C447C,#1D6B8C)',type:'Skill',desc:'Text preprocessing, sentiment analysis, named entity recognition, transformer architectures, BERT, GPT-based models, multilingual NLP, and Odia language processing.',skills:['NLTK','spaCy','BERT','Transformers','Python'],outcomes:'Students can build NLP-powered applications including chatbots, search engines, and language translation tools.'},
+  {name:'Spectral Image Processing',icon:'🌈',color:'#1D6B8C',bg:'linear-gradient(135deg,#1D6B8C,#3B6D11)',type:'Skill',desc:'Multispectral and hyperspectral image analysis, remote sensing data processing, NDVI computation, spectral classification, and applications in precision agriculture and environmental monitoring.',skills:['Python','ENVI','NDVI','Remote Sensing','Image Classification'],outcomes:'Students qualify for roles in geospatial analytics, satellite imagery processing, and environmental research organisations.'},
+  {name:'3D Game Art & Gaming',icon:'🎨',color:'#A32D2D',bg:'linear-gradient(135deg,#A32D2D,#BA7517)',type:'Skill',desc:'3D modelling, texturing, rigging, animation, level design, game asset creation using Blender and Maya, and integration with Unity or Unreal Engine for commercial game production.',skills:['Blender','Maya','Unity','Texturing','Rigging & Animation'],outcomes:'Students can work as 3D Artists, Game Designers, and Visual Effects Artists in gaming and media companies.'},
+  {name:'CCTV Technician',icon:'📹',color:'#3B6D11',bg:'linear-gradient(135deg,#3B6D11,#042C53)',type:'Skill',desc:'Installation, configuration, and maintenance of CCTV and video surveillance systems, IP camera networking, DVR/NVR setup, remote monitoring, and basic AI-based video analytics.',skills:['CCTV Systems','IP Networking','DVR/NVR','Video Analytics','Troubleshooting'],outcomes:'Students gain practical industry-ready skills for security system installation and maintenance roles in corporate and residential sectors.'},
+  {name:'Computer Installation & Maintenance',icon:'🔧',color:'#185FA5',bg:'linear-gradient(135deg,#185FA5,#042C53)',type:'Skill',desc:'Hardware assembly, OS installation and configuration, driver management, networking setup, troubleshooting, preventive maintenance, and basic cybersecurity for end-user systems.',skills:['Hardware Assembly','Windows/Linux','Networking','Troubleshooting','IT Support'],outcomes:'Students are equipped for IT Support Technician, Hardware Engineer, and Field Service Engineer roles across all industry sectors.'},
+  {name:'Microgrid Design and Implementation',icon:'⚡',color:'#1D9E75',bg:'linear-gradient(135deg,#1D9E75,#3B6D11)',type:'Skill',desc:'Design and simulation of microgrids integrating solar, wind, and battery storage — using MATLAB/Simulink for power flow analysis, control systems, and smart grid technologies.',skills:['MATLAB/Simulink','Solar PV','Energy Storage','Power Electronics','Smart Grid'],outcomes:'Students qualify for energy sector roles in renewable energy companies, power utilities, and sustainable technology firms.'},
+];
+
+/* ════ FUTURE NEXUS LAB (10th lab) ════ */
+/* Added to LABS array below */
+
+/* ════ ALUMNI DATA ════ */
+const ALUMNI=[
+  {name:'Priya Sharma',batch:'B.Tech CSE 2022',role:'Software Engineer',company:'TCS, Bangalore',campus:'bbsr',icon:'PS',spec:'Full-Stack Development'},
+  {name:'Rahul Mishra',batch:'MCA 2023',role:'Data Analyst',company:'Infosys, Hyderabad',campus:'bbsr',icon:'RM',spec:'Data Science'},
+  {name:'Ankita Das',batch:'B.Tech CSE 2021',role:'Cloud Engineer',company:'Wipro, Pune',campus:'pkd',icon:'AD',spec:'Cloud Computing'},
+  {name:'Sourav Nayak',batch:'B.Tech CSE AIML 2023',role:'ML Engineer',company:'Capgemini, Chennai',campus:'bbsr',icon:'SN',spec:'AI & Machine Learning'},
+  {name:'Lipika Patro',batch:'BCA 2022',role:'Junior Developer',company:'HCL Technologies, Bhubaneswar',campus:'pkd',icon:'LP',spec:'Web Development'},
+  {name:'Debasish Mohanty',batch:'M.Tech Data Science 2024',role:'Research Associate',company:'IIT Bhubaneswar',campus:'bbsr',icon:'DM',spec:'Data Science Research'},
+];
+
+/* ════ TESTIMONIALS DATA ════ */
+const TESTIMONIALS=[
+  {text:'SoCDS gave me everything I needed — a strong foundation in algorithms, practical AI lab experience, and placement support that helped me land my dream job at TCS. The faculty are genuinely invested in every student\'s success.',name:'Priya Sharma',role:'Software Engineer, TCS · B.Tech CSE 2022',stars:5,color:'#0C447C',campus:'BBSR'},
+  {text:'The Data Science & ML Lab with NVIDIA GPUs was a game-changer for me. I could run real experiments that I later wrote my thesis on. The M.Tech Data Science program at SoCDS is truly research-oriented.',name:'Debasish Mohanty',role:'Research Associate, IIT Bhubaneswar · M.Tech 2024',stars:5,color:'#1D9E75',campus:'BBSR'},
+  {text:'What I loved most was the industry exposure — workshops, hackathons, and real company projects. I participated in Smart India Hackathon and our team won. That one experience opened so many doors for me.',name:'Sourav Nayak',role:'ML Engineer, Capgemini · B.Tech CSE AIML 2023',stars:5,color:'#BA7517',campus:'BBSR'},
+  {text:'Coming from Paralakhemundi, I was nervous about the quality of education. But SoCDS PKD campus has excellent faculty, well-equipped labs, and strong placement support. I got placed in my 7th semester itself!',name:'Ankita Das',role:'Cloud Engineer, Wipro · B.Tech CSE 2021',stars:5,color:'#533AB7',campus:'PKD'},
+  {text:'The BCA program at SoCDS is underrated. The curriculum is practical, the teachers are approachable, and the college genuinely cares about your future. I joined HCL straight out of campus.',name:'Lipika Patro',role:'Junior Developer, HCL Technologies · BCA 2022',stars:4,color:'#3B6D11',campus:'PKD'},
+  {text:'The MCA program gave me the depth and breadth I needed to shift from a basic developer to a proper data analyst. The projects we did with real datasets, and the NPTEL courses — they all added up to a strong portfolio.',name:'Rahul Mishra',role:'Data Analyst, Infosys · MCA 2023',stars:5,color:'#A32D2D',campus:'BBSR'},
+];
+
+/* ════ RENDER: SUBJECTS ════ */
+function renderSubjects(){
+  const domainEl=document.getElementById('domainGrid');
+  const skillEl=document.getElementById('skillGrid');
+  if(!domainEl||!skillEl)return;
+  domainEl.innerHTML=DOMAIN_SUBJECTS.map((s,i)=>`
+    <div class="subj-card su d${(i%5)+1}" style="border-top-color:${s.color}" onclick="openSubjMo(${i},'domain')">
+      <div class="subj-card-icon">${s.icon}</div>
+      <h5>${s.name}</h5>
+      <span>${s.type} Subject</span>
+    </div>`).join('');
+  skillEl.innerHTML=SKILL_SUBJECTS.map((s,i)=>`
+    <div class="subj-card su d${(i%5)+1}" style="border-top-color:${s.color}" onclick="openSubjMo(${i},'skill')">
+      <div class="subj-card-icon">${s.icon}</div>
+      <h5>${s.name}</h5>
+      <span>${s.type} Subject</span>
+    </div>`).join('');
+}
+
+function switchSubjTab(type,btn){
+  document.querySelectorAll('.subj-tab').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  document.getElementById('domainGrid').style.display=type==='domain'?'':'none';
+  document.getElementById('skillGrid').style.display=type==='skill'?'':'none';
+}
+
+function openSubjMo(i,type){
+  const s=type==='domain'?DOMAIN_SUBJECTS[i]:SKILL_SUBJECTS[i];
+  document.getElementById('subjMoBody').innerHTML=`
+    <div class="mo-strip" style="background:${s.bg}">${s.icon}</div>
+    <div class="mo-body">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div style="font-family:'Cinzel',serif;font-size:17px;color:#1a1a1a">${s.name}</div>
+        <span style="font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:${type==='domain'?'#E6F1FB':'#EAF3DE'};color:${type==='domain'?'#0C447C':'#3B6D11'};flex-shrink:0">${s.type} Subject</span>
+      </div>
+      <p style="font-size:13.5px;color:#444;line-height:1.75;margin-bottom:16px;padding:12px;background:#f8f7f2;border-radius:8px;border-left:3px solid ${s.color}">${s.desc}</p>
+      <div style="margin-bottom:12px">
+        <div style="font-family:'Cinzel',serif;font-size:11px;color:#0C447C;margin-bottom:8px;letter-spacing:.04em">KEY SKILLS COVERED</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">${s.skills.map(k=>`<span style="background:#E6F1FB;color:#042C53;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px">${k}</span>`).join('')}</div>
+      </div>
+      <div style="padding:12px;background:#EAF3DE;border-radius:8px;border-left:3px solid #3B6D11">
+        <div style="font-size:11px;font-weight:700;color:#3B6D11;margin-bottom:4px;letter-spacing:.04em">CAREER OUTCOMES</div>
+        <p style="font-size:13px;color:#444;line-height:1.65">${s.outcomes}</p>
+      </div>
+    </div>`;
+  openMo('subjMo');
+}
+
+/* ════ RENDER: ALUMNI ════ */
+let ALUMNI_SHOWN=6;
+function renderAlumni(){
+  const g=document.getElementById('alumniGrid');if(!g)return;
+  g.innerHTML=ALUMNI.slice(0,ALUMNI_SHOWN).map((a,i)=>`
+    <div class="alumni-card su d${(i%3)+1}" onclick="openAlumniMo(${i})">
+      <div class="alumni-av" style="background:${GR[i%GR.length]}">${a.icon}</div>
+      <div class="alumni-body">
+        <div class="alumni-name">${a.name}</div>
+        <span class="alumni-batch">${a.batch}</span>
+        <div class="alumni-role">💼 ${a.role}</div>
+        <div class="alumni-company">🏢 ${a.company}</div>
+      </div>
+    </div>`).join('');
+}
+
+function openAlumniMo(i){
+  const a=ALUMNI[i];
+  document.getElementById('alumniMoBody').innerHTML=`
+    <div class="mo-top" style="border-top:4px solid #0C447C">
+      <div class="mo-avatar" style="background:${GR[i%GR.length]}">${a.icon}</div>
+      <div>
+        <div class="mo-name">${a.name}</div>
+        <span class="alumni-batch">${a.batch}</span>
+      </div>
+    </div>
+    <div class="mo-body">
+      <div class="mo-row"><span>Current Role</span><strong>${a.role}</strong></div>
+      <div class="mo-row"><span>Company</span><strong>${a.company}</strong></div>
+      <div class="mo-row"><span>Campus</span><strong>${a.campus==='bbsr'?'📍 Bhubaneswar':'📍 Paralakhemundi'}</strong></div>
+      <div class="mo-row"><span>Specialization</span><strong>${a.spec}</strong></div>
+      <div style="margin-top:14px;padding:12px;background:#E6F1FB;border-radius:8px;text-align:center;font-size:13px;color:#0C447C">📷 Photo and LinkedIn will be linked here once alumni register.</div>
+    </div>`;
+  openMo('alumniMo');
+}
+
+/* ════ RENDER: TESTIMONIALS ════ */
+function renderTestimonials(){
+  const g=document.getElementById('testiGrid');if(!g)return;
+  g.innerHTML=TESTIMONIALS.map((t,i)=>`
+    <div class="testi-card su d${(i%3)+1}" style="border-top-color:${t.color}">
+      <div class="testi-stars">${'★'.repeat(t.stars)}${'☆'.repeat(5-t.stars)}</div>
+      <div class="testi-quote">"</div>
+      <div class="testi-text">${t.text}</div>
+      <div class="testi-person">
+        <div class="testi-av" style="background:${GR[i%GR.length]}">${t.name.split(' ').map(w=>w[0]).join('').substring(0,2)}</div>
+        <div>
+          <div class="testi-name">${t.name}</div>
+          <div class="testi-role">${t.role}</div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ════ STUDENTS DROPDOWN ════ */
+function handleStudentsClick(e){
+  e.stopPropagation();
+  const nd=document.getElementById('studentsNd');
+  const dd=document.getElementById('studentsDd');
+  const isOpen=nd.classList.contains('open');
+  if(isOpen){
+    nd.classList.remove('open');
+    document.getElementById('startups')?.scrollIntoView({behavior:'smooth'});
+  } else {
+    const rect=nd.getBoundingClientRect();
+    dd.style.top=rect.bottom+'px';
+    dd.style.left=rect.left+'px';
+    nd.classList.add('open');
+  }
+}
+function closeStudentsDd(){document.getElementById('studentsNd')?.classList.remove('open');}
+document.addEventListener('click',e=>{
+  const nd=document.getElementById('studentsNd');
+  if(nd&&!nd.contains(e.target))nd.classList.remove('open');
+});
+window.addEventListener('scroll',()=>{
+  const nd=document.getElementById('studentsNd');
+  if(nd?.classList.contains('open')){
+    const rect=nd.getBoundingClientRect();
+    const dd=document.getElementById('studentsDd');
+    if(dd){dd.style.top=rect.bottom+'px';dd.style.left=rect.left+'px';}
+  }
+},true);
+window.addEventListener('resize',()=>document.getElementById('studentsNd')?.classList.remove('open'));
+function ini(n){return n.replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.)\s/,'').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+function openMo(id){document.getElementById(id).classList.add('open');}
+function closeMo(id){document.getElementById(id).classList.remove('open');}
+
+/* ════════════════════════════════════════
+   RENDER SECTIONS
+════════════════════════════════════════ */
+
+/* —— PROGRAMS —— */
+function renderPrograms(){
+  const row=document.getElementById('progCardsRow');
+  row.innerHTML=PROGRAMS.map((p,i)=>`
+    <div class="prog-card su d${(i%4)+1}" onclick="openProgMo(${i})">
+      <div class="prog-card-top" style="background:${p.bg}">
+        <span>${p.icon}</span>
+        <span class="prog-card-level">${p.level}</span>
+      </div>
+      <div class="prog-card-body">
+        <h5>${p.short}</h5>
+        <span>${p.dur} · ${p.level}</span>
+
+      </div>
+    </div>`).join('');
+}
+
+function openProgMo(i){
+  const p=PROGRAMS[i];
+  document.getElementById('progMoBody').innerHTML=`
+    <div class="mo-strip" style="background:${p.bg}">${p.icon}</div>
+    <div class="mo-top" style="border-top:4px solid ${p.color}">
+      <div>
+        <div style="font-size:10.5px;font-weight:700;background:#E6F1FB;color:${p.color};padding:2px 10px;border-radius:20px;display:inline-block;margin-bottom:8px">${p.level} · ${p.dur}</div>
+        <div style="font-family:'Cinzel',serif;font-size:17px;font-weight:700;color:#1a1a1a;margin-bottom:3px">${p.name}</div>
+      </div>
+    </div>
+    <div class="mo-body">
+      <p style="font-size:13.5px;line-height:1.75;color:#444;margin-bottom:16px;padding:12px;background:#f8f7f2;border-radius:8px;border-left:3px solid ${p.color}">${p.desc}</p>
+      <div class="mo-row"><span>Duration</span><strong>${p.dur}</strong></div>
+      <div class="mo-row"><span>Level</span><strong>${p.level}</strong></div>
+      <div class="mo-row"><span>Eligibility</span><strong>${p.eligi}</strong></div>
+      <div style="margin-top:16px">
+        <a href="${p.syllabus||'#'}" ${p.syllabus?'target="_blank"':''} onclick="${p.syllabus?'':'alert(\'Syllabus PDF will be linked here. Contact socds@cutm.ac.in for details.\');event.preventDefault()'}" style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:#f8f7f2;border:1.5px dashed #ccc;border-radius:8px;color:#0C447C;font-size:13.5px;font-weight:600;transition:all .18s;text-decoration:none">
+          <span style="font-size:20px">📄</span>
+          <span>View / Download Syllabus</span>
+          <span style="margin-left:auto;opacity:.5;font-size:12px">${p.syllabus?'PDF':'Coming soon'}</span>
+        </a>
+      </div>
+    </div>`;
+  openMo('progMo');
+}
+
+/* —— LEADERSHIP & FACULTY —— */
+function renderLeadership(camp,gridId){
+  const list=LEADERSHIP[camp];
+  document.getElementById(gridId).innerHTML=list.map((l,i)=>{
+    const g=GR[i%GR.length];
+    const lidx=camp+'-'+i;
+    // store in window for safe access
+    window['LEAD_'+lidx]=l;
+    return `<div class="lead-card d${i+1}" style="border-color:${l.bc}" onclick="openLeadMo('${lidx}')">
+      <div class="lead-photo" style="background:${g}">
+        ${l.photo?`<img src="${l.photo}" alt="" onerror="this.style.display='none'">`:''}
+        <span>${ini(l.name)}</span>
+        <div class="lead-bdg" style="background:${l.bc};color:${l.bc==='#EF9F27'?'#042C53':'#fff'}">${l.badge}</div>
+      </div>
+      <div class="lead-body">
+        <div class="lead-name">${l.name}</div>
+        <div class="lead-role">${l.role}</div>
+        <div class="lead-desig">${l.desig}</div>
+        ${l.profile?`<a href="${l.profile}" target="_blank" class="lead-profile" onclick="event.stopPropagation()">View Profile →</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openLeadMo(lidx){
+  const l=window['LEAD_'+lidx];if(!l)return;
+  const g=GR[0];
+  document.getElementById('facMoBody').innerHTML=`
+    <div class="mo-top">
+      <div class="mo-avatar" style="background:${g}">
+        ${l.photo?`<img src="${l.photo}" alt="" onerror="this.style.display='none'">`:''}
+        ${ini(l.name)}
+      </div>
+      <div>
+        <div class="mo-role-badge">${l.badge}</div>
+        <div class="mo-name">${l.name}</div>
+        <div class="mo-desig">${l.desig}</div>
+      </div>
+    </div>
+    <div class="mo-body">
+      <div class="mo-row"><span>Role</span><strong>${l.role}</strong></div>
+      <div class="mo-row"><span>Campus</span><strong>${l.campus==='bbsr'?'📍 Bhubaneswar':'📍 Paralakhemundi'}</strong></div>
+      <div class="mo-row"><span>Specialization</span><strong>${l.spec}</strong></div>
+      <div class="mo-row"><span>Email</span><strong><a href="mailto:${l.email}" style="color:#0C447C">${l.email}</a></strong></div>
+      ${l.profile?`<div class="mo-row"><span>Profile</span><strong><a href="${l.profile}" target="_blank" style="color:#0C447C;font-weight:600">View Full Profile →</a></strong></div>`:`<div class="mo-row"><span>Profile</span><strong style="color:#aaa;font-size:12px">To be linked — contact admin</strong></div>`}
+    </div>`;
+  openMo('facMo');
+}
+
+/* —— ALL FACULTY (filterable) —— */
+let FAC_FILTER='all', FAC_SEARCH='', FAC_SHOWN=12;
+
+function renderFacGrid(data,gridId,limit){
+  const g=document.getElementById(gridId);if(!g)return;
+  const list=limit?data.slice(0,limit):data;
+  g.innerHTML=list.map((f,i)=>{
+    const aidx=ALL_FAC.indexOf(f);
+    const bg=GR[i%GR.length];
+    const dl=f.desig.includes('Associate')?'Assoc. Prof.':f.desig.includes('Assistant')?'Asst. Prof.':'Professor';
+    return `<div class="fac-card d${(i%4)+1}" data-campus="${f.campus}" data-aidx="${aidx}" onclick="openFacByIdx(this.dataset.aidx)">
+      <div class="fac-av" style="background:${bg}">
+        ${f.photo?`<img src="${f.photo}" alt="" onerror="this.style.display='none'">`:''}
+        <span>${ini(f.name)}</span>
+      </div>
+      <div class="fac-body">
+        <div class="fac-name">${f.name}</div>
+        ${f.role?`<div class="fac-role">${f.role}</div>`:''}
+        <div class="fac-desig">${f.desig}</div>
+        <div class="fac-spec">${f.spec}</div>
+        <div class="fac-tags">
+          <span class="ftag ftag-${f.campus}">${f.campus.toUpperCase()}</span>
+          <span class="ftag ftag-desig">${dl}</span>
+        </div>
+        ${f.profile?`<a href="${f.profile}" target="_blank" style="font-size:10.5px;color:#0C447C;font-weight:600;text-decoration:underline;margin-top:5px;display:inline-block" onclick="event.stopPropagation()">View Profile →</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  // animate
+  g.querySelectorAll('.fac-card').forEach((el,i)=>{
+    el.style.opacity='0';el.style.transform='translateY(24px)';
+    setTimeout(()=>{el.style.transition='opacity .35s ease,transform .35s ease';el.style.opacity='1';el.style.transform='none';},i*40);
+  });
+}
+
+function openFacByIdx(idx){openFacMo(ALL_FAC[+idx]);}
+
+function getFilteredFac(){
+  let data=ALL_FAC;
+  if(FAC_FILTER==='bbsr')data=FACULTY_BBSR;
+  else if(FAC_FILTER==='pkd')data=FACULTY_PKD;
+  else if(FAC_FILTER==='prof')data=ALL_FAC.filter(f=>f.desig.toLowerCase().includes('professor')&&!f.desig.toLowerCase().includes('associate')&&!f.desig.toLowerCase().includes('assistant'));
+  else if(FAC_FILTER==='assoc')data=ALL_FAC.filter(f=>f.desig.toLowerCase().includes('associate'));
+  else if(FAC_FILTER==='asst')data=ALL_FAC.filter(f=>f.desig.toLowerCase().includes('assistant'));
+  if(FAC_SEARCH)data=data.filter(f=>f.name.toLowerCase().includes(FAC_SEARCH)||f.spec.toLowerCase().includes(FAC_SEARCH));
+  return data;
+}
+
+function applyFacFilter(){
+  const data=getFilteredFac();
+  const total=data.length;
+  const curShown=Math.min(FAC_SHOWN,total);
+  const cnt=document.getElementById('facCount');
+  const bbsrBlock=document.getElementById('bbsr-block');
+  const pkdBlock=document.getElementById('pkd-block');
+  const allWrap=document.getElementById('all-fac-wrap');
+
+  // "All" with no search → show campus blocks, hide filtered grid
+  if(FAC_FILTER==='all'&&!FAC_SEARCH){
+    if(bbsrBlock)bbsrBlock.style.display='';
+    if(pkdBlock)pkdBlock.style.display='';
+    if(allWrap)allWrap.style.display='none';
+    if(cnt)cnt.textContent='';
+    return;
+  }
+
+  // Any specific filter or search → hide campus blocks, show filtered grid
+  if(bbsrBlock)bbsrBlock.style.display='none';
+  if(pkdBlock)pkdBlock.style.display='none';
+  if(allWrap)allWrap.style.display='';
+  if(cnt)cnt.textContent=`Showing ${curShown} of ${total} faculty`;
+  renderFacGrid(data,'all-fac-grid',FAC_SHOWN);
+
+  const btn=document.getElementById('facBtns');
+  if(!btn)return;
+  let bh='';
+  if(total>curShown)bh+=`<button class="see-more-btn" onclick="showMoreFac()">&#11015; Show More (${total-curShown} more)</button>`;
+  if(FAC_SHOWN>12)bh+=`<button class="see-less-btn" onclick="showLessFac()">&#8593; Show Less</button>`;
+  btn.innerHTML=bh;
+}
+
+function filterFac(type,btn){
+  FAC_FILTER=type;FAC_SHOWN=12;FAC_SEARCH='';
+  document.querySelectorAll('.ffbtn').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  // clear search box
+  const si=document.querySelector('.fac-search');if(si)si.value='';
+  applyFacFilter();
+}
+function searchFac(q){
+  FAC_SEARCH=q.toLowerCase();
+  FAC_SHOWN=12;
+  if(!FAC_SEARCH){
+    // reset to all when search cleared
+    FAC_FILTER='all';
+    document.querySelectorAll('.ffbtn').forEach(b=>b.classList.remove('act'));
+    document.querySelector('.ffbtn')?.classList.add('act');
+  }
+  applyFacFilter();
+}
+function showMoreFac(){const data=getFilteredFac();FAC_SHOWN=Math.min(FAC_SHOWN+12,data.length+12);applyFacFilter();}
+function showLessFac(){
+  FAC_SHOWN=12;
+  // if we were in a filtered view, just reduce count
+  applyFacFilter();
+  document.getElementById('team').scrollIntoView({behavior:'smooth'});
+}
+
+function openFacMo(f){
+  if(typeof f==='string')f=JSON.parse(f);
+  const g=GR[Math.abs(f.name.charCodeAt(0)-65)%GR.length];
+  document.getElementById('facMoBody').innerHTML=`
+    <div class="mo-top">
+      <div class="mo-avatar" style="background:${g}">
+        ${f.photo?`<img src="${f.photo}" alt="${f.name}" onerror="this.style.display='none'">`:''}
+        ${ini(f.name)}
+      </div>
+      <div>
+        ${f.role?`<div class="mo-role-badge">${f.role}</div>`:''}
+        <div class="mo-name">${f.name}</div>
+        <div class="mo-desig">${f.desig}</div>
+      </div>
+    </div>
+    <div class="mo-body">
+      <div class="mo-row"><span>Campus</span><strong>${f.campus==='bbsr'?'📍 Bhubaneswar':'📍 Paralakhemundi'}</strong></div>
+      <div class="mo-row"><span>Specialization</span><strong>${f.spec}</strong></div>
+      ${f.rc?`<div class="mo-row"><span>Research Centre</span><strong>${f.rc}</strong></div>`:''}
+      <div class="mo-row"><span>Email</span><strong><a href="mailto:${f.email}" style="color:#0C447C">${f.email}</a></strong></div>
+      <div class="mo-row"><span>School</span><strong>School of Computing &amp; Data Science, CUTM</strong></div>
+      ${f.profile?`<div class="mo-row"><span>Profile</span><strong><a href="${f.profile}" target="_blank" style="color:#0C447C;font-weight:600">View Full Profile at fdp.cutm.ac.in →</a></strong></div>`:`<div class="mo-row"><span>Profile</span><strong style="color:#aaa;font-size:12px">To be linked — contact admin</strong></div>`}
+    </div>`;
+  openMo('facMo');
+}
+
+/* —— CAMPUS FILTER —— */
+function filterCampus(v){
+  // Faculty sections
+  document.getElementById('bbsr-block').style.display=(v==='pkd')?'none':'';
+  document.getElementById('pkd-block').style.display=(v==='bbsr')?'none':'';
+  // Update campus-sel to match
+  if(FAC_FILTER!=='bbsr'&&FAC_FILTER!=='pkd'){
+    if(v==='bbsr'){document.querySelectorAll('.ffbtn').forEach(b=>b.classList.remove('act'));document.querySelector('.ffbtn.b-bbsr').classList.add('act');FAC_FILTER='bbsr';applyFacFilter();}
+    else if(v==='pkd'){document.querySelectorAll('.ffbtn').forEach(b=>b.classList.remove('act'));document.querySelector('.ffbtn.b-pkd').classList.add('act');FAC_FILTER='pkd';applyFacFilter();}
+    else{document.querySelectorAll('.ffbtn').forEach(b=>b.classList.remove('act'));document.querySelectorAll('.ffbtn')[0].classList.add('act');FAC_FILTER='all';applyFacFilter();}
+  }
+  // Contact section
+  document.querySelectorAll('[data-campus]').forEach(el=>{
+    const c=el.dataset.campus;
+    if(v==='all'||c===v){el.style.opacity='1';el.style.pointerEvents='';}
+    else{el.style.opacity='0.2';el.style.pointerEvents='none';}
+    el.style.transition='opacity .3s';
+  });
+}
+
+/* —— LABS —— */
+function renderLabs(){
+  document.getElementById('labsGrid').innerHTML=LABS.map((l,i)=>`
+    <div class="lab-card su d${(i%3)+1}" onclick="openLabMo(${i})">
+      <div class="lab-img" style="background:${l.bg}">
+        ${l.icon}
+        <div class="lab-lbl">${l.name}</div>
+        ${l.has360?'<div class="gal-360-badge" style="top:8px;right:8px;position:absolute">360°</div>':''}
+      </div>
+      <div class="lab-body">
+        <h4>${l.name}</h4>
+        <p>${l.desc.substring(0,90)}…</p>
+        <div class="lab-tags">${l.tech.split(',').map(t=>`<span class="ltag">${t.trim()}</span>`).join('')}</div>
+      </div>
+    </div>`).join('');
+}
+function openLabMo(i){
+  const l=LABS[i];
+  let topHtml='';
+  if(l.has360){
+    topHtml=`<div style="background:#111;border-radius:14px 14px 0 0;overflow:hidden">
+      <div style="position:relative;height:220px">
+        <canvas id="panoCanvas" style="width:100%;height:100%;cursor:grab;touch-action:none;display:block" width="700" height="220"></canvas>
+        <div style="position:absolute;top:10px;right:10px;background:#EF9F27;color:#042C53;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px">360&#xb0; View</div>
+      </div>
+      <div style="padding:7px 16px;background:#222;text-align:center">
+        <span style="font-size:11px;color:#888">&#128072; Drag left/right to explore &nbsp;|&nbsp; Pinch to zoom on mobile</span>
+      </div>
+    </div>`;
+  } else {
+    topHtml=`<div class="mo-strip" style="background:${l.bg}">${l.icon}</div>`;
+  }
+  document.getElementById('labMoBody').innerHTML=topHtml+`
+    <div class="mo-body">
+      <div style="font-family:'Cinzel',serif;font-size:17px;color:#0C447C;margin-bottom:14px">${l.name}</div>
+      <div class="mo-row"><span>Capacity</span><strong>${l.cap}</strong></div>
+      <div class="mo-row"><span>Technologies</span><strong>${l.tech}</strong></div>
+      <div class="mo-row"><span>Campus</span><strong>Both Campuses</strong></div>
+      <p style="font-size:13.5px;color:#444;line-height:1.75;margin-top:12px;padding:12px;background:#f8f7f2;border-radius:8px">${l.desc}</p>
+      ${l.has360?`<p style="font-size:11px;color:#aaa;margin-top:8px">&#128247; 360&#xb0; photo of this lab will be added here. Drag above to explore interactive view.</p>`:''}
+    </div>`;
+  openMo('labMo');
+  if(l.has360)setTimeout(()=>init360(l),100);
+}
+
+/* —— RESEARCH —— */
+function renderResearch(){
+  document.getElementById('resGrid').innerHTML=RESEARCH_AREAS.map((r,i)=>`
+    <div class="rc su d${(i%4)+1}" style="border-top-color:${r.color}" onclick="openResMo(${i})">
+      <div class="rc-icon">${r.icon}</div>
+      <h4>${r.name}</h4>
+      <p>${r.desc.substring(0,100)}…</p>
+      <div class="rc-pills"><span class="rpill">${r.papers}</span><span class="rpill">${r.projects}</span></div>
+    </div>`).join('');
+}
+function openResMo(i){
+  const r=RESEARCH_AREAS[i];
+  document.getElementById('resMoBody').innerHTML=`
+    <div class="mo-top" style="border-top:4px solid ${r.color}">
+      <div style="font-size:36px;margin-right:4px">${r.icon}</div>
+      <div><div style="font-family:'Cinzel',serif;font-size:17px;color:${r.color}">${r.name}</div></div>
+    </div>
+    <div class="mo-body">
+      <p style="font-size:13.5px;color:#444;line-height:1.75;margin-bottom:14px">${r.desc}</p>
+      <div class="mo-row"><span>Publications</span><strong>${r.papers}</strong></div>
+      <div class="mo-row"><span>Active Projects</span><strong>${r.projects}</strong></div>
+    </div>`;
+  openMo('resMo');
+}
+
+/* —— PROJECTS (with show more/less) —— */
+let PROJ_SHOWN=3;
+function renderProjects(){
+  const g=document.getElementById('projGrid');
+  g.innerHTML=PROJECTS.map((p,i)=>`
+    <div class="pj-card su d${(i%3)+1}" style="${i>=PROJ_SHOWN?'display:none':''}" data-proj="${i}" onclick="openProjMo(${i})">
+      <div class="pj-img" style="background:${p.bg}">${p.icon}</div>
+      <div class="pj-body">
+        <span class="pj-tag" style="background:${p.tagbg};color:${p.tagc}">${p.tag}</span>
+        <h4>${p.name}</h4>
+        <p>${p.desc.substring(0,90)}…</p>
+        <div class="pj-meta">🎓 ${p.team} &nbsp;|&nbsp; 📍 ${p.campus}</div>
+      </div>
+    </div>`).join('');
+  renderProjBtns();
+}
+function renderProjBtns(){
+  const btn=document.getElementById('projBtns');
+  btn.innerHTML='';
+  if(PROJECTS.length>PROJ_SHOWN)btn.innerHTML+=`<button class="see-more-btn" onclick="showMoreProj()">⬇ Show More Projects</button>`;
+  if(PROJ_SHOWN>3)btn.innerHTML+=`<button class="see-less-btn" onclick="showLessProj()">↑ Show Less</button>`;
+}
+function showMoreProj(){PROJ_SHOWN=PROJECTS.length;document.querySelectorAll('[data-proj]').forEach(e=>e.style.display='');renderProjBtns();}
+function showLessProj(){PROJ_SHOWN=3;document.querySelectorAll('[data-proj]').forEach((e,i)=>{e.style.display=i>=3?'none':'';});renderProjBtns();document.getElementById('projects').scrollIntoView({behavior:'smooth'});}
+function openProjMo(i){
+  const p=PROJECTS[i];
+  document.getElementById('projMoBody').innerHTML=`
+    <div class="mo-strip" style="background:${p.bg}">${p.icon}</div>
+    <div class="mo-body">
+      <span class="pj-tag" style="background:${p.tagbg};color:${p.tagc}">${p.tag}</span>
+      <div style="font-family:'Cinzel',serif;font-size:16px;color:#1a1a1a;margin:10px 0">${p.name}</div>
+      <p style="font-size:13.5px;color:#444;line-height:1.75;margin-bottom:14px">${p.desc}</p>
+      <div class="mo-row"><span>Team</span><strong>${p.team}</strong></div>
+      <div class="mo-row"><span>Campus</span><strong>📍 ${p.campus}</strong></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${p.tech.map(t=>`<span style="background:#E6F1FB;color:#042C53;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px">${t}</span>`).join('')}</div>
+    </div>`;
+  openMo('projMo');
+}
+
+/* —— PUBLICATIONS (show more/less) —— */
+let PUB_SHOWN=3;
+function renderPubs(){
+  const el=document.getElementById('pubList');
+  el.innerHTML=PUBLICATIONS.map((p,i)=>`
+    <div class="pub-item su" style="border-left-color:${p.color};${i>=PUB_SHOWN?'display:none':''}" data-pub="${i}" onclick="openPubMo(${i})">
+      <div class="pub-icon">📄</div>
+      <div class="pub-body">
+        <h4>${p.title}</h4>
+        <div class="pub-meta">${p.authors} | <strong>${p.jrnl}</strong> | ${p.year}</div>
+        <div><span class="ps">${p.jrnl.split('–')[0].trim()}</span><span class="ps ${p.campus==='PKD'?'p-pkd':''}">${p.campus}</span><span class="ps">${p.impact}</span></div>
+      </div>
+      <div class="pub-arr">→</div>
+    </div>`).join('');
+  renderPubBtns();
+}
+function renderPubBtns(){
+  const btn=document.getElementById('pubBtns');
+  btn.innerHTML='';
+  if(PUBLICATIONS.length>PUB_SHOWN)btn.innerHTML+=`<button class="see-more-btn" onclick="showMorePub()">⬇ Show More Publications</button>`;
+  if(PUB_SHOWN>3)btn.innerHTML+=`<button class="see-less-btn" onclick="showLessPub()">↑ Show Less</button>`;
+}
+function showMorePub(){PUB_SHOWN=PUBLICATIONS.length;document.querySelectorAll('[data-pub]').forEach(e=>e.style.display='flex');renderPubBtns();}
+function showLessPub(){PUB_SHOWN=3;document.querySelectorAll('[data-pub]').forEach((e,i)=>{e.style.display=i>=3?'none':'flex';});renderPubBtns();document.getElementById('publications').scrollIntoView({behavior:'smooth'});}
+function openPubMo(i){
+  const p=PUBLICATIONS[i];
+  document.getElementById('pubMoBody').innerHTML=`
+    <div class="mo-top" style="border-top:4px solid ${p.color}">
+      <div style="font-size:32px;flex-shrink:0">📄</div>
+      <div><div style="font-size:15px;font-weight:600;color:#1a1a1a;line-height:1.4">${p.title}</div></div>
+    </div>
+    <div class="mo-body">
+      <div class="mo-row"><span>Authors</span><strong>${p.authors}</strong></div>
+      <div class="mo-row"><span>Journal</span><strong>${p.jrnl}</strong></div>
+      <div class="mo-row"><span>Year</span><strong>${p.year}</strong></div>
+      <div class="mo-row"><span>Impact Factor</span><strong>${p.impact}</strong></div>
+      <div class="mo-row"><span>Campus</span><strong>${p.campus==='BBSR'?'📍 Bhubaneswar':'📍 Paralakhemundi'}</strong></div>
+      <div style="margin-top:12px;padding:12px;background:#f8f7f2;border-radius:8px;border-left:3px solid ${p.color}">
+        <div style="font-size:11px;font-weight:700;color:#888;letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px">Abstract</div>
+        <p style="font-size:13px;color:#444;line-height:1.75">${p.abstract}</p>
+      </div>
+    </div>`;
+  openMo('pubMo');
+}
+
+/* —— COLLABORATIONS —— */
+function renderCollabs(){
+  document.getElementById('collabGrid').innerHTML=COLLABS.map((c,i)=>`
+    <div class="clb-card su d${(i%4)+1}" style="border-top-color:${c.color}" onclick="openCollabMo(${i})">
+      <div class="clb-icon">${c.icon}</div>
+      <h4>${c.name}</h4>
+      <p>${c.desc.substring(0,90)}…</p>
+      <span class="ctag" style="background:#E6F1FB;color:${c.color}">${c.type}</span>
+    </div>`).join('');
+}
+function openCollabMo(i){
+  const c=COLLABS[i];
+  document.getElementById('collabMoBody').innerHTML=`
+    <div class="mo-top" style="border-top:4px solid ${c.color}">
+      <div style="font-size:36px;flex-shrink:0">${c.icon}</div>
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:17px;color:#0C447C;margin-bottom:4px">${c.name}</div>
+        <span class="ctag" style="background:#E6F1FB;color:${c.color}">${c.type}</span>
+      </div>
+    </div>
+    <div class="mo-body"><p style="font-size:13.5px;color:#444;line-height:1.75">${c.desc}</p></div>`;
+  openMo('collabMo');
+}
+
+/* —— EVENTS —— */
+function renderEvents(){
+  document.getElementById('evGrid').innerHTML=EVENTS.map((e,i)=>`
+    <div class="ev-card su d${(i%3)+1}" onclick="openEvMo(${i})">
+      <div class="ev-img" style="background:${e.bg}">${e.icon}</div>
+      <div class="ev-body">
+        <span class="ev-tag ${e.tagc||''}">${e.tag}</span>
+        <h4>${e.name}</h4>
+        <p>${e.desc.substring(0,80)}…</p>
+        <div class="ev-meta">📅 ${e.date} &nbsp;|&nbsp; 🏛️ ${e.campus}</div>
+      </div>
+    </div>`).join('');
+}
+function openEvMo(i){
+  const e=EVENTS[i];
+  document.getElementById('evMoBody').innerHTML=`
+    <div class="mo-strip" style="background:${e.bg}">${e.icon}</div>
+    <div class="mo-body">
+      <div style="font-family:'Cinzel',serif;font-size:16px;color:#0C447C;margin-bottom:10px">${e.name}</div>
+      <div class="mo-row"><span>Date</span><strong>${e.date}</strong></div>
+      <div class="mo-row"><span>Campus</span><strong>📍 ${e.campus}</strong></div>
+      <p style="font-size:13.5px;color:#444;line-height:1.75;margin-top:12px;padding:12px;background:#f8f7f2;border-radius:8px">${e.desc}</p>
+    </div>`;
+  openMo('evMo');
+}
+
+/* —— WORKSHOPS (show more/less) —— */
+let WS_SHOWN=4;
+function renderWorkshops(){
+  const g=document.getElementById('wsGrid');
+  g.innerHTML=WORKSHOPS.map((w,i)=>`
+    <div class="ev-card su d${(i%4)+1}" style="${i>=WS_SHOWN?'display:none':''}" data-ws="${i}" onclick="openWsMo(${i})">
+      <div class="ev-img" style="background:${w.bg}">${w.icon}</div>
+      <div class="ev-body">
+        <span class="ev-tag">${w.dur}</span>
+        <h4>${w.name}</h4>
+        <p>${w.desc.substring(0,80)}…</p>
+        <div class="ev-meta">🏛️ ${w.campus}</div>
+      </div>
+    </div>`).join('');
+  renderWsBtns();
+}
+function renderWsBtns(){
+  const btn=document.getElementById('wsBtns');
+  btn.innerHTML='';
+  if(WORKSHOPS.length>WS_SHOWN)btn.innerHTML+=`<button class="see-more-btn" onclick="showMoreWs()">⬇ Show More Workshops</button>`;
+  if(WS_SHOWN>4)btn.innerHTML+=`<button class="see-less-btn" onclick="showLessWs()">↑ Show Less</button>`;
+}
+function showMoreWs(){WS_SHOWN=WORKSHOPS.length;document.querySelectorAll('[data-ws]').forEach(e=>e.style.display='');renderWsBtns();}
+function showLessWs(){WS_SHOWN=4;document.querySelectorAll('[data-ws]').forEach((e,i)=>{e.style.display=i>=4?'none':'';});renderWsBtns();document.getElementById('workshops').scrollIntoView({behavior:'smooth'});}
+function openWsMo(i){
+  const w=WORKSHOPS[i];
+  document.getElementById('wsMoBody').innerHTML=`
+    <div class="mo-strip" style="background:${w.bg}">${w.icon}</div>
+    <div class="mo-body">
+      <div style="font-family:'Cinzel',serif;font-size:16px;color:#0C447C;margin-bottom:10px">${w.name}</div>
+      <div class="mo-row"><span>Duration</span><strong>${w.dur}</strong></div>
+      <div class="mo-row"><span>Campus</span><strong>📍 ${w.campus}</strong></div>
+      <p style="font-size:13.5px;color:#444;line-height:1.75;margin-top:12px;padding:12px;background:#f8f7f2;border-radius:8px">${w.desc}</p>
+    </div>`;
+  openMo('wsMo');
+}
+
+/* —— STARTUPS —— */
+function renderStartups(){
+  document.getElementById('startupGrid').innerHTML=STARTUPS.map((s,i)=>`
+    <div class="sc-card su d${(i%4)+1}" style="border-left-color:${s.bc}" onclick="openScMo(${i})">
+      <div class="sc-icon">${s.icon}</div>
+      <h4>${s.name}</h4>
+      <p>${s.desc.substring(0,90)}…</p>
+      <span class="sctag" style="background:${s.bg};color:${s.bc2}">${s.type}</span>
+    </div>`).join('');
+}
+function openScMo(i){
+  const s=STARTUPS[i];
+  document.getElementById('scMoBody').innerHTML=`
+    <div class="mo-top" style="border-top:4px solid ${s.bc}">
+      <div style="font-size:36px;flex-shrink:0">${s.icon}</div>
+      <div>
+        <div style="font-family:'Cinzel',serif;font-size:17px;color:#0C447C;margin-bottom:4px">${s.name}</div>
+        <span class="sctag" style="background:${s.bg};color:${s.bc2}">${s.type}</span>
+      </div>
+    </div>
+    <div class="mo-body"><p style="font-size:13.5px;color:#444;line-height:1.75">${s.desc}</p></div>`;
+  openMo('scMo');
+}
+
+/* —— GALLERY (filter + show more/less + lightbox) —— */
+let GAL_SHOWN=8, GAL_FILTER='all';
+
+function getFilteredGal(){return GAL_FILTER==='all'?GALLERY:GALLERY.filter(x=>x.cat===GAL_FILTER);}
+
+function renderGallery(){
+  const filtered=getFilteredGal();
+  const g=document.getElementById('galGrid');if(!g)return;
+  g.innerHTML=filtered.map((x,i)=>{
+    const ri=GALLERY.indexOf(x);
+    return `<div class="gal-item" data-cat="${x.cat}" onclick="openGalMo(${ri})">
+      <div class="gal-ph" style="background:${x.bg}">
+        <div class="gal-ph-icon">${x.icon}</div>
+        <div class="gal-ph-lbl">${x.lbl}</div>
+      </div>
+      <div class="gal-ov"></div>
+      <div class="gal-cap">${x.lbl}</div>
+      ${x.has360?'<div class=\"gal-360-badge\">360\u00b0</div>':''}
+    </div>`;
+  }).join('');
+  // apply show/hide
+  g.querySelectorAll('.gal-item').forEach((el,i)=>{el.style.display=i<GAL_SHOWN?'':'none';});
+  renderGalBtns(filtered.length);
+}
+
+function renderGalBtns(total){
+  const btn=document.getElementById('galBtns');if(!btn)return;
+  const vis=Math.min(GAL_SHOWN,total);
+  let bh='';
+  if(total>vis)bh+=`<button class="see-more-btn" onclick="showMoreGal()">&#11015; Load More Photos (${total-vis} more)</button>`;
+  if(GAL_SHOWN>8)bh+=`<button class="see-less-btn" onclick="showLessGal()">&#8593; Show Less</button>`;
+  btn.innerHTML=bh;
+}
+
+function filterGal(cat,btn){
+  GAL_FILTER=cat;GAL_SHOWN=8;
+  document.querySelectorAll('.gfbtn').forEach(b=>b.classList.remove('act'));
+  if(btn)btn.classList.add('act');
+  renderGallery();
+}
+function showMoreGal(){GAL_SHOWN=Math.min(GAL_SHOWN+8,getFilteredGal().length);renderGallery();}
+function showLessGal(){GAL_SHOWN=8;renderGallery();document.getElementById('gallery').scrollIntoView({behavior:'smooth'});}
+
+function openGalMo(i){
+  const x=GALLERY[i];
+  let inner='';
+  if(x.has360){
+    inner=`<div style="background:#111;border-radius:14px 14px 0 0;overflow:hidden">
+      <div style="position:relative;height:280px">
+        <canvas id="panoCanvas" style="width:100%;height:100%;cursor:grab;touch-action:none;display:block" width="700" height="280"></canvas>
+        <div style="position:absolute;top:10px;right:10px;background:#EF9F27;color:#042C53;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px">360&#xb0; View</div>
+      </div>
+      <div style="padding:8px 16px;background:#222;text-align:center">
+        <span style="font-size:11px;color:#888">&#128072; Drag left/right to explore &nbsp;|&nbsp; Pinch to zoom on mobile</span>
+      </div>
+    </div>`;
+  } else {
+    inner=`<div style="height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:${x.bg};border-radius:14px 14px 0 0">
+      <div style="font-size:64px">${x.icon}</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.85);font-weight:600;text-align:center;padding:0 20px">${x.lbl}</div>
+    </div>`;
+  }
+  document.getElementById('galMoBody').innerHTML=inner+`
+    <div style="padding:18px 20px;background:#1a1a1a">
+      <h3 style="font-size:16px;font-weight:600;color:#fff;margin-bottom:6px">${x.lbl}</h3>
+      <p style="font-size:13px;color:#aaa;line-height:1.6">${x.desc}</p>
+      <p style="font-size:11px;color:#555;margin-top:10px">&#128247; ${x.has360?'360&#xb0; interactive view — add your equirectangular photo to enable full panorama.':'Actual photo will be added here once available.'}</p>
+    </div>`;
+  openMo('galMo');
+  if(x.has360)setTimeout(()=>init360(x),100);
+}
+
+function init360(x){
+  const c=document.getElementById('panoCanvas');if(!c)return;
+  const ctx=c.getContext('2d');
+  const W=c.width,H=c.height;
+  let angle=0,dragging=false,lastX=0,zoom=1,rafId;
+  const cols=200;
+  function getColor(s,a){
+    const t=(s/cols+a/(Math.PI*2))%1;
+    const bright=40+Math.abs(Math.sin(t*Math.PI*3))*180;
+    const hue=200+t*60;
+    return `hsl(${hue},55%,${bright}%)`;
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(let s=0;s<cols;s++){
+      ctx.fillStyle=getColor(s,angle);
+      const x=s*(W/cols);
+      ctx.fillRect(x,0,W/cols+1,H);
+    }
+    // center icon
+    ctx.globalAlpha=.15;
+    ctx.font=`${Math.round(80*zoom)}px serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='#fff';
+    ctx.fillText(x.icon,W/2,H/2);
+    ctx.globalAlpha=1;
+    // hint
+    ctx.fillStyle='rgba(255,255,255,.3)';
+    ctx.font='bold 12px sans-serif';ctx.textAlign='center';
+    ctx.fillText('\u2190 Drag to explore \u2192',W/2,H-14);
+  }
+  function spin(){angle+=.003;draw();rafId=requestAnimationFrame(spin);}
+  rafId=requestAnimationFrame(spin);
+  c.addEventListener('mousedown',e=>{dragging=true;lastX=e.clientX;cancelAnimationFrame(rafId);});
+  window.addEventListener('mousemove',e=>{if(!dragging)return;angle+=(e.clientX-lastX)*.006;lastX=e.clientX;draw();});
+  window.addEventListener('mouseup',()=>{dragging=false;});
+  let lt=0;
+  c.addEventListener('touchstart',e=>{lt=e.touches[0].clientX;cancelAnimationFrame(rafId);e.preventDefault();},{passive:false});
+  c.addEventListener('touchmove',e=>{angle+=(e.touches[0].clientX-lt)*.007;lt=e.touches[0].clientX;draw();e.preventDefault();},{passive:false});
+  let pd=0;
+  c.addEventListener('touchstart',e=>{if(e.touches.length===2)pd=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);},{passive:true});
+  c.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom=Math.max(.5,Math.min(2,zoom*d/(pd||d)));pd=d;draw();}},{passive:true});
+  document.getElementById('galMo').addEventListener('click',()=>cancelAnimationFrame(rafId),{once:true});
+}
+
+/* —— NEWS —— */
+function renderHomeNews(){
+  const list=document.getElementById('homeNewsList');
+  list.innerHTML=NEWS.slice(0,6).map(n=>`
+    <div class="news-card su" onclick="openNewsMo(${NEWS.indexOf(n)})">
+      <div class="news-bar" style="background:${n.color}"></div>
+      <div class="news-cnt"><span class="news-dt">${n.date}</span><h4>${n.title}</h4><p>${n.desc.substring(0,80)}…</p></div>
+      <div class="news-arr">→</div>
+    </div>`).join('');
+}
+let NEWS_SHOWN=4;
+function renderNews(){
+  const g=document.getElementById('newsGrid');
+  g.innerHTML=NEWS.map((n,i)=>`
+    <div class="nf-card su" style="${i>=NEWS_SHOWN?'display:none':''}" data-news="${i}" onclick="openNewsMo(${i})">
+      <div class="nf-bar" style="background:${n.color}"></div>
+      <div class="nf-cnt"><span class="nf-dt">${n.date}</span><h4>${n.title}</h4><p>${n.desc.substring(0,100)}…</p></div>
+      <div class="nf-arr">→</div>
+    </div>`).join('');
+  renderNewsBtns();
+}
+function renderNewsBtns(){
+  const btn=document.getElementById('newsBtns');btn.innerHTML='';
+  if(NEWS.length>NEWS_SHOWN)btn.innerHTML+=`<button class="see-more-btn" onclick="showMoreNews()">⬇ Show More News</button>`;
+  if(NEWS_SHOWN>4)btn.innerHTML+=`<button class="see-less-btn" onclick="showLessNews()">↑ Show Less</button>`;
+}
+function showMoreNews(){NEWS_SHOWN=NEWS.length;document.querySelectorAll('[data-news]').forEach(e=>e.style.display='');renderNewsBtns();}
+function showLessNews(){NEWS_SHOWN=4;document.querySelectorAll('[data-news]').forEach((e,i)=>{e.style.display=i>=4?'none':'';});renderNewsBtns();document.getElementById('news').scrollIntoView({behavior:'smooth'});}
+function openNewsMo(i){
+  const n=NEWS[i];
+  document.getElementById('newsMoBody').innerHTML=`
+    <div class="mo-top" style="border-top:4px solid ${n.color};padding-bottom:16px">
+      <div>
+        <span style="display:inline-block;background:#E6F1FB;color:#042C53;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:8px">${n.date}</span>
+        <div style="font-size:16px;font-weight:600;color:#1a1a1a;line-height:1.4">${n.title}</div>
+      </div>
+    </div>
+    <div class="mo-body"><p style="font-size:13.5px;color:#444;line-height:1.75">${n.desc}</p></div>`;
+  openMo('newsMo');
+}
+
+/* —— CONTACT FORM —— */
+function submitCF(){
+  const n=document.getElementById('cfName').value.trim();
+  const e=document.getElementById('cfEmail').value.trim();
+  const s=document.getElementById('cfSubject').value;
+  const m=document.getElementById('cfMsg').value.trim();
+  if(!n||!e||!s||!m){alert('Please fill all required fields.');return;}
+  document.getElementById('cfSuccess').style.display='block';
+}
+
+/* —— ACTIVE NAV —— */
+function updateActiveNav(){
+  const navH=document.querySelector('.nav').offsetHeight+10;
+  const sections=['home','about','programs','labs','research','projects','publications','collaborations','events','workshops','startups','alumni','testimonials','gallery','news','team','contact'];
+  let cur='home';
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el&&el.getBoundingClientRect().top<=navH+20)cur=id;
+  });
+  document.querySelectorAll('.nav-bar>a').forEach(a=>{a.classList.remove('act');if(a.getAttribute('href')==='#'+cur)a.classList.add('act');});
+  const resIds=['research','projects','publications','collaborations'];
+  const resSpan=document.querySelector('.nd>span');
+  if(resSpan)resSpan.style.color=resIds.includes(cur)?'#EF9F27':'';
+}
+
+/* —— SLIDE-UP —— */
+function initSU(){
+  if(!window.IntersectionObserver){document.querySelectorAll('.su').forEach(e=>e.classList.add('vis'));return;}
+  const obs=new IntersectionObserver(entries=>{entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');obs.unobserve(en.target);}});},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
+  document.querySelectorAll('.su').forEach(e=>obs.observe(e));
+}
+
+/* ── Mobile Research dropdown tap ── */
+function toggleMob(){document.getElementById('mobNav').classList.toggle('open');}
+
+/* —— RESEARCH DROPDOWN —— */
+function handleResearchClick(e){
+  e.stopPropagation();
+  const nd=document.getElementById('researchNd');
+  const dd=document.getElementById('researchDd');
+  const isOpen=nd.classList.contains('open');
+  if(isOpen){
+    nd.classList.remove('open');
+    document.getElementById('research')?.scrollIntoView({behavior:'smooth'});
+  } else {
+    // Position the fixed dropdown under the span
+    const rect=nd.getBoundingClientRect();
+    dd.style.top=(rect.bottom)+'px';
+    dd.style.left=rect.left+'px';
+    nd.classList.add('open');
+  }
+}
+function closeResearchDd(){
+  document.getElementById('researchNd')?.classList.remove('open');
+}
+document.addEventListener('click',e=>{
+  const nd=document.getElementById('researchNd');
+  if(nd&&!nd.contains(e.target))nd.classList.remove('open');
+});
+// Also reposition on scroll/resize
+window.addEventListener('scroll',()=>{
+  const nd=document.getElementById('researchNd');
+  if(nd?.classList.contains('open')){
+    const rect=nd.getBoundingClientRect();
+    const dd=document.getElementById('researchDd');
+    if(dd){dd.style.top=rect.bottom+'px';dd.style.left=rect.left+'px';}
+  }
+},true);
+window.addEventListener('resize',()=>document.getElementById('researchNd')?.classList.remove('open'));
+
+/* —— MODAL CLOSE —— */
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.mo.open').forEach(m=>m.classList.remove('open'));});
+document.addEventListener('click',e=>{if(e.target.classList.contains('mo'))e.target.classList.remove('open');});
+
+/* —— CHAT —— */
+function toggleChat(){
+  document.getElementById('chatBx').classList.toggle('open');
+  document.getElementById('chatBdg').style.display='none';
+}
+const CR={program:'SoCDS offers 5 programs at both campuses:<br>• B.Tech CSE (60 seats)<br>• B.Tech CSE – AIML (60 seats)<br>• BCA (60 seats)<br>• MCA (30 seats)<br>• M.Tech Data Science (18 seats)',admission:'Admissions open for 2025–26. Visit <a href="https://cutm.ac.in/admission" style="color:#0C447C">cutm.ac.in/admission</a> or call 📞 +91 8260077222.',campus:'SoCDS has two campuses:<br>📍 Bhubaneswar – Jatni, Odisha (752050)<br>📍 Paralakhemundi – Gajapati, Odisha (761211)',bbsr:'Bhubaneswar Campus: Jatni, Odisha – 752050<br>📞 +91 0674 2492 444 | ✉️ info.bbsr@cutm.ac.in',pkd:'Paralakhemundi Campus: Gajapati, Odisha – 761211<br>📞 +91 8260077222 | ✉️ info.pkd@cutm.ac.in',lab:'SoCDS has 9 labs: Basic Programming, Data Science & ML, Advanced Programming, Cloud Computing, OS, AR/VR, Blockchain, Research, and Networking Labs.',placement:'95%+ placement rate. Students placed at TCS, Infosys, Wipro, Capgemini, HCL and many more top IT companies.',faculty:'SoCDS has 40 CSE faculty — 27 at Bhubaneswar and 13 at Paralakhemundi campus.',default:'For more info: 📞 +91 8260077222 | ✉️ socds@cutm.ac.in | 🌐 cutm.ac.in'};
+function sendChat(){
+  const inp=document.getElementById('chatIn');const ms=document.getElementById('chatMs');const msg=inp.value.trim();if(!msg)return;
+  ms.innerHTML+=`<div class="cm usr">${msg}</div>`;inp.value='';
+  const ml=msg.toLowerCase();let r=CR.default;
+  if(ml.includes('program')||ml.includes('course'))r=CR.program;
+  else if(ml.includes('admit')||ml.includes('apply'))r=CR.admission;
+  else if(ml.includes('bbsr')||ml.includes('bhubaneswar'))r=CR.bbsr;
+  else if(ml.includes('pkd')||ml.includes('paralakhe'))r=CR.pkd;
+  else if(ml.includes('campus')||ml.includes('location'))r=CR.campus;
+  else if(ml.includes('lab')||ml.includes('facilit'))r=CR.lab;
+  else if(ml.includes('place')||ml.includes('job'))r=CR.placement;
+  else if(ml.includes('facult')||ml.includes('professor'))r=CR.faculty;
+  setTimeout(()=>{ms.innerHTML+=`<div class="cm bot">${r}</div>`;ms.scrollTop=ms.scrollHeight;},480);
+  ms.scrollTop=ms.scrollHeight;
+}
+
+/* —— HERO CANVAS —— */
+(function(){
+  const c=document.getElementById('heroCanvas');if(!c)return;
+  const ctx=c.getContext('2d');let W,H,nodes=[];
+  function resize(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;}
+  resize();window.addEventListener('resize',resize);
+  const words=['if()','01','AI','{}','</>','def','class','int','ML','API','SQL','NLP','GPU','IoT','λ','∑','∂','π','bool','null'];
+  for(let i=0;i<55;i++)nodes.push({x:Math.random()*1400,y:Math.random()*600,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,word:words[Math.floor(Math.random()*words.length)],size:Math.random()*5+8,alpha:Math.random()*.35+.1,color:Math.random()>.5?'#EF9F27':'#6AADFF'});
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.strokeStyle=`rgba(106,173,255,${.12*(1-d/110)})`;ctx.lineWidth=.7;ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();}}
+    nodes.forEach(n=>{ctx.font=`bold ${n.size}px monospace`;ctx.fillStyle=n.color;ctx.globalAlpha=n.alpha;ctx.fillText(n.word,n.x,n.y);ctx.globalAlpha=1;n.x+=n.vx;n.y+=n.vy;if(n.x<-60)n.x=W+20;if(n.x>W+60)n.x=-20;if(n.y<-20)n.y=H+10;if(n.y>H+20)n.y=-10;});
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* —— SINGLE INIT ——  */
+window.addEventListener('scroll',updateActiveNav);
+document.addEventListener('DOMContentLoaded',()=>{
+  renderPrograms();
+  renderSubjects();
+  renderLeadership('bbsr','bbsr-lead-row');
+  renderLeadership('pkd','pkd-lead-row');
+  renderFacGrid(FACULTY_BBSR,'bbsr-fac-grid',8);
+  renderFacGrid(FACULTY_PKD,'pkd-fac-grid',6);
+  applyFacFilter();
+  renderLabs();
+  renderResearch();
+  renderProjects();
+  renderPubs();
+  renderCollabs();
+  renderEvents();
+  renderWorkshops();
+  renderStartups();
+  renderAlumni();
+  renderTestimonials();
+  renderGallery();
+  renderHomeNews();
+  renderNews();
+  initSU();
+  // Research dropdown — works on both hover (desktop) and click/tap (mobile)
+  // handled by handleResearchClick() defined globally below
+});
+</script>
+</body>
+</html>
