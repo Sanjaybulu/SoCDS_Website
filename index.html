@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,15 +6,16 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SoCDS — School of Computing &amp; Data Science | Centurion University</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
+<script type="text/javascript" src="http://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=XCjkfGSP1CA5BsfyOuMfddCWLxd2DHrEK7mAVMRp39mnd4YHjv7e0pW43rZ1SlqiZTGqiAxonQI_-_BMsFlwtw" charset="UTF-8"></script><style>
 /* ═══ RESET & BASE ═══ */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:#f0ede6;color:#1a1a1a}
 a{text-decoration:none}
 [id]{scroll-margin-top:150px}
-.su{opacity:0;transform:translateY(40px);transition:opacity .6s ease,transform .6s ease}
-.su.vis{opacity:1;transform:none}
+.su{opacity:1;transform:none;transition:opacity .6s ease,transform .6s ease}
+.su.anim{opacity:0;transform:translateY(40px)}
+.su.anim.vis{opacity:1;transform:none}
 .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}.d4{transition-delay:.32s}
 
 /* ═══ NAV ═══ */
@@ -364,6 +366,13 @@ footer{background:#1a1a1a;padding:44px 32px 0}
 .mo-role-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:#E6F1FB;color:#0C447C;margin-bottom:4px}
 
 .gal-360-badge{position:absolute;top:8px;right:8px;background:#EF9F27;color:#042C53;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;z-index:2;letter-spacing:.03em}
+.pub-stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:24px}
+.pub-stat-card{background:#fff;border-radius:12px;padding:14px 16px;border-left:4px solid;box-shadow:0 3px 12px rgba(0,0,0,.08);display:flex;align-items:center;gap:12px}
+.pub-stat-icon{font-size:28px;width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pub-stat-num{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:#1a1a1a;line-height:1}
+.pub-stat-lbl{font-size:12px;color:#888;margin-top:3px}
+@media(max-width:1024px){.pub-stats-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.pub-stats-row{grid-template-columns:repeat(2,1fr)}}
 /* ═══ TOUCH & MOBILE IMPROVEMENTS ═══ */
 /* Make all clickable cards touch-friendly */
 .prog-card,.fac-card,.lead-card,.lab-card,.rc,.pj-card,.pub-item,.clb-card,.ev-card,.sc-card,.gal-item,.nf-card,.news-card{
@@ -839,6 +848,8 @@ footer{background:#1a1a1a;padding:44px 32px 0}
 <section class="sec-std wht" id="publications">
   <div class="sec-in">
     <div class="sec-hd su"><h2>Publications</h2><p>Peer-reviewed publications by SoCDS faculty in international journals</p><div class="sec-bar"></div></div>
+    <!-- Publication Stats Summary -->
+    <div class="pub-stats-row" id="pubStatsRow"></div>
     <div id="pubList"></div>
     <div class="sm-btns" id="pubBtns"></div>
   </div>
@@ -951,12 +962,13 @@ footer{background:#1a1a1a;padding:44px 32px 0}
     <div class="fac-filter-wrap">
       <div class="fac-filter">
         <span style="font-size:13px;color:#666;font-weight:500">Filter:</span>
-        <button class="ffbtn act" onclick="filterFac('all',this)">All (40)</button>
+        <button class="ffbtn act" onclick="filterFac('all',this)" id="ffbtn-all">All (40)</button>
         <button class="ffbtn b-bbsr" onclick="filterFac('bbsr',this)">📍 Bhubaneswar (27)</button>
         <button class="ffbtn b-pkd" onclick="filterFac('pkd',this)">📍 Paralakhemundi (13)</button>
         <button class="ffbtn" onclick="filterFac('prof',this)">Professors</button>
         <button class="ffbtn" onclick="filterFac('assoc',this)">Assoc. Prof.</button>
         <button class="ffbtn" onclick="filterFac('asst',this)">Asst. Prof.</button>
+        <button class="ffbtn" onclick="filterFac('support',this)">Supporting Staff</button>
         <input class="fac-search" type="text" placeholder="🔍 Search by name or subject…" oninput="searchFac(this.value)">
       </div>
       <div style="font-size:13px;color:#888;margin:8px 0 4px" id="facCount"></div>
@@ -983,6 +995,16 @@ footer{background:#1a1a1a;padding:44px 32px 0}
       <div class="fac-grid" id="all-fac-grid"></div>
       <div class="sm-btns" id="facBtns"></div>
     </div>
+
+    <!-- Supporting Staff — always at the bottom -->
+    <div class="support-staff-section" id="supportStaffSection" style="display:none;margin-top:28px">
+      <div class="campus-block-title" style="margin-bottom:14px">
+        <span class="cdot" style="background:#533AB7"></span>Supporting Staff
+        <span id="supportStaffCount" style="font-size:12px;color:#888;font-weight:400;margin-left:8px"></span>
+      </div>
+      <div class="fac-grid" id="support-staff-grid"></div>
+      <div class="sm-btns" id="supportBtns"></div>
+    </div>
   </div>
 </section>
 
@@ -993,20 +1015,20 @@ footer{background:#1a1a1a;padding:44px 32px 0}
       <!-- BBSR -->
       <div class="contact-card su d1" style="margin-bottom:20px" data-campus="bbsr">
         <h3 style="color:#0C447C">📍 Bhubaneswar Campus</h3>
-        <div class="cinfo-row"><div class="cinfo-icon">🏠</div><div class="cinfo-text"><label>Address</label><span>Campus-11, Jatni, Bhubaneswar, Odisha — 752050</span></div></div>
-        <div class="cinfo-row"><div class="cinfo-icon">📞</div><div class="cinfo-text"><label>Phone</label><a href="tel:+910674249244">+91 0674 2492 444</a></div></div>
-        <div class="cinfo-row"><div class="cinfo-icon">✉️</div><div class="cinfo-text"><label>Email</label><a href="mailto:info.bbsr@cutm.ac.in">info.bbsr@cutm.ac.in</a></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon">🏠</div><div class="cinfo-text"><label>Address</label><span id="bbsr-addr">Campus-11, Jatni, Bhubaneswar, Odisha — 752050</span></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon">📞</div><div class="cinfo-text"><label>Phone</label><a id="bbsr-phone" href="tel:+910674249244">+91 0674 2492 444</a></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon">✉️</div><div class="cinfo-text"><label>Email</label><a id="bbsr-email" href="mailto:info.bbsr@cutm.ac.in">info.bbsr@cutm.ac.in</a></div></div>
         <div class="cinfo-row"><div class="cinfo-icon">🕐</div><div class="cinfo-text"><label>Hours</label><span>Mon – Sat: 9:00 AM – 5:00 PM</span></div></div>
-        <a href="https://maps.google.com/?q=Centurion+University+Bhubaneswar+Jatni" target="_blank" style="display:inline-block;margin-top:10px;background:#E6F1FB;color:#0C447C;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px">📍 Open in Google Maps</a>
+        <a id="bbsr-map" href="https://maps.google.com/?q=Centurion+University+Bhubaneswar+Jatni" target="_blank" style="display:inline-block;margin-top:10px;background:#E6F1FB;color:#0C447C;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px">📍 Open in Google Maps</a>
       </div>
       <!-- PKD -->
       <div class="contact-card su d2" data-campus="pkd">
         <h3 style="color:#BA7517">📍 Paralakhemundi Campus</h3>
-        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">🏠</div><div class="cinfo-text"><label>Address</label><span>Ramachandrapur, Gajapati, Odisha — 761211</span></div></div>
-        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">📞</div><div class="cinfo-text"><label>Phone</label><a href="tel:+918260077222">+91 8260077222</a></div></div>
-        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">✉️</div><div class="cinfo-text"><label>Email</label><a href="mailto:info.pkd@cutm.ac.in">info.pkd@cutm.ac.in</a></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">🏠</div><div class="cinfo-text"><label>Address</label><span id="pkd-addr">Ramachandrapur, Gajapati, Odisha — 761211</span></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">📞</div><div class="cinfo-text"><label>Phone</label><a id="pkd-phone" href="tel:+918260077222">+91 8260077222</a></div></div>
+        <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">✉️</div><div class="cinfo-text"><label>Email</label><a id="pkd-email" href="mailto:info.pkd@cutm.ac.in">info.pkd@cutm.ac.in</a></div></div>
         <div class="cinfo-row"><div class="cinfo-icon" style="background:#FFF3DC">🕐</div><div class="cinfo-text"><label>Hours</label><span>Mon – Sat: 9:00 AM – 5:00 PM</span></div></div>
-        <a href="https://maps.google.com/?q=Centurion+University+Paralakhemundi" target="_blank" style="display:inline-block;margin-top:10px;background:#FFF3DC;color:#BA7517;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px">📍 Open in Google Maps</a>
+        <a id="pkd-map" href="https://maps.google.com/?q=Centurion+University+Paralakhemundi" target="_blank" style="display:inline-block;margin-top:10px;background:#FFF3DC;color:#BA7517;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px">📍 Open in Google Maps</a>
       </div>
     </div>
     <div class="contact-form su d3">
@@ -1036,8 +1058,8 @@ footer{background:#1a1a1a;padding:44px 32px 0}
       <h3>School of Computing &amp; Data Science</h3>
       <p>A premier academic division of Centurion University of Technology &amp; Management, Odisha — nurturing technology leaders across two campuses.</p>
       <div class="ft-camps">
-        <div class="ft-camp"><strong>📍 Bhubaneswar Campus</strong>Jatni, Bhubaneswar, Odisha — 752050<br>📞 +91 0674 2492 444 | ✉️ info.bbsr@cutm.ac.in</div>
-        <div class="ft-camp"><strong>📍 Paralakhemundi Campus</strong>Ramachandrapur, Gajapati, Odisha — 761211<br>📞 +91 8260077222 | ✉️ info.pkd@cutm.ac.in</div>
+        <div class="ft-camp"><strong>📍 Bhubaneswar Campus</strong>Ramchandrapur, P.O.– Jatni, Bhubaneswar, Khurda, Odisha — 752050<br>📞 +91 0674 2492 444 | ✉️ info.bbsr@cutm.ac.in</div>
+        <div class="ft-camp"><strong>📍 Paralakhemundi Campus</strong>Village- Alluri Nagar, P.O.– R Sitapur, Via- Uppalada Paralakhemundi, Gajapati, Odisha — 761211<br>📞 +91 8260077222 | ✉️ info.pkd@cutm.ac.in</div>
       </div>
       <div style="font-size:12px;color:#888">✉️ <a href="mailto:socds@cutm.ac.in" style="color:#EF9F27">socds@cutm.ac.in</a> &nbsp;|&nbsp; 🌐 <a href="https://cutm.ac.in" target="_blank" style="color:#EF9F27">cutm.ac.in</a></div>
     </div>
@@ -1082,7 +1104,7 @@ footer{background:#1a1a1a;padding:44px 32px 0}
 ════════════════════════════════════════════ */
 const GR=['linear-gradient(135deg,#042C53,#185FA5)','linear-gradient(135deg,#0C447C,#1D9E75)','linear-gradient(135deg,#185FA5,#533AB7)','linear-gradient(135deg,#3B6D11,#0C447C)','linear-gradient(135deg,#A32D2D,#185FA5)','linear-gradient(135deg,#533AB7,#042C53)','linear-gradient(135deg,#BA7517,#0C447C)','linear-gradient(135deg,#1D6B8C,#042C53)'];
 
-const PROGRAMS=[
+var PROGRAMS=[
   {id:0,syllabus:'',name:'B.Tech in Computer Science & Engineering',short:'B.Tech CSE',icon:'💻',color:'#185FA5',bg:'linear-gradient(135deg,#042C53,#185FA5)',level:'UG',dur:'4 Years',seats:{bbsr:60,pkd:60},eligi:'10+2 with PCM, min 50%. OJEE / JEE Main preferred.',desc:'A comprehensive four-year undergraduate program covering algorithms, data structures, OS, computer networks, databases, and software engineering with hands-on labs and 6-month industry internship.',highlights:['GPU-powered AI lab access','6-month compulsory internship','Industry-certified curriculum','100% placement assistance','AWS, Google, Cisco certifications'],careers:['Software Engineer','Backend Developer','Systems Analyst','DevOps Engineer','IT Consultant']},
   {id:1,syllabus:'',name:'B.Tech CSE — AI & Machine Learning',short:'B.Tech CSE (AIML)',icon:'🤖',color:'#0C447C',bg:'linear-gradient(135deg,#0C447C,#533AB7)',level:'UG',dur:'4 Years',seats:{bbsr:60,pkd:60},eligi:'10+2 with PCM, min 50%. OJEE / JEE Main preferred.',desc:'A specialized B.Tech focusing on Artificial Intelligence and Machine Learning — covering deep learning, NLP, computer vision, and AI system deployment with NVIDIA GPU cluster access.',highlights:['NVIDIA A100 GPU cluster lab','Research publication support','Live industry AI projects','GATE / PhD preparation','Google / AWS AI certifications'],careers:['AI Engineer','ML Researcher','Data Scientist','NLP Engineer','Computer Vision Developer']},
   {id:2,syllabus:'',name:'BCA — Bachelor of Computer Applications',short:'BCA',icon:'🎓',color:'#3B6D11',bg:'linear-gradient(135deg,#3B6D11,#1D9E75)',level:'UG',dur:'3 Years',seats:{bbsr:60,pkd:60},eligi:'10+2 in any stream, min 45%. Direct merit-based admission.',desc:'A career-focused three-year program in computer applications, web development, programming, and database management — ideal for quick IT industry entry or pathway to MCA.',highlights:['Practical project every semester','Web & mobile development focus','NPTEL certifications integrated','Strong placement cell support','Gateway to MCA program'],careers:['Junior Software Developer','Web Developer','Technical Support Analyst','Programmer Analyst','IT Trainee']},
@@ -1090,7 +1112,7 @@ const PROGRAMS=[
   {id:4,syllabus:'',name:'M.Tech in Data Science',short:'M.Tech Data Science',icon:'🔬',color:'#A32D2D',bg:'linear-gradient(135deg,#A32D2D,#185FA5)',level:'PG',dur:'2 Years',seats:{bbsr:18,pkd:18},eligi:'B.Tech / B.E. in CS / IT / ECE or M.Sc. CS / IT / Mathematics. Min 55%. GATE score preferred.',desc:'A research-intensive postgraduate program covering advanced data science, ML research, statistical modelling, and big data engineering with thesis-based assessment and PhD pathway.',highlights:['Research scholarships available','Funded project participation','National conference presentations','PhD pathway supported','CUTM research centre access'],careers:['Data Scientist','Research Scientist','ML Engineer','Data Analyst','PhD Scholar / Academia']},
 ];
 
-const LEADERSHIP={
+var LEADERSHIP={
   bbsr:[
     {name:'Dr. Sujata Chakravarty',role:'Director — IC & Academic External Interface',desig:'Professor',campus:'bbsr',spec:'Machine Learning, Pattern Recognition',email:'sujata.chakravarty@cutm.ac.in',photo:'https://fdp.cutm.ac.in/sujatachakravarty/assets/images/profile.png',profile:'https://fdp.cutm.ac.in/sujatachakravarty/',badge:'Director',bc:'#A32D2D'},
     {name:'Dr. Swarna Prabha Jena',role:'Associate Dean — SoCDS',desig:'Associate Professor-I',campus:'bbsr',spec:'Embedded Systems, IoT, Edge Computing',email:'swarna.jena@cutm.ac.in',photo:'https://fdp.cutm.ac.in/swarnaprabhajena/assets/images/profile.png',profile:'https://fdp.cutm.ac.in/swarnaprabhajena/',badge:'Assoc. Dean',bc:'#0C447C'},
@@ -1105,7 +1127,7 @@ const LEADERSHIP={
   ]
 };
 
-const FACULTY_BBSR=[
+var FACULTY_BBSR=[
   {name:'Dr. Sujata Chakravarty',desig:'Professor',role:'Director — IC & Academic External Interface',spec:'Machine Learning, Pattern Recognition',campus:'bbsr',email:'sujata.chakravarty@cutm.ac.in',photo:'https://fdp.cutm.ac.in/sujatachakravarty/assets/images/profile.png',profile:'https://fdp.cutm.ac.in/sujatachakravarty/'},
   {name:'Dr. Swarna Prabha Jena',desig:'Associate Professor-I',role:'Associate Dean — SoCDS',spec:'Embedded Systems, IoT, Edge Computing',campus:'bbsr',email:'swarna.jena@cutm.ac.in',photo:'https://fdp.cutm.ac.in/swarnaprabhajena/assets/images/profile.png',profile:'https://fdp.cutm.ac.in/swarnaprabhajena/'},
   {name:'Dr. Sangram Keshari Swain',desig:'Professor',role:'',spec:'Software Engineering, IoT',campus:'bbsr',email:'sangram.swain@cutm.ac.in',photo:'',profile:''},
@@ -1136,7 +1158,7 @@ const FACULTY_BBSR=[
   {name:'Mrs. Soumyarashmi Panigrahi',desig:'Assistant Professor',role:'',spec:'Algorithms, Distributed Systems',campus:'bbsr',email:'soumyarashmi.panigrahi@cutm.ac.in',photo:'',profile:''},
 ];
 
-const FACULTY_PKD=[
+var FACULTY_PKD=[
   {name:'Dr. Prafulla Kumar Panda',desig:'Professor',role:'Dean — SoCDS',spec:'Data Science, Machine Learning',campus:'pkd',email:'prafullapanda@cutm.ac.in',photo:'',profile:''},
   {name:'Dr. Pragyan Paramita Pradhan',desig:'Assistant Professor',role:'Associate Dean — SoCDS',spec:'Smart Infrastructure, IoT',campus:'pkd',email:'pragyan.pradhan@cutm.ac.in',photo:'',profile:''},
   {name:'Dr. Dhawaleswar Rao CH',desig:'Associate Professor',role:'HoD — CSE',spec:'Data Science, Machine Learning',campus:'pkd',email:'dhawaleswar.rao@cutm.ac.in',photo:'',profile:''},
@@ -1154,9 +1176,9 @@ const FACULTY_PKD=[
   {name:'Mrs. Puspanjali B',desig:'Assistant Professor',role:'',spec:'Software Development, Testing',campus:'pkd',email:'puspanjali.b@cutm.ac.in',photo:'',profile:''},
 ];
 
-const ALL_FAC=[...FACULTY_BBSR,...FACULTY_PKD];
+var ALL_FAC=[...FACULTY_BBSR,...FACULTY_PKD];
 
-const LABS=[
+var LABS=[
   {name:'Basic Programming Lab',has360:true,icon:'💻',bg:'linear-gradient(135deg,#185FA5,#042C53)',cap:'50 workstations',tech:'C, C++, Java, Python, Basic Web',desc:'Foundational lab with 50 high-spec workstations supporting C, C++, Java, Python, and web programming for first and second year students with hands-on compiler and debugging tools.'},
   {name:'Data Science & ML Lab',has360:true,icon:'🧠',bg:'linear-gradient(135deg,#533AB7,#0C447C)',cap:'30 workstations + NVIDIA GPUs',tech:'TensorFlow, PyTorch, Keras, Jupyter',desc:'GPU-powered lab with NVIDIA A100 clusters for deep learning, NLP, and computer vision research. Students run real ML experiments using TensorFlow, PyTorch, and Jupyter notebooks.'},
   {name:'Advanced Programming Lab',has360:true,icon:'⚙️',bg:'linear-gradient(135deg,#042C53,#185FA5)',cap:'50 workstations',tech:'Full Stack, Docker, DSA, CI/CD',desc:'Full-stack development, DSA, algorithms, and system design lab with CI/CD pipelines, Docker environments, and collaborative coding platforms for advanced students.'},
@@ -1169,7 +1191,7 @@ const LABS=[
   {name:'Future Nexus Lab',has360:true,icon:'🚀',bg:'linear-gradient(135deg,#EF9F27,#A32D2D)',cap:'30 workstations + Innovation Space',tech:'Quantum Computing Simulators, AI Agents, XR Devices, Edge AI',desc:'A next-generation innovation lab bridging emerging technologies — quantum computing simulation, agentic AI systems, spatial computing, and cross-disciplinary tech experimentation. Designed for advanced research and prototype development.'},
 ];
 
-const RESEARCH_AREAS=[
+var RESEARCH_AREAS=[
   {name:'Artificial Intelligence & ML',icon:'🧠',color:'#0C447C',desc:'Deep learning, reinforcement learning, NLP, computer vision and intelligent systems with GPU-powered infrastructure. Faculty publish in IEEE Transactions and top AI conferences.',papers:'12+ publications',projects:'8 active projects'},
   {name:'Data Science & Analytics',icon:'📊',color:'#1D9E75',desc:'Big data processing, predictive modelling, statistical analysis, and BI systems for real-world decision support with industry partner datasets.',papers:'8 publications',projects:'5 active projects'},
   {name:'Cyber Security',icon:'🔒',color:'#A32D2D',desc:'Network security, cryptography, digital forensics, IDS and ethical hacking research. Students participate in national CTF competitions and bug bounty programs.',papers:'6 publications',projects:'4 active projects'},
@@ -1180,7 +1202,7 @@ const RESEARCH_AREAS=[
   {name:'Health Informatics',icon:'🏥',color:'#042C53',desc:'AI in healthcare, medical image analysis, electronic health records, and federated learning for privacy-preserving patient data analysis.',papers:'4 publications',projects:'2 active projects'},
 ];
 
-const PROJECTS=[
+var PROJECTS=[
   {name:'Smart Traffic Management System',tag:'AI / ML',tagc:'#0C447C',tagbg:'#E6F1FB',icon:'🚦',bg:'linear-gradient(135deg,#042C53,#185FA5)',team:'Final Year B.Tech CSE',campus:'BBSR',desc:'Computer vision and real-time analytics to optimise urban traffic flow using YOLO object detection and LSTM-based traffic prediction models.',tech:['Computer Vision','Python','YOLO','LSTM']},
   {name:'Blockchain Certificate Verification',tag:'Blockchain',tagc:'#A32D2D',tagbg:'#FCEBEB',icon:'🔐',bg:'linear-gradient(135deg,#1D6B8C,#533AB7)',team:'Final Year B.Tech CSE',campus:'Both',desc:'Tamper-proof academic credential system on Ethereum smart contracts eliminating certificate fraud using ERC-721 NFT standards for unique credential issuance.',tech:['Ethereum','Solidity','Web3.js','IPFS']},
   {name:'Smart Campus Monitoring System',tag:'IoT',tagc:'#3B6D11',tagbg:'#EAF3DE',icon:'📡',bg:'linear-gradient(135deg,#3B6D11,#1D9E75)',team:'MCA Final Year',campus:'PKD',desc:'IoT-based real-time energy and resource monitoring across CUTM campus with ML-driven anomaly alerts and predictive maintenance capabilities.',tech:['IoT','Node.js','MQTT','Raspberry Pi']},
@@ -1189,7 +1211,7 @@ const PROJECTS=[
   {name:'Odia Language NLP System',tag:'NLP',tagc:'#533AB7',tagbg:'#EEEDFE',icon:'💬',bg:'linear-gradient(135deg,#533AB7,#3B6D11)',team:'Funded Research',campus:'Both',desc:'NLP tools for Odia script — text classification, sentiment analysis and machine translation using fine-tuned multilingual BERT models.',tech:['BERT','Transformers','Python','Odia Corpus']},
 ];
 
-const PUBLICATIONS=[
+var PUBLICATIONS=[
   {title:'Deep Learning Approaches for Real-Time Object Detection in Low-Resource Environments',authors:'Dr. Sujata Chakravarty, Dr. Rahul Ray, Ms. Adyasa Swain',jrnl:'IEEE Transactions on Neural Networks',year:'2024',campus:'BBSR',impact:'IF: 10.4',color:'#185FA5',abstract:'Proposes a lightweight deep learning architecture for real-time object detection with limited compute, achieving 89% mAP on benchmark datasets.'},
   {title:'Federated Learning for Privacy-Preserving Healthcare Data Analysis',authors:'Dr. Sasmita Kumari Nayak, Ms. Adyasa Swain',jrnl:'Springer – Journal of Medical Informatics',year:'2024',campus:'BBSR',impact:'IF: 7.2',color:'#1D9E75',abstract:'Federated learning framework for training ML models on distributed hospital datasets without sharing raw patient data, ensuring GDPR compliance.'},
   {title:'Blockchain-Enhanced Security Architecture for IoT Networks',authors:'Dr. Dhawaleswar Rao CH, Mr. Biswaranjan Routray',jrnl:'Elsevier – Computers & Security',year:'2025',campus:'PKD',impact:'IF: 5.6',color:'#A32D2D',abstract:'Novel blockchain-based decentralised security architecture for IoT networks eliminating single points of failure and ensuring tamper-proof device authentication.'},
@@ -1198,7 +1220,7 @@ const PUBLICATIONS=[
   {title:'Smart Agriculture Using Drone Technology and Deep Learning',authors:'Mr. Saneev Kumar Das, Dr. Prachee Dewangan',jrnl:'Springer Precision Agriculture',year:'2025',campus:'BBSR',impact:'IF: 6.2',color:'#3B6D11',abstract:'Drone-based crop disease detection using CNN-based image classification achieving 91% accuracy for 12 major crop diseases in Odisha.'},
 ];
 
-const COLLABS=[
+var COLLABS=[
   {name:'TCS iON',icon:'🏢',color:'#0C447C',type:'Industry Partner',desc:'Curriculum co-development, campus placements, pre-placement training, and industry-sponsored capstone projects for final year students.'},
   {name:'AWS Academy',icon:'☁️',color:'#BA7517',type:'Cert. Partner',desc:'Cloud certification programs integrated into B.Tech and MCA curricula. Students earn AWS Cloud Practitioner at no extra cost.'},
   {name:'Infosys',icon:'🌐',color:'#1D9E75',type:'Recruit. Partner',desc:'Campus recruitment, Infosys Springboard access, live project mentorship and special training tracks for final year students.'},
@@ -1209,7 +1231,7 @@ const COLLABS=[
   {name:'Capgemini',icon:'🏛️',color:'#042C53',type:'Industry Partner',desc:'Annual campus recruitment drives, technical training partnerships and internship opportunities for B.Tech and MCA students.'},
 ];
 
-const EVENTS=[
+var EVENTS=[
   {name:'TechNova 2025 — Annual Hackathon',tag:'Hackathon',tc:'#0C447C',icon:'🏆',bg:'linear-gradient(135deg,#042C53,#0C447C)',date:'March 2025',campus:'Both Campuses',desc:'48-hour national-level hackathon with 500+ participants in AI, Web Dev, and IoT tracks. Cash prizes worth ₹2 lakhs. Organised by SoCDS in association with CUTM.'},
   {name:'AI in Industry — Guest Lecture Series',tag:'Seminar',tc:'#3B6D11',tagc:'g',icon:'🎓',bg:'linear-gradient(135deg,#1D9E75,#3B6D11)',date:'Monthly — Ongoing',campus:'Both Campuses',desc:'Monthly lectures by experts from Google, Microsoft, IBM, and leading AI startups covering real-world AI applications, career guidance, and emerging tech trends.'},
   {name:'Campus Recruitment Drive 2025',tag:'Placement',tc:'#BA7517',tagc:'a',icon:'💼',bg:'linear-gradient(135deg,#BA7517,#A32D2D)',date:'February 2025',campus:'Both Campuses',desc:'Annual placement fair with 30+ companies — TCS, Infosys, Wipro, Capgemini, HCL. Pre-placement talks, group discussions, and on-spot offer letters.'},
@@ -1218,7 +1240,7 @@ const EVENTS=[
   {name:'Research Symposium — SoCDS',tag:'Research',tc:'#0C447C',icon:'🔬',bg:'linear-gradient(135deg,#1D6B8C,#533AB7)',date:'January 2025',campus:'PKD',desc:'Annual research showcase — students and faculty present papers, posters and project demos. Best paper award and funding for top 3 student research projects.'},
 ];
 
-const WORKSHOPS=[
+var WORKSHOPS=[
   {name:'Deep Learning with PyTorch',dur:'2 Days',icon:'🧠',bg:'linear-gradient(135deg,#0C447C,#185FA5)',campus:'BBSR',desc:'CNNs, RNNs, Transformer models and deployment on NVIDIA GPU lab with live training on real datasets.'},
   {name:'Ethical Hacking Bootcamp',dur:'1 Day',icon:'🛡️',bg:'linear-gradient(135deg,#533AB7,#042C53)',campus:'Both',desc:'Penetration testing, Metasploit, Kali Linux, CTF challenges and OWASP Top 10 security tools.'},
   {name:'Data Analytics with Python & Tableau',dur:'3 Days',icon:'📊',bg:'linear-gradient(135deg,#1D9E75,#3B6D11)',campus:'PKD',desc:'End-to-end data pipeline: collection, cleaning, EDA, Tableau visualisation and business storytelling.'},
@@ -1229,7 +1251,7 @@ const WORKSHOPS=[
   {name:'Mobile App Development (Flutter)',dur:'3 Days',icon:'📱',bg:'linear-gradient(135deg,#185FA5,#BA7517)',campus:'BBSR',desc:'Cross-platform mobile apps with Flutter/Dart, Firebase, state management with Provider and Google Play submission.'},
 ];
 
-const STARTUPS=[
+var STARTUPS=[
   {name:'SoCDS Startup Incubator',type:'Incubator',icon:'🚀',bc:'#EF9F27',bg:'#FFF3DC',bc2:'#BA7517',desc:'Student startup cell with mentoring, seed funding up to ₹50,000, legal guidance and CUTM incubation tie-ups for tech ventures. Open to 2nd year+ students.'},
   {name:'Innovation & Design Thinking Cell',type:'Innovation Lab',icon:'💡',bc:'#1D9E75',bg:'#EAF3DE',bc2:'#3B6D11',desc:'Cross-disciplinary lab using Stanford Design Thinking frameworks, rapid prototyping, and user research to build solutions for social and industry problems.'},
   {name:'CodeCraft Club',type:'Technical Club',icon:'💻',bc:'#0C447C',bg:'#E6F1FB',bc2:'#0C447C',desc:'Competitive programming community with weekly LeetCode sessions, Codeforces rounds, ICPC preparation and monthly internal hackathons.'},
@@ -1240,7 +1262,7 @@ const STARTUPS=[
   {name:'App Dev Society',type:'Technical Club',icon:'📱',bc:'#BA7517',bg:'#FFF3DC',bc2:'#BA7517',desc:'Mobile and web app development club building real apps for college and community use — current projects include CUTM student portal app and SoCDS digital noticeboard.'},
 ];
 
-const GALLERY=[
+var GALLERY=[
   {lbl:'Basic Programming Lab',cat:'labs',icon:'💻',bg:'linear-gradient(135deg,#185FA5,#042C53)',has360:true,desc:'First-year students in a hands-on coding session — C and Python fundamentals at the Basic Programming Lab.'},
   {lbl:'AI & ML Lab — GPU Session',cat:'labs',icon:'🧠',bg:'linear-gradient(135deg,#533AB7,#0C447C)',has360:true,desc:'Deep learning model training on NVIDIA GPU cluster — M.Tech Data Science students running PyTorch experiments.'},
   {lbl:'TechNova 2024 Hackathon',cat:'events',icon:'🏆',bg:'linear-gradient(135deg,#042C53,#0C447C)',has360:false,desc:'TechNova 2024 — 48-hour national hackathon with 500+ participants across AI, Web, and IoT tracks at BBSR campus.'},
@@ -1255,7 +1277,7 @@ const GALLERY=[
   {lbl:'Campus Placement Drive',cat:'campus',icon:'💼',bg:'linear-gradient(135deg,#185FA5,#1D9E75)',has360:false,desc:'Campus Placement Drive 2025 — 150+ students placed at top IT companies with packages up to 12 LPA.'},
 ];
 
-const NEWS=[
+var NEWS=[
   {title:'New AI & ML Research Lab Inaugurated',date:'May 2025',color:'#185FA5',desc:'State-of-the-art GPU cluster lab launched at SoCDS for advanced deep learning and computer vision research featuring NVIDIA A100 GPUs accessible to both students and faculty.'},
   {title:'Placement Drive 2025 — Record Results',date:'Apr 2025',color:'#1D9E75',desc:'Over 150 SoCDS students placed at TCS, Infosys, Wipro, and Capgemini with packages ranging from 3.5 to 12 LPA — the best placement season in SoCDS history.'},
   {title:'National Hackathon — SoCDS Wins Top Prize',date:'Mar 2025',color:'#BA7517',desc:'CSE teams won at Smart India Hackathon 2025 with an AI-based urban waste management solution, winning ₹2 lakh in prize money.'},
@@ -1267,7 +1289,7 @@ const NEWS=[
 ];
 
 /* ════ DOMAIN SUBJECTS ════ */
-const DOMAIN_SUBJECTS=[
+var DOMAIN_SUBJECTS=[
   {name:'Full-Stack Development with MERN',icon:'🌐',color:'#185FA5',bg:'linear-gradient(135deg,#185FA5,#042C53)',type:'Domain',desc:'Covers front-end (React.js) and back-end (Node.js, Express, MongoDB) development. Students build complete, production-ready web applications with REST APIs, authentication, and cloud deployment.',skills:['React.js','Node.js','Express','MongoDB','REST API'],outcomes:'Students develop full-stack web applications independently and are ready for roles as Full-Stack Developer, Web Engineer, or Product Developer.'},
   {name:'Generative AI',icon:'🤖',color:'#533AB7',bg:'linear-gradient(135deg,#533AB7,#0C447C)',type:'Domain',desc:'Covers Large Language Models, prompt engineering, fine-tuning, diffusion models, and AI content generation. Students work with OpenAI, HuggingFace, and Stable Diffusion frameworks.',skills:['LLMs','Prompt Engineering','HuggingFace','LangChain','Diffusion Models'],outcomes:'Students can build AI-powered applications, chatbots, and creative AI systems for industries ranging from media to healthcare.'},
   {name:'Data Analytics and Machine Learning',icon:'📊',color:'#0C447C',bg:'linear-gradient(135deg,#0C447C,#1D9E75)',type:'Domain',desc:'Comprehensive coverage of data wrangling, exploratory data analysis, statistical modelling, supervised and unsupervised ML, and model deployment using Python, scikit-learn, and TensorFlow.',skills:['Python','scikit-learn','TensorFlow','Pandas','Power BI'],outcomes:'Students qualify for Data Analyst, ML Engineer, and Business Intelligence roles at leading analytics and IT companies.'},
@@ -1280,7 +1302,7 @@ const DOMAIN_SUBJECTS=[
   {name:'Cyber Security',icon:'🔒',color:'#A32D2D',bg:'linear-gradient(135deg,#A32D2D,#042C53)',type:'Domain',desc:'Ethical hacking, penetration testing, network security, cryptography, digital forensics, VAPT, incident response, and security operations centre (SOC) practices.',skills:['Kali Linux','Wireshark','Metasploit','Cryptography','VAPT'],outcomes:'Students are prepared for Ethical Hacker, Security Analyst, SOC Analyst, and Cyber Forensics Investigator roles.'},
 ];
 
-const SKILL_SUBJECTS=[
+var SKILL_SUBJECTS=[
   {name:'Artificial Intelligence in Material Science',icon:'🧬',color:'#533AB7',bg:'linear-gradient(135deg,#533AB7,#185FA5)',type:'Skill',desc:'Application of AI and ML techniques to materials discovery, property prediction, molecular simulations, and accelerated materials research for industrial and academic applications.',skills:['Python','Materials Informatics','ML Models','Molecular Simulation'],outcomes:'Students gain interdisciplinary skills bridging AI and physical sciences — valuable in research labs, pharma, and advanced manufacturing.'},
   {name:'SBC Based System Design & IoT',icon:'🖥️',color:'#1D9E75',bg:'linear-gradient(135deg,#1D9E75,#042C53)',type:'Skill',desc:'Single Board Computer (Raspberry Pi, Arduino, BeagleBone) based system design, sensor integration, IoT protocol (MQTT, CoAP), edge computing, and real-time data pipelines.',skills:['Raspberry Pi','Arduino','MQTT','Node-RED','Edge Computing'],outcomes:'Students develop IoT solutions for smart home, agriculture, health monitoring, and industrial automation.'},
   {name:'Quantum Computing',icon:'⚛️',color:'#042C53',bg:'linear-gradient(135deg,#042C53,#533AB7)',type:'Skill',desc:'Fundamentals of quantum mechanics for computing, quantum gates, circuits, Qiskit programming, quantum algorithms (Shor, Grover), and quantum cryptography concepts.',skills:['Qiskit','Python','Quantum Gates','IBM Quantum','Linear Algebra'],outcomes:'Students gain foundational knowledge for quantum research roles and emerging quantum computing industry positions.'},
@@ -1297,7 +1319,7 @@ const SKILL_SUBJECTS=[
 /* Added to LABS array below */
 
 /* ════ ALUMNI DATA ════ */
-const ALUMNI=[
+var ALUMNI=[
   {name:'Priya Sharma',batch:'B.Tech CSE 2022',role:'Software Engineer',company:'TCS, Bangalore',campus:'bbsr',icon:'PS',spec:'Full-Stack Development'},
   {name:'Rahul Mishra',batch:'MCA 2023',role:'Data Analyst',company:'Infosys, Hyderabad',campus:'bbsr',icon:'RM',spec:'Data Science'},
   {name:'Ankita Das',batch:'B.Tech CSE 2021',role:'Cloud Engineer',company:'Wipro, Pune',campus:'pkd',icon:'AD',spec:'Cloud Computing'},
@@ -1307,7 +1329,7 @@ const ALUMNI=[
 ];
 
 /* ════ TESTIMONIALS DATA ════ */
-const TESTIMONIALS=[
+var TESTIMONIALS=[
   {text:'SoCDS gave me everything I needed — a strong foundation in algorithms, practical AI lab experience, and placement support that helped me land my dream job at TCS. The faculty are genuinely invested in every student\'s success.',name:'Priya Sharma',role:'Software Engineer, TCS · B.Tech CSE 2022',stars:5,color:'#0C447C',campus:'BBSR'},
   {text:'The Data Science & ML Lab with NVIDIA GPUs was a game-changer for me. I could run real experiments that I later wrote my thesis on. The M.Tech Data Science program at SoCDS is truly research-oriented.',name:'Debasish Mohanty',role:'Research Associate, IIT Bhubaneswar · M.Tech 2024',stars:5,color:'#1D9E75',campus:'BBSR'},
   {text:'What I loved most was the industry exposure — workshops, hackathons, and real company projects. I participated in Smart India Hackathon and our team won. That one experience opened so many doors for me.',name:'Sourav Nayak',role:'ML Engineer, Capgemini · B.Tech CSE AIML 2023',stars:5,color:'#BA7517',campus:'BBSR'},
@@ -1557,7 +1579,7 @@ function renderFacGrid(data,gridId,limit){
   g.innerHTML=list.map((f,i)=>{
     const aidx=ALL_FAC.indexOf(f);
     const bg=GR[i%GR.length];
-    const dl=f.desig.includes('Associate')?'Assoc. Prof.':f.desig.includes('Assistant')?'Asst. Prof.':'Professor';
+    const dl=f.desig.includes('Teaching Assistant')?'Teaching Asst.':f.desig.includes('Teaching Associate')?'Teaching Assoc.':f.desig.includes('Project Assistant')?'Project Asst.':f.desig.includes('Lab Assistant')?'Lab Asst.':f.desig.includes('Associate')?'Assoc. Prof.':f.desig.includes('Assistant')?'Asst. Prof.':'Professor';
     return `<div class="fac-card d${(i%4)+1}" data-campus="${f.campus}" data-aidx="${aidx}" onclick="openFacByIdx(this.dataset.aidx)">
       <div class="fac-av" style="background:${bg}">
         ${f.photo?`<img src="${f.photo}" alt="" onerror="this.style.display='none'">`:''}
@@ -1583,7 +1605,70 @@ function renderFacGrid(data,gridId,limit){
   });
 }
 
-function openFacByIdx(idx){openFacMo(ALL_FAC[+idx]);}
+let SUPPORT_SHOWN=4;
+
+function renderSupportStaff(){
+  const supportDesigs=['teaching assistant','teaching associate','project assistant','lab assistant'];
+  const staff=ALL_FAC.filter(f=>supportDesigs.some(s=>f.desig.toLowerCase().includes(s)));
+  const sec=document.getElementById('supportStaffSection');
+  const grid=document.getElementById('support-staff-grid');
+  const countEl=document.getElementById('supportStaffCount');
+  const btns=document.getElementById('supportBtns');
+  if(!sec||!grid)return;
+
+  // Always hide when filter is active (not 'all')
+  if(FAC_FILTER!=='all'&&FAC_FILTER!=='support'){sec.style.display='none';return;}
+  if(FAC_FILTER==='support'){
+    // Show all support staff in the main filter grid instead
+    sec.style.display='none';return;
+  }
+
+  if(staff.length===0){sec.style.display='none';return;}
+  sec.style.display='';
+
+  if(countEl)countEl.textContent='('+staff.length+' members)';
+
+  const shown=staff.slice(0,SUPPORT_SHOWN);
+  grid.innerHTML=shown.map((f,i)=>{
+    const aidx=ALL_FAC.indexOf(f);
+    const bg=GR[(aidx)%GR.length];
+    const dl=f.desig.includes('Teaching Assistant')?'Teaching Asst.':
+             f.desig.includes('Teaching Associate')?'Teaching Assoc.':
+             f.desig.includes('Project Assistant')?'Project Asst.':
+             f.desig.includes('Lab Assistant')?'Lab Asst.':f.desig;
+    return `<div class="fac-card" data-campus="${f.campus}" data-aidx="${aidx}" onclick="openFacByIdx(this.dataset.aidx)">
+      <div class="fac-av" style="background:${bg}">
+        ${f.photo?`<img src="${f.photo}" alt="" onerror="this.style.display='none'">`:''}
+        <span>${ini(f.name)}</span>
+      </div>
+      <div class="fac-body">
+        <div class="fac-name">${f.name}</div>
+        ${f.role?`<div class="fac-role">${f.role}</div>`:''}
+        <div class="fac-desig">${f.desig}</div>
+        <div class="fac-spec">${f.spec}</div>
+        <div class="fac-tags">
+          <span class="ftag ftag-${f.campus}">${f.campus.toUpperCase()}</span>
+          <span class="ftag" style="background:#EEEDFE;color:#533AB7">${dl}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Show More / Show Less buttons
+  if(btns){
+    let bh='';
+    if(staff.length>SUPPORT_SHOWN)
+      bh+=`<button class="see-more-btn" onclick="showMoreSupport()">&#11015; Show More (${staff.length-SUPPORT_SHOWN} more)</button>`;
+    if(SUPPORT_SHOWN>4)
+      bh+=`<button class="see-less-btn" onclick="showLessSupport()">&#8593; Show Less</button>`;
+    btns.innerHTML=bh;
+  }
+}
+
+function showMoreSupport(){SUPPORT_SHOWN+=4;renderSupportStaff();}
+function showLessSupport(){SUPPORT_SHOWN=4;renderSupportStaff();document.getElementById('supportStaffSection').scrollIntoView({behavior:'smooth'});}
+
+
 
 function getFilteredFac(){
   let data=ALL_FAC;
@@ -1591,7 +1676,8 @@ function getFilteredFac(){
   else if(FAC_FILTER==='pkd')data=FACULTY_PKD;
   else if(FAC_FILTER==='prof')data=ALL_FAC.filter(f=>f.desig.toLowerCase().includes('professor')&&!f.desig.toLowerCase().includes('associate')&&!f.desig.toLowerCase().includes('assistant'));
   else if(FAC_FILTER==='assoc')data=ALL_FAC.filter(f=>f.desig.toLowerCase().includes('associate'));
-  else if(FAC_FILTER==='asst')data=ALL_FAC.filter(f=>f.desig.toLowerCase().includes('assistant'));
+  else if(FAC_FILTER==='asst')data=ALL_FAC.filter(f=>f.desig.toLowerCase().includes('assistant')&&!f.desig.toLowerCase().includes('teaching')&&!f.desig.toLowerCase().includes('project')&&!f.desig.toLowerCase().includes('lab assistant'));
+  else if(FAC_FILTER==='support')data=ALL_FAC.filter(f=>['teaching assistant','teaching associate','project assistant','lab assistant'].some(s=>f.desig.toLowerCase().includes(s)));
   if(FAC_SEARCH)data=data.filter(f=>f.name.toLowerCase().includes(FAC_SEARCH)||f.spec.toLowerCase().includes(FAC_SEARCH));
   return data;
 }
@@ -1604,19 +1690,33 @@ function applyFacFilter(){
   const bbsrBlock=document.getElementById('bbsr-block');
   const pkdBlock=document.getElementById('pkd-block');
   const allWrap=document.getElementById('all-fac-wrap');
+  // Update filter button counts dynamically
+  const allBtn=document.getElementById('ffbtn-all');
+  if(allBtn)allBtn.textContent='All ('+ALL_FAC.length+')';
+  const bbsrBtn=document.querySelector('.ffbtn.b-bbsr');
+  if(bbsrBtn)bbsrBtn.textContent='📍 Bhubaneswar ('+FACULTY_BBSR.length+')';
+  const pkdBtn=document.querySelector('.ffbtn.b-pkd');
+  if(pkdBtn)pkdBtn.textContent='📍 Paralakhemundi ('+FACULTY_PKD.length+')';
+  const supDesigs=['teaching assistant','teaching associate','project assistant','lab assistant'];
+  const supCount=ALL_FAC.filter(f=>supDesigs.some(s=>f.desig.toLowerCase().includes(s))).length;
+  const supBtn=document.querySelector('.ffbtn[onclick*="support"]');
+  if(supBtn&&supCount>0)supBtn.textContent='Supporting Staff ('+supCount+')';
 
-  // "All" with no search → show campus blocks, hide filtered grid
+  // "All" with no search → show campus blocks, hide filtered grid, show support staff
   if(FAC_FILTER==='all'&&!FAC_SEARCH){
     if(bbsrBlock)bbsrBlock.style.display='';
     if(pkdBlock)pkdBlock.style.display='';
     if(allWrap)allWrap.style.display='none';
     if(cnt)cnt.textContent='';
+    renderSupportStaff();
     return;
   }
 
-  // Any specific filter or search → hide campus blocks, show filtered grid
+  // Any specific filter or search → hide campus blocks, show filtered grid, hide support section
   if(bbsrBlock)bbsrBlock.style.display='none';
   if(pkdBlock)pkdBlock.style.display='none';
+  const supSec=document.getElementById('supportStaffSection');
+  if(supSec)supSec.style.display='none';
   if(allWrap)allWrap.style.display='';
   if(cnt)cnt.textContent=`Showing ${curShown} of ${total} faculty`;
   renderFacGrid(data,'all-fac-grid',FAC_SHOWN);
@@ -1744,7 +1844,7 @@ function openLabMo(i){
       ${l.has360?`<p style="font-size:11px;color:#aaa;margin-top:8px">&#128247; 360&#xb0; photo of this lab will be added here. Drag above to explore interactive view.</p>`:''}
     </div>`;
   openMo('labMo');
-  if(l.has360)setTimeout(()=>init360(l),100);
+  if(l.has360)setTimeout(()=>init360({...l, photo360: l.photo360||l.photo||''}),100);
 }
 
 /* —— RESEARCH —— */
@@ -1814,6 +1914,36 @@ function openProjMo(i){
 /* —— PUBLICATIONS (show more/less) —— */
 let PUB_SHOWN=3;
 function renderPubs(){
+  // Render stats summary
+  const statsEl=document.getElementById('pubStatsRow');
+  if(statsEl){
+    const total=PUBLICATIONS.length;
+    const journals=PUBLICATIONS.filter(p=>(p.type||'journal')==='journal').length;
+    const confs=PUBLICATIONS.filter(p=>p.type==='conference').length;
+    const patents=PUBLICATIONS.filter(p=>p.type==='patent').length;
+    const bookChaps=PUBLICATIONS.filter(p=>p.type==='book_chapter').length;
+    statsEl.innerHTML=`
+      <div class="pub-stat-card" style="border-left-color:#042C53">
+        <div class="pub-stat-icon" style="background:#E6F1FB">📄</div>
+        <div><div class="pub-stat-num">${total}</div><div class="pub-stat-lbl">Total</div></div>
+      </div>
+      <div class="pub-stat-card" style="border-left-color:#0C447C">
+        <div class="pub-stat-icon" style="background:#E6F1FB">📚</div>
+        <div><div class="pub-stat-num">${journals}</div><div class="pub-stat-lbl">Journals</div></div>
+      </div>
+      <div class="pub-stat-card" style="border-left-color:#1D9E75">
+        <div class="pub-stat-icon" style="background:#EAF3DE">🏛️</div>
+        <div><div class="pub-stat-num">${confs}</div><div class="pub-stat-lbl">Conferences</div></div>
+      </div>
+      <div class="pub-stat-card" style="border-left-color:#BA7517">
+        <div class="pub-stat-icon" style="background:#FFF3DC">🏅</div>
+        <div><div class="pub-stat-num">${patents}</div><div class="pub-stat-lbl">Patents</div></div>
+      </div>
+      <div class="pub-stat-card" style="border-left-color:#533AB7">
+        <div class="pub-stat-icon" style="background:#EEEDFE">📖</div>
+        <div><div class="pub-stat-num">${bookChaps}</div><div class="pub-stat-lbl">Book Chapters</div></div>
+      </div>`;
+  }
   const el=document.getElementById('pubList');
   el.innerHTML=PUBLICATIONS.map((p,i)=>`
     <div class="pub-item su" style="border-left-color:${p.color};${i>=PUB_SHOWN?'display:none':''}" data-pub="${i}" onclick="openPubMo(${i})">
@@ -1977,14 +2107,15 @@ function renderGallery(){
   const g=document.getElementById('galGrid');if(!g)return;
   g.innerHTML=filtered.map((x,i)=>{
     const ri=GALLERY.indexOf(x);
-    return `<div class="gal-item" data-cat="${x.cat}" onclick="openGalMo(${ri})">
+    const imgHtml=x.photo?`<img src="${x.photo}" alt="${x.lbl}" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">`:'';
+    return `<div class="gal-item" data-cat="${x.cat}" onclick="openGalMo(${ri})" style="position:relative">
       <div class="gal-ph" style="background:${x.bg}">
-        <div class="gal-ph-icon">${x.icon}</div>
-        <div class="gal-ph-lbl">${x.lbl}</div>
+        ${imgHtml}
+        ${!x.photo?`<div class="gal-ph-icon">${x.icon}</div><div class="gal-ph-lbl">${x.lbl}</div>`:''}
       </div>
       <div class="gal-ov"></div>
       <div class="gal-cap">${x.lbl}</div>
-      ${x.has360?'<div class=\"gal-360-badge\">360\u00b0</div>':''}
+      ${x.has360?'<div class="gal-360-badge">360°</div>':''}
     </div>`;
   }).join('');
   // apply show/hide
@@ -2029,59 +2160,139 @@ function openGalMo(i){
       <div style="font-size:14px;color:rgba(255,255,255,.85);font-weight:600;text-align:center;padding:0 20px">${x.lbl}</div>
     </div>`;
   }
+  // Build photo display for lightbox
+  let photoDisplay = '';
+  if (x.photo) {
+    photoDisplay = `<img src="${x.photo}" alt="${x.lbl}" style="width:100%;display:block;max-height:300px;object-fit:cover;border-radius:14px 14px 0 0">`;
+    inner = photoDisplay;
+  }
   document.getElementById('galMoBody').innerHTML=inner+`
     <div style="padding:18px 20px;background:#1a1a1a">
       <h3 style="font-size:16px;font-weight:600;color:#fff;margin-bottom:6px">${x.lbl}</h3>
       <p style="font-size:13px;color:#aaa;line-height:1.6">${x.desc}</p>
-      <p style="font-size:11px;color:#555;margin-top:10px">&#128247; ${x.has360?'360&#xb0; interactive view — add your equirectangular photo to enable full panorama.':'Actual photo will be added here once available.'}</p>
+      ${!x.photo?`<p style="font-size:11px;color:#555;margin-top:10px">&#128247; ${x.has360?'360&#xb0; interactive view available.':'Photo will be added here once available.'}</p>`:''}
     </div>`;
   openMo('galMo');
-  if(x.has360)setTimeout(()=>init360(x),100);
+  if(x.has360)setTimeout(()=>init360({...x, photo360: x.photo360||x.photo||''}),100);
 }
 
 function init360(x){
   const c=document.getElementById('panoCanvas');if(!c)return;
   const ctx=c.getContext('2d');
   const W=c.width,H=c.height;
-  let angle=0,dragging=false,lastX=0,zoom=1,rafId;
-  const cols=200;
-  function getColor(s,a){
-    const t=(s/cols+a/(Math.PI*2))%1;
-    const bright=40+Math.abs(Math.sin(t*Math.PI*3))*180;
-    const hue=200+t*60;
-    return `hsl(${hue},55%,${bright}%)`;
-  }
-  function draw(){
+  let angle=0,vAngle=0,dragging=false,lastX=0,lastY=0,zoom=1,rafId;
+  let imgLoaded=false;
+  const img=new Image();
+
+  function drawWithPhoto(){
+    // Draw equirectangular panorama by sampling horizontal strips
     ctx.clearRect(0,0,W,H);
-    for(let s=0;s<cols;s++){
-      ctx.fillStyle=getColor(s,angle);
-      const x=s*(W/cols);
-      ctx.fillRect(x,0,W/cols+1,H);
+    if(!img.complete||!img.naturalWidth){drawFake();return;}
+    const iW=img.naturalWidth,iH=img.naturalHeight;
+    // For each column on canvas, sample the corresponding pixel from panorama
+    const fov=Math.PI/zoom; // horizontal field of view
+    for(let col=0;col<W;col++){
+      const theta=angle+(col/W-0.5)*fov;
+      const normX=((theta%(Math.PI*2))/(Math.PI*2)+1)%1;
+      const srcX=Math.floor(normX*iW);
+      const vFov=fov*(H/W)*0.6;
+      for(let row=0;row<H;row++){
+        const phi=vAngle+(row/H-0.5)*vFov;
+        const normY=Math.max(0,Math.min(1,(phi+Math.PI/2)/Math.PI));
+        const srcY=Math.floor(normY*iH);
+        ctx.drawImage(img,Math.min(srcX,iW-1),Math.min(srcY,iH-1),1,1,col,row,1,1);
+      }
     }
-    // center icon
-    ctx.globalAlpha=.15;
-    ctx.font=`${Math.round(80*zoom)}px serif`;
+    // Hint overlay
+    if(!dragging){
+      ctx.fillStyle='rgba(0,0,0,.35)';
+      ctx.fillRect(0,H-28,W,28);
+      ctx.fillStyle='rgba(255,255,255,.9)';
+      ctx.font='bold 12px DM Sans,sans-serif';
+      ctx.textAlign='center';
+      ctx.fillText('← Drag to explore 360° | Pinch/Scroll to zoom →',W/2,H-10);
+    }
+  }
+
+  function drawFake(){
+    // Placeholder while no real photo — animated gradient
+    ctx.clearRect(0,0,W,H);
+    const cols=200;
+    for(let s=0;s<cols;s++){
+      const t=(s/cols+angle/(Math.PI*2))%1;
+      const bright=40+Math.abs(Math.sin(t*Math.PI*3))*180;
+      ctx.fillStyle=`hsl(${200+t*60},55%,${bright}%)`;
+      ctx.fillRect(s*(W/cols),0,W/cols+1,H);
+    }
+    ctx.globalAlpha=.18;
+    ctx.font=`${Math.round(70*zoom)}px serif`;
     ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillStyle='#fff';
-    ctx.fillText(x.icon,W/2,H/2);
+    ctx.fillText(x.icon||'🔬',W/2,H/2);
     ctx.globalAlpha=1;
-    // hint
-    ctx.fillStyle='rgba(255,255,255,.3)';
+    ctx.fillStyle='rgba(255,255,255,.25)';
     ctx.font='bold 12px sans-serif';ctx.textAlign='center';
-    ctx.fillText('\u2190 Drag to explore \u2192',W/2,H-14);
+    ctx.fillText('← Drag to explore · 360° photo not yet uploaded →',W/2,H-14);
   }
+
+  function draw(){imgLoaded?drawWithPhoto():drawFake();}
+
+  // Try loading real 360° photo
+  const photoSrc = x.photo360||x.photo||'';
+  if(photoSrc){
+    img.crossOrigin='anonymous';
+    img.onload=()=>{imgLoaded=true;cancelAnimationFrame(rafId);draw();};
+    img.onerror=()=>{imgLoaded=false;};
+    img.src=photoSrc;
+  }
+
   function spin(){angle+=.003;draw();rafId=requestAnimationFrame(spin);}
   rafId=requestAnimationFrame(spin);
-  c.addEventListener('mousedown',e=>{dragging=true;lastX=e.clientX;cancelAnimationFrame(rafId);});
-  window.addEventListener('mousemove',e=>{if(!dragging)return;angle+=(e.clientX-lastX)*.006;lastX=e.clientX;draw();});
-  window.addEventListener('mouseup',()=>{dragging=false;});
-  let lt=0;
-  c.addEventListener('touchstart',e=>{lt=e.touches[0].clientX;cancelAnimationFrame(rafId);e.preventDefault();},{passive:false});
-  c.addEventListener('touchmove',e=>{angle+=(e.touches[0].clientX-lt)*.007;lt=e.touches[0].clientX;draw();e.preventDefault();},{passive:false});
-  let pd=0;
-  c.addEventListener('touchstart',e=>{if(e.touches.length===2)pd=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);},{passive:true});
-  c.addEventListener('touchmove',e=>{if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom=Math.max(.5,Math.min(2,zoom*d/(pd||d)));pd=d;draw();}},{passive:true});
-  document.getElementById('galMo').addEventListener('click',()=>cancelAnimationFrame(rafId),{once:true});
+
+  // Mouse drag
+  c.addEventListener('mousedown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;cancelAnimationFrame(rafId);c.style.cursor='grabbing';});
+  window.addEventListener('mousemove',e=>{
+    if(!dragging)return;
+    angle+=(e.clientX-lastX)*.006;
+    vAngle+=-(e.clientY-lastY)*.004;
+    vAngle=Math.max(-0.8,Math.min(0.8,vAngle));
+    lastX=e.clientX;lastY=e.clientY;draw();
+  });
+  window.addEventListener('mouseup',()=>{dragging=false;c.style.cursor='grab';});
+
+  // Scroll zoom
+  c.addEventListener('wheel',e=>{
+    e.preventDefault();
+    zoom=Math.max(0.5,Math.min(4,zoom+(e.deltaY>0?-0.1:0.1)));
+    draw();
+  },{passive:false});
+
+  // Touch drag + pinch zoom
+  let lt=0,ltY=0,pd=0;
+  c.addEventListener('touchstart',e=>{
+    if(e.touches.length===1){lt=e.touches[0].clientX;ltY=e.touches[0].clientY;}
+    if(e.touches.length===2)pd=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+    cancelAnimationFrame(rafId);e.preventDefault();
+  },{passive:false});
+  c.addEventListener('touchmove',e=>{
+    if(e.touches.length===1){
+      angle+=(e.touches[0].clientX-lt)*.007;
+      vAngle+=-(e.touches[0].clientY-ltY)*.005;
+      vAngle=Math.max(-0.8,Math.min(0.8,vAngle));
+      lt=e.touches[0].clientX;ltY=e.touches[0].clientY;
+    }
+    if(e.touches.length===2){
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+      zoom=Math.max(0.5,Math.min(4,zoom*(d/(pd||d))));pd=d;
+    }
+    draw();e.preventDefault();
+  },{passive:false});
+
+  // Stop animation when modal closes
+  ['galMo','labMo'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.addEventListener('click',e=>{if(e.target===el||e.target.classList.contains('mo-x'))cancelAnimationFrame(rafId);},{once:true});
+  });
 }
 
 /* —— NEWS —— */
@@ -2152,9 +2363,21 @@ function updateActiveNav(){
 
 /* —— SLIDE-UP —— */
 function initSU(){
-  if(!window.IntersectionObserver){document.querySelectorAll('.su').forEach(e=>e.classList.add('vis'));return;}
-  const obs=new IntersectionObserver(entries=>{entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('vis');obs.unobserve(en.target);}});},{threshold:0.08,rootMargin:'0px 0px -20px 0px'});
-  document.querySelectorAll('.su').forEach(e=>obs.observe(e));
+  // Elements start visible (opacity:1). Only animate ones below the fold.
+  if(!window.IntersectionObserver)return;
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){en.target.classList.add('vis');obs.unobserve(en.target);}
+    });
+  },{threshold:0.05,rootMargin:'0px 0px -10px 0px'});
+  document.querySelectorAll('.su').forEach(e=>{
+    const rect=e.getBoundingClientRect();
+    if(rect.top>window.innerHeight*0.95){
+      e.classList.add('anim');
+      obs.observe(e);
+    }
+    // Elements already in view stay visible — no animation needed
+  });
 }
 
 /* ── Mobile Research dropdown tap ── */
@@ -2238,15 +2461,18 @@ function sendChat(){
   draw();
 })();
 
+/* ═══ DATA_OVERRIDE_POINT ═══ */
 /* —— SINGLE INIT ——  */
 window.addEventListener('scroll',updateActiveNav);
-document.addEventListener('DOMContentLoaded',()=>{
+
+function initRender(){
   renderPrograms();
   renderSubjects();
   renderLeadership('bbsr','bbsr-lead-row');
   renderLeadership('pkd','pkd-lead-row');
   renderFacGrid(FACULTY_BBSR,'bbsr-fac-grid',8);
   renderFacGrid(FACULTY_PKD,'pkd-fac-grid',6);
+  renderSupportStaff();
   applyFacFilter();
   renderLabs();
   renderResearch();
@@ -2262,9 +2488,106 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderHomeNews();
   renderNews();
   initSU();
-  // Research dropdown — works on both hover (desktop) and click/tap (mobile)
-  // handled by handleResearchClick() defined globally below
+  // Research & Students dropdowns
+  var ndR=document.getElementById('researchNd');
+  var ndS=document.getElementById('studentsNd');
+  function setupDd(nd,ddId,closeFn){
+    if(!nd)return;
+    var dd=document.getElementById(ddId);
+    var open=false;
+    nd.querySelector('span').addEventListener('click',function(e){
+      if(window.innerWidth>768)return;
+      open=!open;if(dd)dd.style.display=open?'block':'none';
+      e.stopPropagation();
+    });
+  }
+  setupDd(ndR,'researchDd');
+  setupDd(ndS,'studentsDd');
+}
+
+// Will be called by PHP override script or directly if no PHP
+var _dataReady = false;
+document.addEventListener('DOMContentLoaded',()=>{
+  if(!_dataReady) initRender();
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+  /* ── 1. Faculty ── */
+    try {
+    var _lf = [{"id":1,"name":"Dr. Sujata Chakravarty","desig":"Professor","campus":"bbsr","role":"Director — IC &amp; Academic External Interface","is_leadership":true,"spec":"Machine Learning, Pattern Recognition","email":"sujata.chakravarty@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sujata-chakravarty\/","active":true},{"id":2,"name":"Dr. Swarna Prabha Jena","desig":"Associate Professor-I","campus":"bbsr","role":"Associate Dean — SoCDS","is_leadership":true,"spec":"Embedded Systems, IoT, Edge Computing","email":"swarna.jena@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/swarnaprabhajena\/","active":true},{"id":3,"name":"Dr. Sangram Keshari Swain","desig":"Professor","campus":"bbsr","role":"Dean Examinations, Dean, Student Welfare","is_leadership":false,"spec":"Software Engineering, IoT","email":"sangram.swain@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/dr-sangram-keshari-swain\/","active":true},{"id":4,"name":"Dr. Sasmita Kumari Nayak","desig":"Associate Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Data Mining, Big Data","email":"sasmita.nayak@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sasmita-nayak\/","active":true},{"id":5,"name":"Dr. Sunil Kumar Mohapatra","desig":"Associate Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Cloud Computing, Networks","email":"sunil.mohapatra@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sunil-kumar-mohapatra\/","active":true},{"id":6,"name":"Dr. Rahul Ray","desig":"Associate Professor","campus":"bbsr","role":"HoD — CSE","is_leadership":true,"spec":"AI, Deep Learning","email":"rahul.ray@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/rahul-ray\/","active":true},{"id":7,"name":"Mr. Rakesh Kumar Ray","desig":"Assistant Professor","campus":"bbsr","role":"HoD — Computer Applications","is_leadership":true,"spec":"FinTech, Blockchain","email":"rakesh.ray@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/rakesh-ray\/","active":true},{"id":8,"name":"Mr. Raj Kumar Mohanta","desig":"Assistant Professor","campus":"bbsr","role":"School Coordinator","is_leadership":true,"spec":"Web Technologies, Database","email":"rajkumar.mohanta@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/raj-kumar-mohanta\/","active":true},{"id":9,"name":"Ms. Adyasa Swain","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Data Science, Python","email":"adyasa.swain@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/adyasha-swain\/","active":true},{"id":10,"name":"Mrs. Swarupa Pattanaik","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Computer Networks, Security","email":"swarupa.pattanaik@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/swarupa-pattanaik\/","active":true},{"id":11,"name":"Mr. Chitta Ranjan Behera","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Algorithms, Data Structures","email":"chitta.behera@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/chittaranjan-behera\/","active":true},{"id":12,"name":"Mr. Sabyasachi Mohanty","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Machine Learning, NLP","email":"sabyasachi.mohanty@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sabyasachi-mohanty\/","active":true},{"id":13,"name":"Mr. Saneev Kumar Das","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Drone Technology, Embedded Systems","email":"saneev.das@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/saneev-kumar-das\/","active":true},{"id":14,"name":"Mr. Saroj Kumar Sahoo","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Software Development, DBMS","email":"saroj.sahoo@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/saroj-kumar-sahoo\/","active":true},{"id":15,"name":"Mr. Rasmi Prakash Swain","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Computer Architecture, OS","email":"rasmi.swain@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/rasmi-prakash-swain\/","active":true},{"id":16,"name":"Mr. Sushanta Meher","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Programming Languages, Web Dev","email":"sushanta.meher@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sushanta-meher\/","active":true},{"id":17,"name":"Ms. Sanghamitra Panda","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Data Analytics, Statistics","email":"sanghamitra.panda@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sanghamitra-panda\/","active":true},{"id":18,"name":"Mr. Satyananda Swain","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Cybersecurity, Networking","email":"satyananda.swain@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/satyananda-swain\/","active":true},{"id":19,"name":"Ms. Swatilagna Sahu","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"AI, Computer Vision","email":"swatilagna.sahu@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/swatilagna-sahu\/","active":true},{"id":20,"name":"Ms. Sasmita Tripathy","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Machine Learning, IoT","email":"sasmita.tripathy@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sasmita-tripathy\/","active":true},{"id":21,"name":"Ms. Smita Patra","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Soft Computing, Programming","email":"smita.patra@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/smita-patra\/","active":true},{"id":22,"name":"Mr. Lalit Kumar Behera","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Deep Learning, NLP","email":"lalit.behera@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/lalit-kumar-behera\/","active":true},{"id":23,"name":"Ms. Roseleen Anjum","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Web Technologies, UI\/UX","email":"rosellen.anjum@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/roseleen-anjum\/","active":true},{"id":24,"name":"Mr. Sanjib Kumar Naik","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Data Science, Cloud","email":"sanjib.naik@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sanjibnaik\/","active":true},{"id":25,"name":"Ms. Priyankaa Sarkar","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"AI, Data Mining","email":"priyanka.sarkar@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/priyankaa-sarkar\/","active":true},{"id":26,"name":"Mr. Snehil Gupta","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"Full Stack Development","email":"snehil.gupta@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/snehil-gupta\/","active":true},{"id":27,"name":"Dr. Prachee Dewangan","desig":"Assistant Professor","campus":"bbsr","role":"","is_leadership":false,"spec":"ML, Pattern Recognition","email":"prachee.dewangan@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/prachee-dewangan\/","active":true},{"id":29,"name":"Dr. Prafulla Kumar Panda","desig":"Professor","campus":"pkd","role":"Dean — SoCDS and SoET","is_leadership":true,"spec":"Data Science, Machine Learning","email":"prafullapanda@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/dr-prafulla-kumar-panda\/","active":true},{"id":30,"name":"Dr. Pragyan Paramita Pradhan","desig":"Assistant Professor","campus":"pkd","role":"Associate Dean — SoCDS","is_leadership":true,"spec":"Smart Infrastructure, IoT","email":"pragyan.pradhan@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/prangya-parimita-pradhan\/","active":true},{"id":31,"name":"Dr. Dhawaleswar Rao CH","desig":"Associate Professor","campus":"pkd","role":"HoD — CSE","is_leadership":true,"spec":"Data Science, Machine Learning","email":"dhawaleswar.rao@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/dr-dhawaleswar-rao-ch\/","active":true},{"id":32,"name":"Dr. Abhishek Das","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"AI, Computer Vision","email":"abhishek.das@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/dr-abhishek-das\/","active":true},{"id":33,"name":"Mr. Jagannath Padhy","desig":"Assistant Professor","campus":"pkd","role":"Program Coordinator — MCA &amp; BCA","is_leadership":true,"spec":"Software Engineering, DBMS","email":"jagannath.padhy@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/jagannath-padhy\/","active":true},{"id":34,"name":"Mr. Susanta Kumar Nayak","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"Networks, Cybersecurity","email":"susanta.nayak@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/susanta-kumar-nayak\/","active":true},{"id":35,"name":"Ms. Lipsa Priyadarshini Singh","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"Data Analytics, Python","email":"lipsa.singh@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/lipsa-priyadarshini-singh\/","active":true},{"id":36,"name":"Mr. Satyanarayan Sahu","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"Cloud Computing, DevOps","email":"satyanarayan.sahu@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/satyanarayan-sahu\/","active":true},{"id":37,"name":"Mr. Manoj Kumar Padhi","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"ML, Deep Learning","email":"manoj.padhi@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/manoj-kumar-padhi\/","active":true},{"id":38,"name":"Mr. Biswaranjan Routray","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"IoT, Embedded Systems","email":"biswaranjan.routray@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/biswaranjan-routray\/","active":true},{"id":39,"name":"Mrs. Kumari Manswini Padhy","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"Data Science, Statistics","email":"manswini.padhy@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/manswini-kumari-padhy\/","active":true},{"id":40,"name":"Ms. Sagarika Dash","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"AI, NLP","email":"sagarika.dash@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/sagarika-dash\/","active":true},{"id":41,"name":"Ms. Pragnya Das","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"Computer Graphics, Web Dev","email":"pragnya.das@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/pragnya-das\/","active":true},{"id":42,"name":"Ms. Aryalopa Malla","desig":"Assistant Professor","campus":"pkd","role":"","spec":"Programming, Algorithms","email":"aryalopa.malla@cutm.ac.in","photo":"","profile":"","active":true,"is_leadership":false},{"id":43,"name":"Mrs. Puspanjali B","desig":"Assistant Professor","campus":"pkd","role":"","is_leadership":false,"spec":"Software Development, Testing","email":"puspanjali.b@cutm.ac.in","photo":"","profile":"https:\/\/fdp.cutm.ac.in\/ms-puspanjali-b\/","active":true}];
+    if (_lf.length > 0) {
+      var _supportDesigs = ['teaching assistant','teaching associate','project assistant','lab assistant'];
+      FACULTY_BBSR = _lf.filter(function(f){ return f.campus === 'bbsr'; });
+      FACULTY_PKD  = _lf.filter(function(f){ return f.campus === 'pkd'; });
+      ALL_FAC      = _lf;
+      function _bc(r){if(!r)return'#1D9E75';if(r.indexOf('Director')!==-1)return'#A32D2D';if(r.indexOf('Associate Dean')!==-1)return'#0C447C';if(r.indexOf('Dean')!==-1&&r.indexOf('Associate')===-1)return'#EF9F27';if(r.indexOf('HoD')!==-1)return'#1D9E75';if(r.indexOf('Coordinator')!==-1)return'#533AB7';return'#533AB7';}
+      function _toLeader(f){return{name:f.name,role:f.role||'',desig:f.desig,campus:f.campus,spec:f.spec,email:f.email,photo:f.photo||'',profile:f.profile||'',badge:f.role?(f.role.split('—')[0].trim()):f.desig,bc:_bc(f.role||'')};}
+      LEADERSHIP = {
+        bbsr: _lf.filter(function(f){return f.campus==='bbsr'&&f.is_leadership===true;}).map(_toLeader),
+        pkd:  _lf.filter(function(f){return f.campus==='pkd' &&f.is_leadership===true;}).map(_toLeader)
+      };
+    }
+  } catch(e){ console.warn('Faculty:', e); }
+  
+  /* ── 2. Simple array overrides ── */
+    try{var _d=[{"id":1,"title":"New AI & ML Research Lab Inaugurated","date":"May 2025","color":"#185FA5","desc":"State-of-the-art GPU cluster lab launched at SoCDS for advanced deep learning and computer vision research featuring NVIDIA A100 GPUs accessible to both students and faculty.","active":true},{"id":2,"title":"Placement Drive 2025 — Record Results","date":"Apr 2025","color":"#1D9E75","desc":"Over 150 SoCDS students placed at TCS, Infosys, Wipro, and Capgemini with packages ranging from 3.5 to 12 LPA — the best placement season in SoCDS history.","active":true},{"id":3,"title":"National Hackathon — SoCDS Wins Top Prize","date":"Mar 2025","color":"#BA7517","desc":"CSE teams won at Smart India Hackathon 2025 with an AI-based urban waste management solution, winning ₹2 lakh in prize money.","active":true},{"id":4,"title":"M.Tech Data Science — Applications Open for 2025–26","date":"Feb 2025","color":"#042C53","desc":"Applications open for the new M.Tech in Data Science cohort at both campuses. Research scholarships and funded positions available. GATE score preferred.","active":true}];if(_d.length>0)NEWS=_d;}catch(e){console.warn('NEWS:',e);}
+    try{var _d=[{"id":1,"name":"Centurion Expo- 2025","tag":"Hackathon","date":"5th March 2025","campus":"BBSR","icon":"🏆","bg":"linear-gradient(135deg,#042C53,#0C447C)","desc":"Understanding Network Security Through pfSense Firewall"},{"id":2,"name":"Tech Spark- 2026","tag":"IEEE Student Chapter","date":"April 2026","campus":"Both Campuses","icon":"🎓","bg":"linear-gradient(135deg,#1D9E75,#3B6D11)","desc":"IEEE Student Chapter 2"},{"id":3,"name":"Campus Recruitment Drive 2026","tag":"Placement","date":"March 2026","campus":"Both Campuses","icon":"💼","bg":"linear-gradient(135deg,#BA7517,#A32D2D)","desc":"Annual placement fair with 30+ companies including IBM, TCS, Infosys, Wipro, Capgemini, HCL."},{"id":4,"name":"Explora Innovation 2026","tag":"University-level hackathon","date":"February 2026","campus":"BBSR","icon":"📜","bg":"linear-gradient(135deg,#533AB7,#185FA5)","desc":"The first university-level hackathon in the history of Centurion University of Technology and Management (CUTM)."},{"id":5,"name":"Smart India Hackathon 2025","tag":"Hackathon","date":"September 2025","campus":"BBSR","icon":"🤝","bg":"linear-gradient(135deg,#3B6D11,#0C447C)","desc":"Conducted a successful internal hackathon to select the best student teams for the national level Smart India Hackathon 2025"},{"id":6,"name":"Research Symposium — SoCDS","tag":"Research","icon":"🔬","bg":"linear-gradient(135deg,#1D6B8C,#533AB7)","date":"January 2025","campus":"PKD","desc":"Annual research showcase — students and faculty present papers, posters and project demos.","active":true}];if(_d.length>0)EVENTS=_d;}catch(e){console.warn('EVENTS:',e);}
+    try{var _d=[{"id":1,"name":"Deep Learning with PyTorch","dur":"2 Days","icon":"🧠","bg":"linear-gradient(135deg,#0C447C,#185FA5)","campus":"BBSR","desc":"CNNs, RNNs, Transformer models and deployment on NVIDIA GPU lab.","active":true},{"id":2,"name":"Ethical Hacking Bootcamp","dur":"1 Day","icon":"🛡️","bg":"linear-gradient(135deg,#533AB7,#042C53)","campus":"Both","desc":"Penetration testing, Metasploit, Kali Linux, CTF challenges and OWASP Top 10.","active":true},{"id":3,"name":"Data Analytics with Python & Tableau","dur":"3 Days","icon":"📊","bg":"linear-gradient(135deg,#1D9E75,#3B6D11)","campus":"PKD","desc":"End-to-end data pipeline, EDA, Tableau visualisation and business storytelling.","active":true},{"id":4,"name":"AWS Cloud Practitioner Prep","dur":"2 Days","icon":"☁️","bg":"linear-gradient(135deg,#BA7517,#EF9F27)","campus":"Both","desc":"AWS core services, cloud architecture best practices and certification exam strategies.","active":true},{"id":5,"name":"Blockchain Development with Solidity","dur":"2 Days","icon":"⛓️","bg":"linear-gradient(135deg,#A32D2D,#533AB7)","campus":"BBSR","desc":"Smart contracts on Ethereum, DApp creation, ERC-20\/721 token standards.","active":true},{"id":6,"name":"Full-Stack Web Development","dur":"5 Days","icon":"🌐","bg":"linear-gradient(135deg,#1D6B8C,#0C447C)","campus":"Both","desc":"React.js, Node.js, Express, MongoDB MERN stack with REST API and cloud deployment.","active":true},{"id":7,"name":"Robotics & Embedded Systems","dur":"3 Days","icon":"🤖","bg":"linear-gradient(135deg,#3B6D11,#1D9E75)","campus":"PKD","desc":"Arduino, Raspberry Pi, sensor integration and autonomous robot programming.","active":true},{"id":8,"name":"Mobile App Development (Flutter)","dur":"3 Days","icon":"📱","bg":"linear-gradient(135deg,#185FA5,#BA7517)","campus":"BBSR","desc":"Cross-platform mobile apps with Flutter\/Dart, Firebase and Google Play submission.","active":true}];if(_d.length>0)WORKSHOPS=_d;}catch(e){console.warn('WORKSHOPS:',e);}
+    try{var _d=[{"id":1,"lbl":"Basic Programming Lab","cat":"labs","icon":"💻","bg":"linear-gradient(135deg,#185FA5,#042C53)","has360":true,"photo":"","desc":"First-year students in a hands-on coding session at the Basic Programming Lab.","active":true,"photo360":""},{"id":2,"lbl":"AI & ML Lab — GPU Session","cat":"labs","icon":"🧠","bg":"linear-gradient(135deg,#533AB7,#0C447C)","has360":true,"photo":"","desc":"Deep learning model training on NVIDIA GPU cluster.","active":true,"photo360":""},{"id":3,"lbl":"Centurion Expo-2025","cat":"events","icon":"🏆","bg":"linear-gradient(135deg,#042C53,#0C447C)","has360":false,"photo":"uploads\/gallery\/gal_1780037357_849.jpeg","photo360":"","desc":"Understanding Network Security Through pfSense Firewall","active":true},{"id":4,"lbl":"Tech Spark- 2026","cat":"events","icon":"🎓","bg":"linear-gradient(135deg,#1D9E75,#3B6D11)","has360":false,"photo":"uploads\/gallery\/gal_1780037749_746.jpeg","photo360":"","desc":"IEEE Student Chapter 2","active":true},{"id":5,"lbl":"Bhubaneswar Campus","cat":"campus","icon":"🏛️","bg":"linear-gradient(135deg,#0C447C,#185FA5)","has360":true,"photo":"","desc":"Centurion University Bhubaneswar Campus — Jatni, Odisha.","active":true,"photo360":""},{"id":6,"lbl":"Paralakhemundi Campus","cat":"campus","icon":"🌿","bg":"linear-gradient(135deg,#3B6D11,#1D9E75)","has360":true,"photo":"","desc":"Centurion University Paralakhemundi Campus — Gajapati, Odisha.","active":true,"photo360":""},{"id":7,"lbl":"Networking Lab","cat":"labs","icon":"🌐","bg":"linear-gradient(135deg,#1D6B8C,#042C53)","has360":false,"photo":"","desc":"Cisco-certified Networking Lab.","active":true,"photo360":""},{"id":8,"lbl":"AR\/VR Lab Demo","cat":"labs","icon":"🥽","bg":"linear-gradient(135deg,#BA7517,#A32D2D)","has360":true,"photo":"","desc":"Students in the AR\/VR Lab using Meta Quest 3 headsets.","active":true,"photo360":""},{"id":9,"lbl":"Explora Innovation 2026","cat":"events","icon":"📜","bg":"linear-gradient(135deg,#533AB7,#185FA5)","has360":false,"photo":"uploads\/gallery\/gal_1780038234_711.jpeg","photo360":"","desc":"The first university-level hackathon in the history of Centurion University of Technology and Management (CUTM).","active":true},{"id":10,"lbl":"Annual Day Celebrations","cat":"campus","icon":"🎉","bg":"linear-gradient(135deg,#A32D2D,#BA7517)","has360":false,"photo":"","desc":"Annual Day at SoCDS.","active":true,"photo360":""},{"id":11,"lbl":"Smart India Hackathon 2025","cat":"events","icon":"🛠️","bg":"linear-gradient(135deg,#042C53,#533AB7)","has360":false,"photo":"uploads\/gallery\/gal_1780038405_946.jpg","photo360":"","desc":"Conducted a successful internal hackathon to select the best student teams for the national level Smart India Hackathon 2025","active":true},{"id":12,"lbl":"Campus Placement Drive","cat":"campus","icon":"💼","bg":"linear-gradient(135deg,#185FA5,#1D9E75)","has360":false,"photo":"","desc":"Campus Placement Drive 2025.","active":true,"photo360":""}];if(_d.length>0)GALLERY=_d;}catch(e){console.warn('GALLERY:',e);}
+    try{var _d=[{"id":1,"name":"Priya Sharm","batch":"B.Tech CSE 2022","campus":"bbsr","role":"Software Engineer","company":"TCS, Bangalore","spec":"Full-Stack Development","linkedin":""},{"id":2,"name":"Rahul Mishra","batch":"MCA 2023","role":"Data Analyst","company":"Infosys, Hyderabad","campus":"bbsr","spec":"Data Science","photo":"","linkedin":"","active":true},{"id":3,"name":"Ankita Das","batch":"B.Tech CSE 2021","role":"Cloud Engineer","company":"Wipro, Pune","campus":"pkd","spec":"Cloud Computing","photo":"","linkedin":"","active":true},{"id":4,"name":"Sourav Nayak","batch":"B.Tech CSE AIML 2023","role":"ML Engineer","company":"Capgemini, Chennai","campus":"bbsr","spec":"AI & Machine Learning","photo":"","linkedin":"","active":true},{"id":5,"name":"Lipika Patro","batch":"BCA 2022","role":"Junior Developer","company":"HCL Technologies, Bhubaneswar","campus":"pkd","spec":"Web Development","photo":"","linkedin":"","active":true},{"id":6,"name":"Debasish Mohanty","batch":"M.Tech Data Science 2024","role":"Research Associate","company":"IIT Bhubaneswar","campus":"bbsr","spec":"Data Science Research","photo":"","linkedin":"","active":true}];if(_d.length>0)ALUMNI=_d;}catch(e){console.warn('ALUMNI:',e);}
+    try{var _d=[{"id":1,"name":"Priya Sharm","role":"Software Engineer, TCS · B.Tech CSE 2022","campus":"BBSR","stars":"5","color":"#0C447C","text":"SoCDS gave me everything I needed — a strong foundation in algorithms, practical AI lab experience, and placement support that helped me land my dream job at TCS."},{"id":2,"text":"The Data Science & ML Lab with NVIDIA GPUs was a game-changer. I could run real experiments for my thesis. The M.Tech Data Science program is truly research-oriented.","name":"Debasish Mohanty","role":"Research Associate, IIT Bhubaneswar · M.Tech 2024","stars":5,"color":"#1D9E75","campus":"BBSR","active":true},{"id":3,"text":"What I loved most was the industry exposure — workshops, hackathons, and real company projects. I participated in Smart India Hackathon and our team won.","name":"Sourav Nayak","role":"ML Engineer, Capgemini · B.Tech CSE AIML 2023","stars":5,"color":"#BA7517","campus":"BBSR","active":true},{"id":4,"text":"Coming from Paralakhemundi, I was nervous about quality. But SoCDS PKD campus has excellent faculty and strong placement support. I got placed in my 7th semester!","name":"Ankita Das","role":"Cloud Engineer, Wipro · B.Tech CSE 2021","stars":5,"color":"#533AB7","campus":"PKD","active":true},{"id":5,"text":"The BCA program at SoCDS is underrated. The curriculum is practical, the teachers are approachable. I joined HCL straight out of campus.","name":"Lipika Patro","role":"Junior Developer, HCL Technologies · BCA 2022","stars":4,"color":"#3B6D11","campus":"PKD","active":true},{"id":6,"text":"The MCA program gave me the depth I needed to shift from a basic developer to a proper data analyst. The NPTEL courses and real projects built a strong portfolio.","name":"Rahul Mishra","role":"Data Analyst, Infosys · MCA 2023","stars":5,"color":"#A32D2D","campus":"BBSR","active":true}];if(_d.length>0)TESTIMONIALS=_d;}catch(e){console.warn('TESTIMONIALS:',e);}
+    try{var _d=[{"id":1,"title":"Deep Learning Approaches for Real-Time Object Detection in Low-Resource Environments","authors":"Dr. Sujata Chakravarty, Dr. Rahul Ray, Ms. Adyasa Swain","jrnl":"IEEE Transactions on Neural Networks","year":"2024","campus":"BBSR","impact":"IF: 10.4","color":"#185FA5","abstract":"Proposes a lightweight deep learning architecture achieving 89% mAP on benchmark datasets.","doi":"","active":true,"type":"journal"},{"id":2,"title":"Federated Learning for Privacy-Preserving Healthcare Data Analysis","authors":"Dr. Sasmita Kumari Nayak, Ms. Adyasa Swain","jrnl":"Springer – Journal of Medical Informatics","year":"2024","campus":"BBSR","impact":"IF: 7.2","color":"#1D9E75","abstract":"Federated learning framework for training ML models on distributed hospital datasets ensuring GDPR compliance.","doi":"","active":true,"type":"journal"},{"id":3,"title":"Blockchain-Enhanced Security Architecture for IoT Networks","authors":"Dr. Dhawaleswar Rao CH, Mr. Biswaranjan Routray","jrnl":"Elsevier – Computers & Security","year":"2025","campus":"PKD","impact":"IF: 5.6","color":"#A32D2D","abstract":"Novel blockchain-based decentralised security architecture for IoT networks.","doi":"","active":true,"type":"journal"},{"id":4,"title":"Natural Language Processing for Low-Resource Odia Script","authors":"Dr. Sunil Kumar Mohapatra, Ms. Sanghamitra Panda","jrnl":"ACM Computing Surveys","year":"2024","campus":"BBSR","impact":"IF: 23.8","color":"#BA7517","abstract":"Survey of NLP techniques for the Odia language with a proposed framework for text classification.","doi":"","active":true,"type":"journal"},{"id":5,"title":"Efficient Resource Scheduling in Edge Computing Using Reinforcement Learning","authors":"Dr. Abhishek Das, Mr. Jagannath Padhy","jrnl":"IEEE Access","year":"2025","campus":"PKD","impact":"IF: 3.9","color":"#533AB7","abstract":"RL-based dynamic resource scheduling reducing task completion time by 34%.","doi":"","active":true,"type":"journal"},{"id":6,"title":"Smart Agriculture Using Drone Technology and Deep Learning","authors":"Mr. Saneev Kumar Das, Dr. Prachee Dewangan","jrnl":"Springer Precision Agriculture","year":"2025","campus":"BBSR","impact":"IF: 6.2","color":"#3B6D11","abstract":"Drone-based crop disease detection achieving 91% accuracy for 12 major crop diseases.","doi":"","active":true,"type":"journal"}];if(_d.length>0)PUBLICATIONS=_d;}catch(e){console.warn('PUBLICATIONS:',e);}
+    try{var _d=[{"id":1,"name":"TCS iON","icon":"🏢","color":"#0C447C","type":"Industry Partner","desc":"Curriculum co-development, campus placements, pre-placement training, and industry-sponsored capstone projects.","active":true},{"id":2,"name":"AWS Academy","icon":"☁️","color":"#BA7517","type":"Cert. Partner","desc":"Cloud certification programs integrated into B.Tech and MCA curricula at no extra cost.","active":true},{"id":3,"name":"Infosys","icon":"🌐","color":"#1D9E75","type":"Recruit. Partner","desc":"Campus recruitment, Infosys Springboard access, live project mentorship.","active":true},{"id":4,"name":"NIT Rourkela","icon":"🔬","color":"#533AB7","type":"Academic Partner","desc":"Joint research programs, faculty exchange, collaborative PhD supervision.","active":true},{"id":5,"name":"NASSCOM","icon":"🎓","color":"#A32D2D","type":"Cert. Partner","desc":"FutureSkills Prime certification and industry-aligned curriculum advisory.","active":true},{"id":6,"name":"NPTEL \/ IIT Network","icon":"📚","color":"#3B6D11","type":"Academic Partner","desc":"Online IIT faculty courses with academic credit recognition.","active":true},{"id":7,"name":"Wipro","icon":"💻","color":"#185FA5","type":"Recruit. Partner","desc":"Wipro TalentNext program, campus placement partnerships.","active":true},{"id":8,"name":"Capgemini","icon":"🏛️","color":"#042C53","type":"Industry Partner","desc":"Annual campus recruitment drives and internship opportunities.","active":true}];if(_d.length>0)COLLABS=_d;}catch(e){console.warn('COLLABS:',e);}
+    try{var _d=[{"id":1,"name":"SoCDS Startup Incubator","type":"Incubator","icon":"🚀","bc":"#EF9F27","desc":"Student startup cell with mentoring, seed funding up to ₹50,000, and CUTM incubation tie-ups.","active":true},{"id":2,"name":"Innovation & Design Thinking Cell","type":"Innovation Lab","icon":"💡","bc":"#1D9E75","desc":"Cross-disciplinary lab using Design Thinking frameworks and rapid prototyping.","active":true},{"id":3,"name":"CodeCraft Club","type":"Technical Club","icon":"💻","bc":"#0C447C","desc":"Competitive programming community with weekly LeetCode sessions and ICPC preparation.","active":true},{"id":4,"name":"AI & Robotics Society","type":"Research Society","icon":"🤖","bc":"#533AB7","desc":"AI research, robotics projects, drone programming and SIH participation.","active":true},{"id":5,"name":"CyberSec Club","type":"Technical Club","icon":"🛡️","bc":"#A32D2D","desc":"Ethical hacking, CTF competitions, bug bounty hunts and OWASP study sessions.","active":true},{"id":6,"name":"WebDev & Design Club","type":"Technical Club","icon":"🌐","bc":"#3B6D11","desc":"Front-end, back-end and UI\/UX design community with monthly challenges.","active":true},{"id":7,"name":"Data Science & Analytics Club","type":"Research Club","icon":"📊","bc":"#0C447C","desc":"Kaggle competitions, data visualisation workshops and industry dataset challenges.","active":true},{"id":8,"name":"App Dev Society","type":"Technical Club","icon":"📱","bc":"#BA7517","desc":"Mobile and web app development club building real apps for college and community.","active":true}];if(_d.length>0)STARTUPS=_d;}catch(e){console.warn('STARTUPS:',e);}
+    try{var _d=[{"id":1,"name":"Basic Programming Lab","icon":"💻","bg":"linear-gradient(135deg,#185FA5,#042C53)","cap":"50 workstations","tech":"C, C++, Java, Python, Basic Web","desc":"Foundational lab with 50 high-spec workstations supporting C, C++, Java, Python, and web programming for first and second year students.","has360":true,"photo":"uploads\/labs\/lab_1779982814_352.jpeg","photo360":"uploads\/labs\/lab360_1780046946_609.jpeg","active":true},{"id":2,"name":"Data Science &amp;amp;amp; ML Lab","icon":"🧠","bg":"linear-gradient(135deg,#533AB7,#0C447C)","cap":"30 workstations + NVIDIA GPUs","tech":"TensorFlow, PyTorch, Keras, Jupyter","desc":"GPU-powered lab with NVIDIA A100 clusters for deep learning, NLP, and computer vision research. Students run real ML experiments using TensorFlow, PyTorch, and Jupyter notebooks.","has360":true,"photo":"uploads\/labs\/lab_1780046067_658.jpeg","photo360":"uploads\/labs\/lab360_1780046329_859.jpeg","active":true},{"id":3,"name":"Advanced Programming Lab","icon":"⚙️","bg":"linear-gradient(135deg,#042C53,#185FA5)","cap":"50 workstations","tech":"Full Stack, Docker, DSA, CI\/CD","desc":"Full-stack development, DSA, algorithms, and system design lab with CI\/CD pipelines, Docker environments, and collaborative coding platforms.","has360":true,"photo":"","photo360":"uploads\/labs\/lab360_1780046277_784.jpeg","active":true},{"id":4,"name":"Cloud Computing Lab","icon":"☁️","bg":"linear-gradient(135deg,#1D9E75,#042C53)","cap":"40 workstations","tech":"AWS, Azure, GCP, Kubernetes, Docker","desc":"AWS Academy-certified lab for cloud architecture, serverless computing, Kubernetes orchestration, and cloud-native application development.","has360":true,"photo":"","photo360":"uploads\/labs\/lab360_1780046413_348.jpeg","active":true},{"id":5,"name":"Operating System Lab","icon":"🖥️","bg":"linear-gradient(135deg,#A32D2D,#533AB7)","cap":"40 workstations","tech":"Linux, Shell Script, VMware, VirtualBox","desc":"Linux administration, shell scripting, system calls, process management and virtualisation lab using VMware and VirtualBox.","has360":true,"photo":"","photo360":"uploads\/labs\/lab360_1780046788_989.jpeg","active":true},{"id":6,"name":"AR \/ VR Lab","icon":"🥽","bg":"linear-gradient(135deg,#BA7517,#A32D2D)","cap":"20 Meta Quest 3 headsets","tech":"Unity 3D, Unreal Engine 5, Meta Quest","desc":"Immersive technology lab with Meta Quest 3 headsets, Unity 3D, and Unreal Engine 5 for AR\/VR application development and XR research.","has360":true,"photo":"","photo360":"uploads\/labs\/lab360_1780046888_927.jpeg","active":true},{"id":7,"name":"Blockchain Lab","icon":"⛓️","bg":"linear-gradient(135deg,#3B6D11,#0C447C)","cap":"30 workstations","tech":"Ethereum, Solidity, Hyperledger, Web3.js","desc":"Dedicated blockchain development lab with Ethereum, Solidity smart contracts, Hyperledger Fabric, and DApp development.","has360":true,"photo":"","photo360":"uploads\/labs\/lab360_1780047083_291.jpeg","active":true},{"id":8,"name":"Research Lab","icon":"🔬","bg":"linear-gradient(135deg,#042C53,#533AB7)","cap":"20 researcher workstations","tech":"HPC Cluster, MATLAB, R, Python","desc":"Dedicated research environment for funded projects, patent work, thesis research, and faculty-led innovation with HPC resources.","has360":true,"photo":"","photo360":"uploads\/labs\/lab360_1780046927_730.jpeg","active":true},{"id":9,"name":"Networking Lab","icon":"🌐","bg":"linear-gradient(135deg,#1D6B8C,#042C53)","cap":"30 workstations","tech":"Cisco Routers, Wireshark, GNS3, CCNA","desc":"Cisco-certified lab with physical routers, managed switches, firewalls, and network simulation tools.","has360":true,"photo":"","photo360":"uploads\/labs\/lab360_1780047011_319.jpeg","active":true},{"id":10,"name":"Future Nexus Lab","icon":"🚀","bg":"linear-gradient(135deg,#EF9F27,#A32D2D)","cap":"30 workstations + Innovation Space","tech":"Quantum Computing Simulators, AI Agents, XR Devices, Edge AI","desc":"Next-generation innovation lab bridging emerging technologies — quantum computing simulation, agentic AI systems, spatial computing, and cross-disciplinary tech experimentation.","has360":true,"photo":"","photo360":"uploads\/labs\/lab360_1780046902_587.jpeg","active":true}];if(_d.length>0)LABS=_d;}catch(e){console.warn('LABS:',e);}
+    try{var _d=[{"id":1,"name":"Artificial Intelligence & ML","icon":"🧠","color":"#0C447C","desc":"Deep learning, reinforcement learning, NLP, computer vision and intelligent systems with GPU-powered infrastructure.","papers":"12+","projects":"8","active":true},{"id":2,"name":"Data Science & Analytics","icon":"📊","color":"#1D9E75","desc":"Big data processing, predictive modelling, statistical analysis, and BI systems for real-world decision support.","papers":"8","projects":"5","active":true},{"id":3,"name":"Cyber Security","icon":"🔒","color":"#A32D2D","desc":"Network security, cryptography, digital forensics, IDS and ethical hacking research.","papers":"6","projects":"4","active":true},{"id":4,"name":"Cloud & Distributed Systems","icon":"☁️","color":"#533AB7","desc":"Scalable cloud architectures, edge computing, fog computing, IoT integration and distributed system design.","papers":"5","projects":"3","active":true},{"id":5,"name":"Blockchain & FinTech","icon":"⛓️","color":"#BA7517","desc":"Distributed ledger, smart contracts, DApps, cryptocurrency systems and financial technology innovation.","papers":"4","projects":"3","active":true},{"id":6,"name":"Internet of Things","icon":"🌐","color":"#3B6D11","desc":"Embedded systems, sensor networks, smart city applications, industrial IoT and drone technology research.","papers":"6","projects":"5","active":true},{"id":7,"name":"AR \/ VR","icon":"🥽","color":"#185fa5","desc":"Augmented and virtual reality applications, human-computer interaction, immersive learning and UX research.","papers":"3","projects":"2","active":true},{"id":8,"name":"Health Informatics","icon":"🏥","color":"#042C53","desc":"AI in healthcare, medical image analysis, electronic health records, and federated learning for patient privacy.","papers":"4","projects":"2","active":true}];if(_d.length>0)RESEARCH_AREAS=_d;}catch(e){console.warn('RESEARCH_AREAS:',e);}
+    try{var _d=[{"id":1,"name":"Smart Traffic Management System","tag":"AI \/ ML","tagc":"#0C447C","tagbg":"#E6F1FB","icon":"🚦","bg":"linear-gradient(135deg,#042C53,#185FA5)","team":"Final Year B.Tech CSE","campus":"BBSR","desc":"Computer vision and real-time analytics to optimise urban traffic flow using YOLO object detection and LSTM-based traffic prediction models.","tech":"Computer Vision, Python, YOLO, LSTM","active":true},{"id":2,"name":"Blockchain Certificate Verification","tag":"Blockchain","tagc":"#A32D2D","tagbg":"#FCEBEB","icon":"🔐","bg":"linear-gradient(135deg,#1D6B8C,#533AB7)","team":"Final Year B.Tech CSE","campus":"Both","desc":"Tamper-proof academic credential system on Ethereum smart contracts eliminating certificate fraud using ERC-721 NFT standards.","tech":"Ethereum, Solidity, Web3.js, IPFS","active":true},{"id":3,"name":"Smart Campus Monitoring System","tag":"IoT","tagc":"#3B6D11","tagbg":"#EAF3DE","icon":"📡","bg":"linear-gradient(135deg,#3B6D11,#1D9E75)","team":"MCA Final Year","campus":"PKD","desc":"IoT-based real-time energy and resource monitoring across CUTM campus with ML-driven anomaly alerts.","tech":"IoT, Node.js, MQTT, Raspberry Pi","active":true},{"id":4,"name":"AI-Based Disease Prediction","tag":"ML","tagc":"#0C447C","tagbg":"#E6F1FB","icon":"🏥","bg":"linear-gradient(135deg,#A32D2D,#185FA5)","team":"M.Tech Data Science","campus":"BBSR","desc":"ML model with 92% accuracy for early detection of diabetes and heart disease using patient records with explainable AI features.","tech":"scikit-learn, XGBoost, SHAP, Python","active":true},{"id":5,"name":"Precision Agriculture with Drones","tag":"Drone · AI","tagc":"#BA7517","tagbg":"#FFF3DC","icon":"🌾","bg":"linear-gradient(135deg,#BA7517,#042C53)","team":"Faculty Research","campus":"PKD","desc":"Drone-based crop monitoring, soil analysis and AI-guided irrigation for improved agricultural yield.","tech":"Computer Vision, DJI SDK, Python, GIS","active":true},{"id":6,"name":"Odia Language NLP System","tag":"NLP","tagc":"#533AB7","tagbg":"#EEEDFE","icon":"💬","bg":"linear-gradient(135deg,#533AB7,#3B6D11)","team":"Funded Research","campus":"Both","desc":"NLP tools for Odia script — text classification, sentiment analysis and machine translation using fine-tuned multilingual BERT models.","tech":"BERT, Transformers, Python, Odia Corpus","active":true}];if(_d.length>0)PROJECTS=_d;}catch(e){console.warn('PROJECTS:',e);}
+  
+  /* ── 3. Programs with syllabus ── */
+    try {
+    var _dp = [{"id":1,"name":"B.Tech in Computer Science &amp;amp; Engineering","short":"B.Tech CSE","icon":"💻","color":"#185fa5","bg":"linear-gradient(135deg,#042C53,#185FA5)","level":"UG","dur":"4 Years","eligi":"10+2 with PCM, min 50%. OJEE \/ JEE Main preferred.","desc":"A comprehensive four-year undergraduate program covering algorithms, data structures, OS, computer networks, databases, and software engineering with hands-on labs and 6-month industry internship.","syllabus":"uploads\/syllabus\/syllabus_1779982726_516.pdf","active":true},{"id":2,"name":"B.Tech CSE — AI &amp;amp; Machine Learning","short":"B.Tech CSE (AIML)","icon":"🤖","color":"#0c447c","bg":"linear-gradient(135deg,#0C447C,#533AB7)","level":"UG","dur":"4 Years","eligi":"10+2 with PCM, min 50%. OJEE \/ JEE Main preferred.","desc":"A specialized B.Tech focusing on Artificial Intelligence and Machine Learning — covering deep learning, NLP, computer vision, and AI system deployment with NVIDIA GPU cluster access.","syllabus":"uploads\/syllabus\/syllabus_1779982736_923.pdf","active":true},{"id":3,"name":"BCA — Bachelor of Computer Applications","short":"BCA","icon":"🎓","color":"#3B6D11","bg":"linear-gradient(135deg,#3B6D11,#1D9E75)","level":"UG","dur":"3 Years","eligi":"10+2 in any stream, min 45%. Direct merit-based admission.","desc":"A career-focused three-year program in computer applications, web development, programming, and database management.","syllabus":"","active":true},{"id":4,"name":"MCA — Master of Computer Applications","short":"MCA","icon":"🖥️","color":"#042c53","bg":"linear-gradient(135deg,#042C53,#185FA5)","level":"PG","dur":"2 Years","eligi":"BCA \/ B.Sc. CS \/ IT or equivalent, min 50%. Mathematics at 10+2 or graduation level.","desc":"A two-year postgraduate program in advanced software engineering, enterprise application development, and emerging technologies.","syllabus":"uploads\/syllabus\/syllabus_1779982630_654.pdf","active":true},{"id":5,"name":"M.Tech in Data Science","short":"M.Tech Data Science","icon":"🔬","color":"#A32D2D","bg":"linear-gradient(135deg,#A32D2D,#185FA5)","level":"PG","dur":"2 Years","eligi":"B.Tech \/ B.E. in CS \/ IT \/ ECE or M.Sc. CS \/ IT. Min 55%. GATE score preferred.","desc":"A research-intensive postgraduate program covering advanced data science, ML research, statistical modelling, and big data engineering with thesis-based assessment and PhD pathway.","syllabus":"","active":true}];
+    if (_dp.length > 0) {
+      PROGRAMS = _dp.map(function(p) {
+        return {
+          id: p.id, name: p.name, short: p.short||p.name,
+          icon: p.icon||'🎓', color: p.color||'#0C447C', bg: p.bg||'linear-gradient(135deg,#042C53,#185FA5)',
+          level: p.level||'UG', dur: p.dur||'', eligi: p.eligi||'', desc: p.desc||'',
+          syllabus: p.syllabus||''
+        };
+      });
+    }
+  } catch(e){ console.warn('Programs:', e); }
+  
+  /* ── 4. Domain & Skill Subjects ── */
+    try{var _dds=[{"id":1,"name":"Full-Stack Development with MERN","icon":"🌐","color":"#185FA5","bg":"linear-gradient(135deg,#185FA5,#042C53)","type":"Domain","desc":"Covers front-end (React.js) and back-end (Node.js, Express, MongoDB) development. Students build complete, production-ready web applications with REST APIs, authentication, and cloud deployment.","skills":"React.js, Node.js, Express, MongoDB, REST API","outcomes":"Students develop full-stack web applications and are ready for roles as Full-Stack Developer, Web Engineer, or Product Developer.","active":true},{"id":2,"name":"Generative AI","icon":"🤖","color":"#533AB7","bg":"linear-gradient(135deg,#533AB7,#0C447C)","type":"Domain","desc":"Covers Large Language Models, prompt engineering, fine-tuning, diffusion models, and AI content generation. Students work with OpenAI, HuggingFace, and Stable Diffusion frameworks.","skills":"LLMs, Prompt Engineering, HuggingFace, LangChain, Diffusion Models","outcomes":"Students can build AI-powered applications, chatbots, and creative AI systems for industries ranging from media to healthcare.","active":true},{"id":3,"name":"Data Analytics and Machine Learning","icon":"📊","color":"#0C447C","bg":"linear-gradient(135deg,#0C447C,#1D9E75)","type":"Domain","desc":"Comprehensive coverage of data wrangling, exploratory data analysis, statistical modelling, supervised and unsupervised ML, and model deployment using Python, scikit-learn, and TensorFlow.","skills":"Python, scikit-learn, TensorFlow, Pandas, Power BI","outcomes":"Students qualify for Data Analyst, ML Engineer, and Business Intelligence roles at leading analytics and IT companies.","active":true},{"id":4,"name":"Cloud Technology","icon":"☁️","color":"#1D9E75","bg":"linear-gradient(135deg,#1D9E75,#185FA5)","type":"Domain","desc":"AWS, Azure, and GCP cloud platforms — serverless computing, cloud architecture, containerisation with Docker and Kubernetes, DevOps pipelines, and cloud security best practices.","skills":"AWS, Azure, GCP, Docker, Kubernetes, CI\/CD","outcomes":"Students earn cloud certifications and are ready for Cloud Engineer, DevOps Engineer, and Cloud Architect roles.","active":true},{"id":5,"name":"Drone Imaging and Spectral Analysis","icon":"🚁","color":"#BA7517","bg":"linear-gradient(135deg,#BA7517,#042C53)","type":"Domain","desc":"UAV flight operations, drone photography, multispectral and hyperspectral imaging, GIS data processing, and agricultural remote sensing.","skills":"DJI SDK, GIS, NDVI Analysis, Remote Sensing, Python","outcomes":"Students can work in precision agriculture, environmental monitoring, infrastructure inspection, and geospatial analytics sectors.","active":true},{"id":6,"name":"Software Technology","icon":"⚙️","color":"#042C53","bg":"linear-gradient(135deg,#042C53,#185FA5)","type":"Domain","desc":"Software engineering principles, design patterns, agile methodologies, DevOps practices, testing, quality assurance, and enterprise application architecture.","skills":"Agile\/Scrum, Design Patterns, Git, CI\/CD, Testing","outcomes":"Students are prepared for Software Engineer, QA Engineer, and Technical Project Manager roles.","active":true},{"id":7,"name":"Mobile App Development","icon":"📱","color":"#3B6D11","bg":"linear-gradient(135deg,#3B6D11,#1D9E75)","type":"Domain","desc":"Cross-platform mobile application development using Flutter and Dart, native Android (Kotlin), Firebase integration, state management, and Google Play \/ App Store deployment.","skills":"Flutter, Dart, Firebase, Kotlin, UI\/UX Design","outcomes":"Students can independently build and publish mobile apps and work as Mobile App Developer or Flutter Developer.","active":true},{"id":8,"name":"Gaming and Immersive Learning — AR\/VR","icon":"🎮","color":"#A32D2D","bg":"linear-gradient(135deg,#A32D2D,#533AB7)","type":"Domain","desc":"Game development using Unity 3D and Unreal Engine 5, VR\/AR application creation, 3D modelling, shader programming, and deployment on PC, mobile, and Meta Quest headsets.","skills":"Unity 3D, Unreal Engine 5, C#, Meta Quest, 3D Modelling","outcomes":"Students can pursue careers as Game Developer, XR Developer, Simulation Engineer, or VR\/AR Content Creator.","active":true},{"id":9,"name":"Blockchain Development","icon":"⛓️","color":"#1D6B8C","bg":"linear-gradient(135deg,#1D6B8C,#533AB7)","type":"Domain","desc":"Ethereum blockchain, Solidity smart contract development, decentralised applications (DApps), NFT standards, Web3.js, Hyperledger Fabric, and DeFi protocol design.","skills":"Ethereum, Solidity, Web3.js, IPFS, Hyperledger","outcomes":"Students qualify for Blockchain Developer, Smart Contract Engineer, and DeFi Analyst roles.","active":true},{"id":10,"name":"Cyber Security","icon":"🔒","color":"#A32D2D","bg":"linear-gradient(135deg,#A32D2D,#042C53)","type":"Domain","desc":"Ethical hacking, penetration testing, network security, cryptography, digital forensics, VAPT, incident response, and security operations centre (SOC) practices.","skills":"Kali Linux, Wireshark, Metasploit, Cryptography, VAPT","outcomes":"Students are prepared for Ethical Hacker, Security Analyst, and SOC Analyst roles.","active":true}];if(_dds.length>0)DOMAIN_SUBJECTS=_dds.map(function(s){return{name:s.name,icon:s.icon||'📘',color:s.color||'#0C447C',bg:s.bg||'linear-gradient(135deg,#0C447C,#185FA5)',type:'Domain',desc:s.desc||'',skills:s.skills?s.skills.split(','):[],outcomes:s.outcomes||''};});}catch(e){console.warn('Domain subjects:',e);}
+      try{var _dss=[{"id":1,"name":"Artificial Intelligence in Material Science","icon":"🧬","color":"#533AB7","bg":"linear-gradient(135deg,#533AB7,#185FA5)","type":"Skill","desc":"Application of AI and ML techniques to materials discovery, property prediction, molecular simulations, and accelerated materials research.","skills":"Python, Materials Informatics, ML Models, Molecular Simulation","outcomes":"Students gain interdisciplinary skills bridging AI and physical sciences.","active":true},{"id":2,"name":"SBC Based System Design & IoT","icon":"🖥️","color":"#1D9E75","bg":"linear-gradient(135deg,#1D9E75,#042C53)","type":"Skill","desc":"Single Board Computer (Raspberry Pi, Arduino, BeagleBone) based system design, sensor integration, IoT protocol, edge computing, and real-time data pipelines.","skills":"Raspberry Pi, Arduino, MQTT, Node-RED, Edge Computing","outcomes":"Students develop IoT solutions for smart home, agriculture, health monitoring, and industrial automation.","active":true},{"id":3,"name":"Quantum Computing","icon":"⚛️","color":"#042C53","bg":"linear-gradient(135deg,#042C53,#533AB7)","type":"Skill","desc":"Fundamentals of quantum mechanics for computing, quantum gates, circuits, Qiskit programming, quantum algorithms (Shor, Grover), and quantum cryptography concepts.","skills":"Qiskit, Python, Quantum Gates, IBM Quantum, Linear Algebra","outcomes":"Students gain foundational knowledge for quantum research roles and emerging quantum computing positions.","active":true},{"id":4,"name":"Block Chain Technology","icon":"⛓️","color":"#BA7517","bg":"linear-gradient(135deg,#BA7517,#0C447C)","type":"Skill","desc":"Conceptual and applied study of distributed ledger technology, consensus mechanisms, permissioned vs permissionless blockchains, tokenisation, and enterprise blockchain use cases.","skills":"Ethereum, Hyperledger, Consensus Algorithms, Tokenisation","outcomes":"Students understand blockchain architecture and can apply it to supply chain, healthcare, and financial systems.","active":true},{"id":5,"name":"Natural Language Processing","icon":"💬","color":"#0C447C","bg":"linear-gradient(135deg,#0C447C,#1D6B8C)","type":"Skill","desc":"Text preprocessing, sentiment analysis, named entity recognition, transformer architectures, BERT, GPT-based models, multilingual NLP, and Odia language processing.","skills":"NLTK, spaCy, BERT, Transformers, Python","outcomes":"Students can build NLP-powered applications including chatbots, search engines, and language translation tools.","active":true},{"id":6,"name":"Spectral Image Processing","icon":"🌈","color":"#1D6B8C","bg":"linear-gradient(135deg,#1D6B8C,#3B6D11)","type":"Skill","desc":"Multispectral and hyperspectral image analysis, remote sensing data processing, NDVI computation, spectral classification, and applications in precision agriculture.","skills":"Python, ENVI, NDVI, Remote Sensing, Image Classification","outcomes":"Students qualify for geospatial analytics, satellite imagery processing, and environmental research roles.","active":true},{"id":7,"name":"3D Game Art & Gaming","icon":"🎨","color":"#A32D2D","bg":"linear-gradient(135deg,#A32D2D,#BA7517)","type":"Skill","desc":"3D modelling, texturing, rigging, animation, level design, game asset creation using Blender and Maya, and integration with Unity or Unreal Engine.","skills":"Blender, Maya, Unity, Texturing, Rigging & Animation","outcomes":"Students can work as 3D Artists, Game Designers, and Visual Effects Artists.","active":true},{"id":8,"name":"CCTV Technician","icon":"📹","color":"#3B6D11","bg":"linear-gradient(135deg,#3B6D11,#042C53)","type":"Skill","desc":"Installation, configuration, and maintenance of CCTV and video surveillance systems, IP camera networking, DVR\/NVR setup, remote monitoring, and basic AI-based video analytics.","skills":"CCTV Systems, IP Networking, DVR\/NVR, Video Analytics, Troubleshooting","outcomes":"Students gain practical skills for security system installation and maintenance roles.","active":true},{"id":9,"name":"Computer Installation & Maintenance","icon":"🔧","color":"#185FA5","bg":"linear-gradient(135deg,#185FA5,#042C53)","type":"Skill","desc":"Hardware assembly, OS installation and configuration, driver management, networking setup, troubleshooting, preventive maintenance, and basic cybersecurity.","skills":"Hardware Assembly, Windows\/Linux, Networking, Troubleshooting, IT Support","outcomes":"Students are equipped for IT Support Technician, Hardware Engineer, and Field Service Engineer roles.","active":true},{"id":10,"name":"Microgrid Design and Implementation","icon":"⚡","color":"#1D9E75","bg":"linear-gradient(135deg,#1D9E75,#3B6D11)","type":"Skill","desc":"Design and simulation of microgrids integrating solar, wind, and battery storage using MATLAB\/Simulink for power flow analysis, control systems, and smart grid technologies.","skills":"MATLAB\/Simulink, Solar PV, Energy Storage, Power Electronics, Smart Grid","outcomes":"Students qualify for energy sector roles in renewable energy companies and power utilities.","active":true}];if(_dss.length>0)SKILL_SUBJECTS=_dss.map(function(s){return{name:s.name,icon:s.icon||'🛠️',color:s.color||'#0C447C',bg:s.bg||'linear-gradient(135deg,#0C447C,#185FA5)',type:'Skill',desc:s.desc||'',skills:s.skills?s.skills.split(','):[],outcomes:s.outcomes||''};});}catch(e){console.warn('Skill subjects:',e);}
+  
+  /* ── 5. Set uploads base path ── */
+  // Ensure photo paths are absolute URLs for XAMPP
+  function _fixPath(p){if(!p)return'';if(p.startsWith('http')||p.startsWith('/'))return p;return p;}
+  if(LABS)LABS=LABS.map(function(l){return Object.assign({},l,{photo:_fixPath(l.photo),photo360:_fixPath(l.photo360)});});
+  if(GALLERY)GALLERY=GALLERY.map(function(g){return Object.assign({},g,{photo:_fixPath(g.photo),photo360:_fixPath(g.photo360)});});
+
+  /* ── 6. Render everything with live data ── */
+  _dataReady = true;
+  initRender();
+
+  /* ── 6. Settings → contact section ── */
+  function _si(id,v){var e=document.getElementById(id);if(e)e.textContent=v;}
+  function _sh(id,v){var e=document.getElementById(id);if(e)e.href=v;}
+  function _sm(id,v){var e=document.getElementById(id);if(e){e.textContent=v;e.href='mailto:'+v;}}
+  _si('bbsr-addr',  'Ramchandrapur, P.O. – Jatni, Bhubaneswar, Khurda, Odisha, India – 752050');
+  _si('bbsr-phone', '+91 0674 2492 444');
+  _sm('bbsr-email', 'info.bbsr@cutm.ac.in');
+  _sh('bbsr-map',   'https://maps.google.com/?q=Centurion+University+Bhubaneswar+Jatni');
+  _si('pkd-addr',   'Village Alluri Nagar, P.O. – R Sitapur, Via- Uppalada Paralakhemundi, Gajapati, Odisha, India – 761211');
+  _si('pkd-phone',  '+91 8260077222');
+  _sm('pkd-email',  'info.pkd@cutm.ac.in');
+  _sh('pkd-map',    'https://maps.google.com/?q=Centurion+University+Paralakhemundi');
+});
+</script>
+
 </body>
 </html>
